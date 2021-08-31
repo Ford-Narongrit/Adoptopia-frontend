@@ -1,10 +1,15 @@
 <template>
   <div>
-    this is about page
+      this is navbar
   </div>
 </template>
+
 <script>
 export default {
-  name: 'About',
+
 }
 </script>
+
+<style>
+
+</style>

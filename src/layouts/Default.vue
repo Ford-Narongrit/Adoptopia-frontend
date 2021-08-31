@@ -1,10 +1,11 @@
 <template>
   <div>
-    this is about page
+    <slot />
   </div>
 </template>
+
 <script>
 export default {
-  name: 'About',
-}
+  name: "DefaultLayout",
+};
 </script>
