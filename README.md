@@ -1,19 +1,38 @@
-# adoptopia
-
+# Adoptopia
+### Project-final Webtech (frontend)
 ## Project setup
 ```
 npm install
 ```
+Open http://localhost:8080 with your browser to see the result.
 
-### Compiles and hot-reloads for development
+### Compiles for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compiles for production
 ```
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### structure
+```
+.
+|-- pubilc
+|
+|-- src
+|   |- assests (เก็บ CSS กับ image)
+|   |- components
+|   |- layout
+|   |- router
+|   |- store
+|   |- views
+|   |- App.vue
+|   |- main.js
+|-- tailwind.config.js (เพิ่ม config tailwind ในนี้)
+```
+
+## TODO
+* [x] Layout
+* [x] Navbar
