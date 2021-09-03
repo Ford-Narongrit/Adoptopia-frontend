@@ -1,0 +1,172 @@
+<template>
+  <div class="flex overflow-hidden h-screen">
+    <div class="w-2/3">
+      <img :src="image" alt="" class="w-full bg-center bg-cover" />
+    </div>
+    <div class="w-1/3">
+      <div class="flex justify-center items-center h-full bg-black">
+        <div class="rounded-lg p-5 space-y-4 w-3/4">
+          <img src="../assets/logo.png" alt="logo" class="h-20 mx-auto" />
+          <div class="text-4xl text-center text-white">REGISTER</div>
+
+          <!-- input image -->
+          <div class="mx-auto">
+            <input
+              type="file"
+              ref="file"
+              style="display: none"
+              @change="addProfile"
+            />
+            <div
+              class="bg-gray-100 overflow-hidden h-60 w-60 mx-auto rounded-full flex items-center relative cursor-pointer 
+              focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
+              bg-center bg-cover"
+              @click="$refs.file.click()"
+              @drop.prevent="addProfile($event)"
+              @dragover.prevent
+              @mouseover="hoverImage = true"
+              @mouseleave="hoverImage = false"
+              :style="{ backgroundImage: 'url(' + `${form.profile}` + ')' }"
+              tabindex="1"
+            >
+              <!-- if hover to upload -->
+              <div
+                v-if="hoverImage"
+                class="absolute w-full h-full flex justify-center items-center bg-black opacity-80"
+              >
+                <div class="text-center text-white text-3xl">
+                  Upload File
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- username -->
+          <div class="space-y-1">
+            <label for="username" class="text-xl block text-white"
+              >Username</label
+            >
+            <input
+              type="text"
+              placeholder="Username"
+              class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+              v-model="form.username"
+            />
+          </div>
+
+          <!-- password -->
+          <div class="space-y-1">
+            <label for="password" class="text-xl block text-white"
+              >Password</label
+            >
+            <div class="relative">
+              <input
+                :type="isPassword ? 'text' : 'password'"
+                placeholder="Password"
+                class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+                v-model="form.password"
+              />
+              <button
+                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                @click="isPassword = !isPassword"
+                tabindex="-1"
+              >
+                <font-awesome-icon
+                  :icon="isPassword ? 'eye' : 'eye-slash'"
+                  class="text-xl text-black"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!--Confirm password -->
+          <div class="space-y-1">
+            <label for="confirmPassword" class="text-xl block text-white"
+              >Confirm Password</label
+            >
+            <div class="relative">
+              <input
+                :type="isConPassword ? 'text' : 'password'"
+                placeholder="Confirm Password"
+                class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+                v-model="form.confirm_password"
+              />
+              <button
+                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                @click="isConPassword = !isConPassword"
+                tabindex="-1"
+              >
+                <font-awesome-icon
+                  :icon="isConPassword ? 'eye' : 'eye-slash'"
+                  class="text-xl text-black"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!--Email -->
+          <div class="space-y-1">
+            <label for="email" class="text-xl block text-white">Email</label>
+            <input
+              type="text"
+              placeholder="Email"
+              class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+              v-model="form.email"
+            />
+          </div>
+          <div></div>
+          <button
+            class="bg-blue-600 rounded-lg p-3 w-full text-white text-xl hover:bg-blue-400 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+            @click="register()"
+          >
+            R E G I S T E R
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Alert from "../helpers/Alert";
+export default {
+  data() {
+    return {
+      isPassword: false,
+      isConPassword: false,
+      hoverImage: false,
+      form: {
+        username: "",
+        password: "",
+        confirm_password: "",
+        email: "",
+        profile:
+          "https://ga.berkeley.edu/wp-content/uploads/2015/08/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+      },
+      image:
+        "https://i.pinimg.com/originals/20/79/03/2079033abc8314be554f9d24f562a199.jpg",
+    };
+  },
+  methods: {
+    register() {
+      console.log(this.form);
+      Alert.mixin("success", "Signed in successfully");
+    },
+    addProfile(e) {
+      console.log(e.type);
+      let files = null;
+      if (e.type === "drop") {
+        files = e.dataTransfer.files;
+      } else if (e.type === "change") {
+        files = e.target.files;
+      }
+
+      if (files) {
+        this.form.profile = URL.createObjectURL(files[0]);
+      }
+    },
+  },
+};
+</script>
+
+<style></style>

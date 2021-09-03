@@ -13,6 +13,9 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+//import sweetalert2
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 library.add(fas)
 library.add(fab)
 library.add(far)
