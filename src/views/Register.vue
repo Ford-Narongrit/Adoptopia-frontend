@@ -1,13 +1,14 @@
 <template>
-  <div class="flex overflow-hidden h-screen">
-    <div class="w-2/3">
-      <img :src="image" alt="" class="w-full bg-center bg-cover" />
-    </div>
-    <div class="w-1/3">
+  <div class="flex overflow-hidden min-h-screen">
+    <div
+      class="md:w-1/2 xl:w-2/3 md:block hidden bg-center bg-cover"
+      :style="{ backgroundImage: 'url(' + `${image}` + ')' }"
+    ></div>
+    <div class="md:w-1/2 xl:w-1/3 w-full">
       <div class="flex justify-center items-center h-full bg-black">
         <div class="rounded-lg p-5 space-y-4 w-3/4">
           <img src="../assets/logo.png" alt="logo" class="h-20 mx-auto" />
-          <div class="text-4xl text-center text-white">REGISTER</div>
+          <div class="my-text-title text-center text-white">REGISTER</div>
 
           <!-- input image -->
           <div class="mx-auto">
@@ -18,8 +19,8 @@
               @change="addProfile"
             />
             <div
-              class="bg-gray-100 overflow-hidden h-60 w-60 mx-auto rounded-full flex items-center relative cursor-pointer 
-              focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
+              class="bg-gray-100 overflow-hidden md:h-40 md:w-40 h-28 w-28 mx-auto rounded-full flex items-center relative cursor-pointer 
+              my-block-focus
               bg-center bg-cover"
               @click="$refs.file.click()"
               @drop.prevent="addProfile($event)"
@@ -34,7 +35,7 @@
                 v-if="hoverImage"
                 class="absolute w-full h-full flex justify-center items-center bg-black opacity-80"
               >
-                <div class="text-center text-white text-3xl">
+                <div class="text-center text-white my-text-content">
                   Upload File
                 </div>
               </div>
@@ -43,27 +44,27 @@
 
           <!-- username -->
           <div class="space-y-1">
-            <label for="username" class="text-xl block text-white"
+            <label for="username" class="my-text-content block text-white"
               >Username</label
             >
             <input
               type="text"
               placeholder="Username"
-              class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
               v-model="form.username"
             />
           </div>
 
           <!-- password -->
           <div class="space-y-1">
-            <label for="password" class="text-xl block text-white"
+            <label for="password" class="my-text-content block text-white"
               >Password</label
             >
             <div class="relative">
               <input
                 :type="isPassword ? 'text' : 'password'"
                 placeholder="Password"
-                class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
                 v-model="form.password"
               />
               <button
@@ -73,7 +74,7 @@
               >
                 <font-awesome-icon
                   :icon="isPassword ? 'eye' : 'eye-slash'"
-                  class="text-xl text-black"
+                  class="my-text-content text-black"
                 />
               </button>
             </div>
@@ -81,14 +82,16 @@
 
           <!--Confirm password -->
           <div class="space-y-1">
-            <label for="confirmPassword" class="text-xl block text-white"
+            <label
+              for="confirmPassword"
+              class="my-text-content block text-white"
               >Confirm Password</label
             >
             <div class="relative">
               <input
                 :type="isConPassword ? 'text' : 'password'"
                 placeholder="Confirm Password"
-                class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
                 v-model="form.confirm_password"
               />
               <button
@@ -98,7 +101,7 @@
               >
                 <font-awesome-icon
                   :icon="isConPassword ? 'eye' : 'eye-slash'"
-                  class="text-xl text-black"
+                  class="my-text-content text-black"
                 />
               </button>
             </div>
@@ -106,17 +109,19 @@
 
           <!--Email -->
           <div class="space-y-1">
-            <label for="email" class="text-xl block text-white">Email</label>
+            <label for="email" class="my-text-content block text-white"
+              >Email</label
+            >
             <input
               type="text"
               placeholder="Email"
-              class="text-xl rounded-lg w-full px-2 py-1 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
               v-model="form.email"
             />
           </div>
           <div></div>
           <button
-            class="bg-blue-600 rounded-lg p-3 w-full text-white text-xl hover:bg-blue-400 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700"
+            class="bg-blue-600 rounded-lg p-3 w-full text-white my-text-content hover:bg-blue-400 my-block-focus"
             @click="register()"
           >
             R E G I S T E R
