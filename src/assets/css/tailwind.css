@@ -17,7 +17,6 @@
 .my-text-base {
     @apply md:text-lg text-base
 }
-
 .my-block-focus {
     @apply focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
 }
