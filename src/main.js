@@ -16,6 +16,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 //import sweetalert2
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+//import Axios
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+Vue.use(VueAxios, axios)
+
 library.add(fas)
 library.add(fab)
 library.add(far)
