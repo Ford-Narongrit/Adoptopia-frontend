@@ -6,6 +6,7 @@ npm install
 cp .env.example .env
 ```
 go config .env to connect database
+
 Open http://localhost:8080 with your browser to see the result.
 
 ### Compiles for development
