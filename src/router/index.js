@@ -27,10 +27,10 @@ const routes = [
     component: Register,
   },
   {
-    path: '/users/:id',
+    path: '/user/:id',
     component: User,
     meta: {
-      layout: "Main",
+      layout: "Profile",
     },
   }
 ]
