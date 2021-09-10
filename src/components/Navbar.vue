@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky top-0 flex justify-between items-center bg-gray-800 py-3 px-10 z-50"
+    class="sticky top-0 flex justify-between items-center bg-shark-500 py-3 px-10 z-50"
     :class="showNavbar ? 'navbar--show' : 'navbar--hidden'"
   >
     <!-- Logo -->
@@ -33,9 +33,9 @@
         >
       </div>
       <div class="text-white text-xl hover:border-blue-400" v-if="!login">
-        <button class="p-2 border-b-2 border-transparent hover:border-blue-500">
+        <router-link to="/login" class="p-2 border-b-2 border-transparent hover:border-blue-500">
           Login
-        </button>
+        </router-link>
       </div>
 
       <!-- if login -->
@@ -85,7 +85,7 @@
 export default {
   data() {
     return {
-      login: true,
+      login: false,
       isOpen: false,
       showNavbar: true,
       ontopNavbar: true,

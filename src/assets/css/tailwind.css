@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.my-text-super {
+    @apply md:text-5xl text-4xl font-bold;
+}
+.my-text-title {
+    @apply md:text-3xl text-2xl font-bold;
+}
+.my-text-subtitle {
+    @apply md:text-2xl text-xl
+}
+.my-text-content {
+    @apply md:text-xl text-lg
+}
+.my-text-base {
+    @apply md:text-lg text-base
+}
+.my-block-focus {
+    @apply focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
+}
