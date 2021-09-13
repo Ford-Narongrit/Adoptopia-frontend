@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import History from '../views/History.vue'
+import PaymentHistory from '../views/PaymentHistory.vue'
+import Topup from '../views/Topup.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import User from '../views/User/id.vue'
@@ -29,9 +32,25 @@ const routes = [
     },
   },
   {
+    path: '/history',
+    name: 'History',
+    component: History,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
     path: '/sale',
     name: 'Sale',
     component: Sale,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: '/topup',
+    name: 'Topup',
+    component: Topup,
     meta: {
       layout: "Main",
     },
@@ -48,6 +67,14 @@ const routes = [
     path: '/dta',
     name: 'Dta',
     component: Dta,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: '/payment/history',
+    name: 'PaymentHistory',
+    component: PaymentHistory,
     meta: {
       layout: "Main",
     },
