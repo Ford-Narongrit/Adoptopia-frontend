@@ -24,7 +24,7 @@ const routes = [
     },
   },
   {
-    path: '/paymenthistory',
+    path: '/payment/history',
     name: 'PaymentHistory',
     component: PaymentHistory,
     meta: {

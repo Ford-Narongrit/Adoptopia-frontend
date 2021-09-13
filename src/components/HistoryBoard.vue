@@ -8,7 +8,12 @@
             </thead>
             <tbody>
                 <tr v-for="(data, index) in data" :key="index">
-                    <td v-for="(heading, index) in key" :key="index">{{data[heading]}}</td>
+                    <td v-for="(heading, index) in key" :key="index"
+                        :class="{'left' : heading === 'name' || heading === 'user',
+                        'right': heading === 'amount'}">
+                        {{data[heading]}}
+                    </td>
+                    
                 </tr>
             </tbody>
         </table>
@@ -44,7 +49,26 @@ table {
     margin: 1em auto;
     background-color: $bg-clr;
     width: 600px;
-    height: 400px;
+    max-height: 400px;
+    border-collapse: collapse;
+    th {
+        height: 40px;
+        border-right:solid black;
+        border-width: 1px;
+        &:last-child{
+            border: transparent;
+        }
+    }
+    td {
+        padding: .2em 1em;
+    }
+    .left {
+        text-align: left;
+    }
+    .right {
+        text-align: right;
+    }
+    
 }
 </style>>
 

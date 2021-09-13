@@ -2,8 +2,8 @@
   <div class="main-container">
       <h1 class="title">History</h1>
       <div class="wrap-btn">
-          <button >History</button>
-          <button @click="toPaymentHistory" class="not-selected">Payment History</button>
+          <button class="disable">History</button>
+          <button @click="toPaymentHistory">Payment History</button>
       </div>
       <HistoryBoard :data="data"/>
   </div>
@@ -68,7 +68,7 @@ export default {
     },
     methods: {
         toPaymentHistory() {
-            this.$router.push("/paymenthistory")
+            this.$router.push("/payment/history")
         }
     }
     
@@ -80,7 +80,6 @@ export default {
 
 .main-container{
     text-align: center;
-    
     .title {
         font-size: 2em;
         margin-top: 1em;
@@ -95,13 +94,16 @@ export default {
         button {
             width: 140px;
             height: 40px;
-            background-color: #E5E5E5;
-            border-radius: 30px;
-        }
-        .not-selected {
             color: white;
             background-color: #1E63E9;
+            border-radius: 30px;
         }
+        .disable {
+            background-color: #E5E5E5;
+            color: black;
+            cursor:default;
+        }
+        
     }
 
 }
