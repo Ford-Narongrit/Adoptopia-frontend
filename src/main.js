@@ -19,7 +19,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 //import Axios
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-axios.defaults.baseURL = process.env.VUE_APP_APIURL || 'http://127.0.0.1:8000/'
+axios.defaults.baseURL = process.env.VUE_APP_APIURL || 'http://127.0.0.1:8000/api'
 Vue.use(VueAxios, axios)
 
 library.add(fas)

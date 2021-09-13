@@ -1,13 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-<<<<<<< HEAD
 import Topup from '../views/Topup.vue'
-=======
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import User from '../views/User/id.vue'
->>>>>>> 740615cacaf631f553b21befdf4eb4c2641628c2
 
 Vue.use(VueRouter)
 
@@ -28,6 +25,7 @@ const routes = [
       layout: "Main",
     },
   },
+  {
     path: '/login',
     name: 'Login',
     component: Login,
