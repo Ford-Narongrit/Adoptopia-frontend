@@ -10,9 +10,9 @@
           src="../assets/logo.png"
           alt="Logo"
           title="Adoptopia"
-          class="h-12"
+          class="h-8"
         />
-        <div class="text-white text-2xl">adoptopia</div>
+        <div class="text-white text-2xl">Adoptopia</div>
       </router-link>
     </div>
 
@@ -127,11 +127,15 @@ export default {
   transition: 0.3s all ease-out;
   box-shadow: none;
   transform: translate3d(0, -100%, 0);
+  border-bottom: 1px solid;
+  border-color: #272727;
 }
 .navbar--show {
   transition: 0.2s all ease-in;
   box-shadow: none;
   transform: translate3d(0, 0, 0);
+  border-bottom: 1px solid;
+  border-color: #ffffff;
 }
 .trans--hidden {
   animation: tran 0.4s;

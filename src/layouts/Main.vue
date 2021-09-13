@@ -1,7 +1,7 @@
 <template>
   <div>
     <navbar />
-    <div class="container mx-auto min-h-screen">
+    <div class="container mx-auto min-h-screen bg-shark-500">
       <slot />
     </div>
   </div>
