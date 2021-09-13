@@ -13,3 +13,8 @@ export default {
   components: { Layout },
 };
 </script>
+<style>
+body{
+    background-color: #686868;
+}
+</style>
