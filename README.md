@@ -3,7 +3,10 @@
 ## Project setup
 ```
 npm install
+cp .env.example .env
 ```
+go config .env to connect database
+
 Open http://localhost:8080 with your browser to see the result.
 
 ### Compiles for development
@@ -33,6 +36,8 @@ npm run build
 |-- tailwind.config.js (เพิ่ม config tailwind ในนี้)
 ```
 
-## TODO
-* [x] Layout
-* [x] Navbar
+## route
+* /
+* /login
+* /register
+* /user/id
