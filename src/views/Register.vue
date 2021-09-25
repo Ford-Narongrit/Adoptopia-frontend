@@ -27,7 +27,7 @@
               @dragover.prevent
               @mouseover="hoverImage = true"
               @mouseleave="hoverImage = false"
-              :style="{ backgroundImage: 'url(' + `${form.profile}` + ')' }"
+              :style="{ backgroundImage: 'url(' + `${profile_image}` + ')' }"
               tabindex="1"
             >
               <!-- if hover to upload -->
@@ -40,6 +40,18 @@
                 </div>
               </div>
             </div>
+          </div>
+          <!-- name -->
+          <div class="space-y-1">
+            <label for="name" class="my-text-content block text-white"
+              >Name</label
+            >
+            <input
+              type="text"
+              placeholder="Name"
+              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              v-model="form.name"
+            />
           </div>
 
           <!-- username -->
@@ -68,7 +80,7 @@
                 v-model="form.password"
               />
               <button
-                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                class="absolute my-auto h-full right-0 p-1 rounded-lg bg-transparent"
                 @click="isPassword = !isPassword"
                 tabindex="-1"
               >
@@ -95,7 +107,7 @@
                 v-model="form.confirm_password"
               />
               <button
-                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                class="absolute my-auto h-full right-0 p-1 rounded-lg bg-transparent"
                 @click="isConPassword = !isConPassword"
                 tabindex="-1"
               >
@@ -141,35 +153,54 @@ export default {
       isPassword: false,
       isConPassword: false,
       hoverImage: false,
+      errors: [],
       form: {
         username: "",
         password: "",
         confirm_password: "",
         email: "",
-        profile:
-          "https://ga.berkeley.edu/wp-content/uploads/2015/08/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+        profile: "",
       },
+      profile_image:
+        "https://ga.berkeley.edu/wp-content/uploads/2015/08/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+
       image:
         "https://i.pinimg.com/originals/20/79/03/2079033abc8314be554f9d24f562a199.jpg",
     };
   },
   methods: {
-    register() {
-      let payload = this.form;
-      axios.post("/user")
-      Alert.mixin("success", "Signed in successfully");
+    async register() {
+      let payload = new FormData();
+      Object.keys(this.form).forEach((key) => {
+        payload.append(key, this.form[key]);
+      });
+      let config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+      try {
+        let res = await axios.post("/auth/register", payload, config);
+        //TODO redirect to home or login and add error handle
+        Alert.mixin("success", res.data.message);
+      } catch (error) {
+        this.errors = error.response.data;
+        Alert.window(
+          "error",
+          "Register Failed",
+          "Sorry, an unexpected error occurred. Please try again."
+        );
+        console.error(error.response);
+      }
     },
     addProfile(e) {
-      console.log(e.type);
       let files = null;
       if (e.type === "drop") {
         files = e.dataTransfer.files;
       } else if (e.type === "change") {
         files = e.target.files;
       }
-
       if (files) {
-        this.form.profile = URL.createObjectURL(files[0]);
+        this.form.profile = files[0];
+        this.profile_image = URL.createObjectURL(files[0]);
       }
     },
   },

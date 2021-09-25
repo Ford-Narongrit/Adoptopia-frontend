@@ -1,8 +1,9 @@
 <template>
   <div class="flex overflow-hidden h-screen">
-    <div class="md:w-1/2 xl:w-2/3 md:block hidden bg-center bg-cover"
-    :style="{ backgroundImage: 'url(' + `${image}` + ')' }">
-    </div>
+    <div
+      class="md:w-1/2 xl:w-2/3 md:block hidden bg-center bg-cover"
+      :style="{ backgroundImage: 'url(' + `${image}` + ')' }"
+    ></div>
     <div class="md:w-1/2 xl:w-1/3 w-full">
       <div class="flex justify-center items-center h-full bg-shark-500">
         <div class="rounded-lg p-5 space-y-4 w-3/4">
@@ -12,14 +13,18 @@
           <!-- username -->
           <div class="space-y-1">
             <label for="username" class="my-text-content block text-white"
-              >Username</label
+              >Username or Email</label
             >
             <input
               type="text"
-              placeholder="Username"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              placeholder="Username or Email"
+              class="my-text-content rounded-lg w-full px-2 py-1 "
+              :class="errors.validate ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.username"
             />
+            <div v-if="errors.validate" class="text-red-400">
+              {{ errors.validate[0] }}
+            </div>
           </div>
 
           <!-- password -->
@@ -32,10 +37,11 @@
                 :type="isSee ? 'text' : 'password'"
                 placeholder="Password"
                 class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+                :class="errors.password ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.password"
               />
               <button
-                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                class="absolute my-auto h-full right-0 px-1 rounded-lg bg-transparent"
                 @click="isSee = !isSee"
               >
                 <font-awesome-icon
@@ -43,6 +49,9 @@
                   class="my-text-content text-black"
                 />
               </button>
+            </div>
+            <div v-if="errors.password" class="text-red-400">
+              {{ errors.password[0] }}
             </div>
           </div>
 
@@ -67,10 +76,12 @@
 
 <script>
 import Alert from "../helpers/Alert";
+import Axios from "axios";
 export default {
   data() {
     return {
       isSee: false,
+      errors: [],
       form: {
         username: "",
         password: "",
@@ -80,9 +91,26 @@ export default {
     };
   },
   methods: {
-    login() {
-        // alert(this.form.username + "  " + this.form.password);
-        Alert.mixin("success", "Signed in successfully");
+    async login() {
+      let payload = {
+        validate: this.form.username,
+        password: this.form.password,
+      };
+      try {
+        let res = await Axios.post("/auth/login", payload).then((res) => {
+          //TODO store user and JWT
+          console.log(res);
+          Alert.mixin("success", "Signed in successfully");
+        });
+      } catch (error) {
+        this.errors = error.response.data;
+        Alert.window(
+          "error",
+          "Sign in Failed",
+          "Sorry, an unexpected error occurred. Please try again."
+        );
+        console.error(error.response);
+      }
     },
   },
 };
