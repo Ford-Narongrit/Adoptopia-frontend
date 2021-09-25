@@ -134,6 +134,7 @@
 
 <script>
 import Alert from "../helpers/Alert";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -154,7 +155,8 @@ export default {
   },
   methods: {
     register() {
-      console.log(this.form);
+      let payload = this.form;
+      axios.post("/user")
       Alert.mixin("success", "Signed in successfully");
     },
     addProfile(e) {
