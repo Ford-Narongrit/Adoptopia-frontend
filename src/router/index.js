@@ -11,6 +11,8 @@ import Auction from '../views/Auction.vue'
 import Sale from '../views/Sale.vue'
 import Ota from '../views/Ota.vue'
 import Dta from '../views/Dta.vue'
+import AddAdopt from '../views/AddAdopt.vue'
+import PostAdopt from '../views/PostAdopt.vue'
 
 Vue.use(VueRouter)
 
@@ -75,6 +77,22 @@ const routes = [
     path: '/payment/history',
     name: 'PaymentHistory',
     component: PaymentHistory,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: '/add',
+    name: 'AddAdopt',
+    component: AddAdopt,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: '/post',
+    name: 'PostAdopt',
+    component: PostAdopt,
     meta: {
       layout: "Main",
     },
