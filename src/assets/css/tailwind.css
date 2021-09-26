@@ -20,3 +20,7 @@
 .my-block-focus {
     @apply focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
 }
+
+.my-block-error {
+    @apply border-red-500 border-4 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-pink-700
+}
