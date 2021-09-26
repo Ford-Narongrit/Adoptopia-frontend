@@ -20,7 +20,7 @@
     <div class="flex items-center space-x-4">
       <div class="nav text-white text-xl">
         <router-link
-          to="trade"
+          to="/"
           class="border-b-2 border-transparent hover:border-blue-500"
           >Trade</router-link
         >
