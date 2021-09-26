@@ -49,9 +49,15 @@
             <input
               type="text"
               placeholder="Name"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.name ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.name"
             />
+            <ul v-if="errors.name" class="text-red-400">
+              <li v-for="(message, index) in errors.name" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
 
           <!-- username -->
@@ -62,9 +68,15 @@
             <input
               type="text"
               placeholder="Username"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.username ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.username"
             />
+            <ul v-if="errors.username" class="text-red-400">
+              <li v-for="(message, index) in errors.username" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
 
           <!-- password -->
@@ -76,7 +88,8 @@
               <input
                 :type="isPassword ? 'text' : 'password'"
                 placeholder="Password"
-                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+                class="my-text-content rounded-lg w-full px-2 py-1"
+                :class="errors.password ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.password"
               />
               <button
@@ -90,12 +103,17 @@
                 />
               </button>
             </div>
+            <ul v-if="errors.password" class="text-red-400">
+              <li v-for="(message, index) in errors.password" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
 
           <!--Confirm password -->
           <div class="space-y-1">
             <label
-              for="confirmPassword"
+              for="password_confirmation"
               class="my-text-content block text-white"
               >Confirm Password</label
             >
@@ -103,8 +121,9 @@
               <input
                 :type="isConPassword ? 'text' : 'password'"
                 placeholder="Confirm Password"
-                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
-                v-model="form.confirm_password"
+                class="my-text-content rounded-lg w-full px-2 py-1"
+                :class="errors.email ? 'my-block-error ' : 'my-block-focus'"
+                v-model="form.password_confirmation"
               />
               <button
                 class="absolute my-auto h-full right-0 p-1 rounded-lg bg-transparent"
@@ -127,11 +146,17 @@
             <input
               type="text"
               placeholder="Email"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.email ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.email"
             />
+            <ul v-if="errors.email" class="text-red-400">
+              <li v-for="(message, index) in errors.email" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
-          <div></div>
+
           <button
             class="bg-blue-600 rounded-lg p-3 w-full text-white my-text-content hover:bg-blue-400 my-block-focus"
             @click="register()"
@@ -157,7 +182,7 @@ export default {
       form: {
         username: "",
         password: "",
-        confirm_password: "",
+        password_confirmation: "",
         email: "",
         profile: "",
       },
@@ -179,8 +204,8 @@ export default {
       };
       try {
         let res = await axios.post("/auth/register", payload, config);
-        //TODO redirect to home or login and add error handle
         Alert.mixin("success", res.data.message);
+        this.$router.push('Login');
       } catch (error) {
         this.errors = error.response.data;
         Alert.window(

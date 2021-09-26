@@ -100,7 +100,7 @@ export default {
         let res = await Axios.post("/auth/login", payload).then((res) => {
           //TODO store user and JWT
           console.log(res);
-          Alert.mixin("success", "Signed in successfully");
+          Alert.mixin("success", "Login successful");
         });
       } catch (error) {
         this.errors = error.response.data;
