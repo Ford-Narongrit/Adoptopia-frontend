@@ -76,7 +76,7 @@
 
 <script>
 import Alert from "../helpers/Alert";
-import Axios from "axios";
+import UserStore from "../store/User";
 export default {
   data() {
     return {
@@ -97,10 +97,9 @@ export default {
         password: this.form.password,
       };
       try {
-        let res = await Axios.post("/auth/login", payload).then((res) => {
-          //TODO store user and JWT
-          console.log(res);
+        let res = await UserStore.dispatch("login", payload).then((res) => {
           Alert.mixin("success", "Login successful");
+          this.$router.push("/profile")
         });
       } catch (error) {
         this.errors = error.response.data;
@@ -109,7 +108,7 @@ export default {
           "Sign in Failed",
           "Sorry, an unexpected error occurred. Please try again."
         );
-        console.error(error.response);
+        // console.error(error.response);
       }
     },
   },

@@ -90,7 +90,7 @@ const routes = [
     component: Register,
   },
   {
-    path: '/user/:id',
+    path: '/profile',
     component: User,
     meta: {
       layout: "Profile",
