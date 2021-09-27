@@ -10,9 +10,9 @@
           src="../assets/logo.png"
           alt="Logo"
           title="Adoptopia"
-          class="h-12"
+          class="h-8"
         />
-        <div class="text-white text-2xl">adoptopia</div>
+        <div class="text-white text-2xl">Adoptopia</div>
       </router-link>
     </div>
 
@@ -20,7 +20,7 @@
     <div class="flex items-center space-x-4">
       <div class="nav text-white text-xl">
         <router-link
-          to="trade"
+          to="/"
           class="border-b-2 border-transparent hover:border-blue-500"
           >Trade</router-link
         >
@@ -33,7 +33,10 @@
         >
       </div>
       <div class="text-white text-xl hover:border-blue-400" v-if="!login">
-        <router-link to="/login" class="p-2 border-b-2 border-transparent hover:border-blue-500">
+        <router-link
+          to="/login"
+          class="p-2 border-b-2 border-transparent hover:border-blue-500"
+        >
           Login
         </router-link>
       </div>
@@ -72,6 +75,7 @@
           <div class="border-b-2 border-gray-400 mx-2 my-1"></div>
           <button
             class="block w-full px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
+            @click="logout()"
           >
             Logout
           </button>
@@ -82,6 +86,7 @@
 </template>
 
 <script>
+import UserStore from "../store/User";
 export default {
   data() {
     return {
@@ -94,6 +99,7 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
+    this.login = UserStore.getters.isAuthen;
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.onScroll);
@@ -118,6 +124,12 @@ export default {
       // Set the current scroll position as the last scroll position
       this.lastScrollPosition = currentScrollPosition;
     },
+    async logout() {
+      let res = await UserStore.dispatch("logout");
+      if (res.success) {
+        this.$router.go({ name: "Home" });
+      }
+    },
   },
 };
 </script>
@@ -127,11 +139,15 @@ export default {
   transition: 0.3s all ease-out;
   box-shadow: none;
   transform: translate3d(0, -100%, 0);
+  border-bottom: 1px solid;
+  border-color: #272727;
 }
 .navbar--show {
   transition: 0.2s all ease-in;
   box-shadow: none;
   transform: translate3d(0, 0, 0);
+  border-bottom: 1px solid;
+  border-color: #ffffff;
 }
 .trans--hidden {
   animation: tran 0.4s;

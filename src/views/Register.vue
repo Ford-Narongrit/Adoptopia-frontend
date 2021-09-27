@@ -27,7 +27,7 @@
               @dragover.prevent
               @mouseover="hoverImage = true"
               @mouseleave="hoverImage = false"
-              :style="{ backgroundImage: 'url(' + `${form.profile}` + ')' }"
+              :style="{ backgroundImage: 'url(' + `${profile_image}` + ')' }"
               tabindex="1"
             >
               <!-- if hover to upload -->
@@ -41,6 +41,24 @@
               </div>
             </div>
           </div>
+          <!-- name -->
+          <div class="space-y-1">
+            <label for="name" class="my-text-content block text-white"
+              >Name</label
+            >
+            <input
+              type="text"
+              placeholder="Name"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.name ? 'my-block-error ' : 'my-block-focus'"
+              v-model="form.name"
+            />
+            <ul v-if="errors.name" class="text-red-400">
+              <li v-for="(message, index) in errors.name" :key="index">
+                {{ message }}
+              </li>
+            </ul>
+          </div>
 
           <!-- username -->
           <div class="space-y-1">
@@ -50,9 +68,15 @@
             <input
               type="text"
               placeholder="Username"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.username ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.username"
             />
+            <ul v-if="errors.username" class="text-red-400">
+              <li v-for="(message, index) in errors.username" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
 
           <!-- password -->
@@ -64,11 +88,12 @@
               <input
                 :type="isPassword ? 'text' : 'password'"
                 placeholder="Password"
-                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+                class="my-text-content rounded-lg w-full px-2 py-1"
+                :class="errors.password ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.password"
               />
               <button
-                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                class="absolute my-auto h-full right-0 p-1 rounded-lg bg-transparent"
                 @click="isPassword = !isPassword"
                 tabindex="-1"
               >
@@ -78,12 +103,17 @@
                 />
               </button>
             </div>
+            <ul v-if="errors.password" class="text-red-400">
+              <li v-for="(message, index) in errors.password" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
 
           <!--Confirm password -->
           <div class="space-y-1">
             <label
-              for="confirmPassword"
+              for="password_confirmation"
               class="my-text-content block text-white"
               >Confirm Password</label
             >
@@ -91,11 +121,12 @@
               <input
                 :type="isConPassword ? 'text' : 'password'"
                 placeholder="Confirm Password"
-                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
-                v-model="form.confirm_password"
+                class="my-text-content rounded-lg w-full px-2 py-1"
+                :class="errors.email ? 'my-block-error ' : 'my-block-focus'"
+                v-model="form.password_confirmation"
               />
               <button
-                class="absolute my-auto h-full right-0 p-1 my-10 rounded-lg bg-white"
+                class="absolute my-auto h-full right-0 p-1 rounded-lg bg-transparent"
                 @click="isConPassword = !isConPassword"
                 tabindex="-1"
               >
@@ -115,11 +146,17 @@
             <input
               type="text"
               placeholder="Email"
-              class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
+              class="my-text-content rounded-lg w-full px-2 py-1"
+              :class="errors.email ? 'my-block-error ' : 'my-block-focus'"
               v-model="form.email"
             />
+            <ul v-if="errors.email" class="text-red-400">
+              <li v-for="(message, index) in errors.email" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
-          <div></div>
+
           <button
             class="bg-blue-600 rounded-lg p-3 w-full text-white my-text-content hover:bg-blue-400 my-block-focus"
             @click="register()"
@@ -134,40 +171,61 @@
 
 <script>
 import Alert from "../helpers/Alert";
+import axios from "axios";
 export default {
   data() {
     return {
       isPassword: false,
       isConPassword: false,
       hoverImage: false,
+      errors: [],
       form: {
         username: "",
         password: "",
-        confirm_password: "",
+        password_confirmation: "",
         email: "",
-        profile:
-          "https://ga.berkeley.edu/wp-content/uploads/2015/08/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+        profile: "",
       },
+      profile_image:
+        "https://ga.berkeley.edu/wp-content/uploads/2015/08/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+
       image:
         "https://i.pinimg.com/originals/20/79/03/2079033abc8314be554f9d24f562a199.jpg",
     };
   },
   methods: {
-    register() {
-      console.log(this.form);
-      Alert.mixin("success", "Signed in successfully");
+    async register() {
+      let payload = new FormData();
+      Object.keys(this.form).forEach((key) => {
+        payload.append(key, this.form[key]);
+      });
+      let config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+      try {
+        let res = await axios.post("/auth/register", payload, config);
+        Alert.mixin("success", res.data.message);
+        this.$router.push('Login');
+      } catch (error) {
+        this.errors = error.response.data;
+        Alert.window(
+          "error",
+          "Register Failed",
+          "Sorry, an unexpected error occurred. Please try again."
+        );
+        console.error(error.response);
+      }
     },
     addProfile(e) {
-      console.log(e.type);
       let files = null;
       if (e.type === "drop") {
         files = e.dataTransfer.files;
       } else if (e.type === "change") {
         files = e.target.files;
       }
-
       if (files) {
-        this.form.profile = URL.createObjectURL(files[0]);
+        this.form.profile = files[0];
+        this.profile_image = URL.createObjectURL(files[0]);
       }
     },
   },
