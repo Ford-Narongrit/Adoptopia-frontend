@@ -62,6 +62,11 @@ const routes = [
     path: '/notification',
     name: 'Notification',
     component: Notification,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
     path: '/ota',
     name: 'Ota',
     component: Ota,
