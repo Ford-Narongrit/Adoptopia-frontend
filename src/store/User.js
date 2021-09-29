@@ -5,14 +5,10 @@ Vue.use(Vuex);
 
 let auth_key = process.env.VUE_APP_AUTH_KEY;
 
-function getApiHeader() {
+function getBearer() {
   let auth = JSON.parse(localStorage.getItem(auth_key));
   if (auth.access_token !== "") {
-    return {
-      headers: {
-        Authorization: `Bearer ${auth.access_token}`,
-      },
-    };
+    return `Bearer ${auth.access_token}`;
   }
   return null;
 }
@@ -26,7 +22,7 @@ export default new Vuex.Store({
   getters: {
     user: (state) => state.user,
     jwt: (state) => state.jwt,
-    isAuthen: (state) => state.isAuthen
+    isAuthen: (state) => state.isAuthen,
   },
   mutations: {
     loginSuccess(state, { user, jwt }) {
@@ -61,15 +57,51 @@ export default new Vuex.Store({
       }
     },
     async logout({ commit }) {
-      localStorage.removeItem(auth_key);
-      commit("logoutSuccess");
-      return {
-        success: true,
-        message: "logout successful",
+      let header = {
+        headers: {
+          Authorization: getBearer(),
+        },
       };
+      try {
+        let res = await Axios.post("/auth/logout", null, header);
+        localStorage.removeItem(auth_key);
+        commit("logoutSuccess");
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async register({ commit }, payload) {
+      let header = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      try {
+        let res = await Axios.post("/auth/register", payload, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
     },
     async getMe({ commit }) {
-      let res = await Axios.post(`/auth/me`, null, getApiHeader());
+      let header = {
+        headers: {
+          Authorization: getBearer(),
+        },
+      };
+      let res = await Axios.post("/auth/me", null, header);
+      commit("userStore", res.data);
+      return res;
+    },
+    async update({ commit }, payload) {
+      let header = {
+        headers: {
+          Authorization: getBearer(),
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      let res = await Axios.post(`/auth/update`, payload, header);
       commit("userStore", res.data);
       return res;
     },
