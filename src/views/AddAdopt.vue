@@ -29,7 +29,9 @@
           >
             Upload Image
           </div>
-          <div class="absolute -bottom-8 left-48 text-red-500 text-center">Maximum: 5 images</div>
+          <div class="absolute -bottom-8 left-48 text-red-500 text-center">
+            Maximum: 5 images
+          </div>
         </div>
         <!-- sroll wrap -->
         <div
@@ -105,7 +107,9 @@
               </div>
             </div>
           </div>
-          <div class="mt-3 bottom-6 text-red-500 text-center">Maximum: 5 images</div>
+          <div class="mt-3 bottom-6 text-red-500 text-center">
+            Maximum: 5 images
+          </div>
         </div>
       </div>
 
@@ -134,16 +138,23 @@
                 class="my-text-content w-32 items-center flex text-white"
                 >Catagory:
               </label>
-              <select
+
+              <multiselect
+                class="my-text-base rounded-lg w-2/3 px-2 py-1 my-block-focus"
                 v-model="form.catagory"
-                class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
+                :options="categories"
+                :multiple="true"
+                :close-on-select="false"
+                :clear-on-select="false"
+                :preserve-search="true"
+                :limit="3"
+                placeholder="Search or select adopt"
+                label="name"
+                track-by="name"
+                :max="7"
+                @input="maxSelected()"
               >
-                <option disabled value="">Please select a catagory</option>
-                <!-- Auction, OTA, DTA, SP -->
-                <option v-for="(catagory, index) in categories" :key="index">{{
-                  catagory
-                }}</option>
-              </select>
+              </multiselect>
             </div>
 
             <!--Agreement -->
@@ -175,20 +186,27 @@
 </template>
 
 <script>
+import axios from "axios";
 import Alert from "../helpers/Alert";
+import UserStore from "../store/User";
+import Multiselect from "vue-multiselect";
+
 export default {
   components: {
-    
+    Multiselect,
   },
   data() {
     return {
       hoverImage: false,
 
+      user: {},
+      maxItemsSelected: false,
+
       images: [],
       categories: ["A", "B", "C"],
       form: {
         name: "",
-        catagory: "",
+        catagory: null,
         agreement: "",
         images: [],
       },
@@ -198,12 +216,45 @@ export default {
     clickImg(image) {
       image.show = !image.show;
     },
-    addAdopt() {
-      console.log(this.form);
+    async addAdopt() {
+      //TODO get User from storage
+      try {
+        let res = await UserStore.dispatch("getMe");
+        this.user = res.data;
+      } catch (error) {
+        Alert.window(
+          "error",
+          "Unauthorized",
+          "Please login before add adopt."
+        );
+        console.error(error);
+      }
+      let auth_key = process.env.VUE_APP_AUTH_KEY;
+      let auth = JSON.parse(localStorage.getItem(auth_key));
+      let payload = new FormData();
+      payload.append("name", this.form.name);
+      Object.keys(this.form.catagory).forEach((key) => {
+        payload.append(`category[${key}]`, this.form.catagory[key].id);
+      });
+      payload.append("agreement", this.form.agreement);
+      Object.keys(this.form.images).forEach((key) => {
+        payload.append(`images[${key}]`, this.form.images[key]);
+      });
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${auth.access_token}`,
+        },
+      };
+      try {
+        let res = await axios.post("/adopt", payload, config);
+      } catch (error) {
+        console.log(error.response);
+      }
+
       Alert.mixin("success", "Add adopt successfully");
     },
     addImage(e) {
-      // console.log(e.type);
       let files = null;
       if (e.type === "drop") {
         files = e.dataTransfer.files;
@@ -213,8 +264,6 @@ export default {
 
       if (files) {
         let isExceed = false;
-        // console.log(files.length);
-        // files.forEach((curr) => {
         for (let i = 0; i < files.length; i++) {
           if (this.form.images.length === 5) {
             isExceed = true;
@@ -235,8 +284,6 @@ export default {
             "You adding more than 5 Images",
             "Maximum images are 5 images per adopt. We will keep your first 5 images. In case you want to change your images consider removing some of those first."
           );
-        // console.log(this.form.images);
-        // console.log(this.imagesUrl.length);
       }
       this.hoverImage = false;
     },
@@ -245,6 +292,21 @@ export default {
       this.images.splice(index, 1);
       this.form.images.splice(index, 1);
     },
+
+    async fetchCategory() {
+      let res = await axios.get("/category");
+      this.categories = res.data;
+    },
+    maxSelected() {
+      const selectedItems = this.form.catagory.length;
+      this.maxItemsSelected = false;
+      if (selectedItems >= 7) {
+        this.maxItemsSelected = true;
+      }
+    },
+  },
+  created() {
+    this.fetchCategory();
   },
 };
 </script>
