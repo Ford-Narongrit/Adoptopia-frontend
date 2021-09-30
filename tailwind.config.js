@@ -1,4 +1,5 @@
 const colors = require("tailwindcss/colors");
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   purge: [],
@@ -48,5 +49,38 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addComponents }) {
+      const buttons = {
+        '.btn-rounded': {
+          background: '#1E63E9',
+          borderRadius: '20px',
+          flex: 'none',
+          width: '6em',
+          height: '2.2em',
+          fontSize: '1rem',
+
+          '&:hover': {
+            color: '#1E63E9',
+            background: '#ffffff'
+          }
+        },
+
+        '.btn-square': {
+          background: '#1E63E9',
+          borderRadius: '5px',
+          flex: 'none',
+          width: '6em',
+          height: '2.2em',
+          fontSize: '1rem',
+
+          '&:hover': {
+            color: '#1E63E9',
+            background: '#ffffff'
+          }
+        }
+      }
+      addComponents(buttons);
+    })
+  ],
 };
