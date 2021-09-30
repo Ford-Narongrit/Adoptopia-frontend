@@ -63,7 +63,7 @@
             >MyAdop</router-link
           >
           <router-link
-            to="addadopt"
+            to="/adopt/add"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >AddAdop</router-link
           >

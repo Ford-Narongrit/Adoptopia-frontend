@@ -190,6 +190,7 @@ import axios from "axios";
 import Alert from "../helpers/Alert";
 import UserStore from "../store/User";
 import Multiselect from "vue-multiselect";
+import Header from "@/helpers/Header";
 
 export default {
   components: {
@@ -217,7 +218,6 @@ export default {
       image.show = !image.show;
     },
     async addAdopt() {
-      //TODO get User from storage
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
@@ -229,8 +229,6 @@ export default {
         );
         console.error(error);
       }
-      let auth_key = process.env.VUE_APP_AUTH_KEY;
-      let auth = JSON.parse(localStorage.getItem(auth_key));
       let payload = new FormData();
       payload.append("name", this.form.name);
       Object.keys(this.form.catagory).forEach((key) => {
@@ -240,14 +238,9 @@ export default {
       Object.keys(this.form.images).forEach((key) => {
         payload.append(`images[${key}]`, this.form.images[key]);
       });
-      let config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${auth.access_token}`,
-        },
-      };
+      let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
-        let res = await axios.post("/adopt", payload, config);
+        await axios.post("/adopt", payload, config);
       } catch (error) {
         console.log(error.response);
       }
