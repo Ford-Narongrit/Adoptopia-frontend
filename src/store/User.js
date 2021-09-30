@@ -5,10 +5,20 @@ Vue.use(Vuex);
 
 let auth_key = process.env.VUE_APP_AUTH_KEY;
 
-function getBearer() {
+function getHeaders(object) {
   let auth = JSON.parse(localStorage.getItem(auth_key));
   if (auth.access_token !== "") {
-    return `Bearer ${auth.access_token}`;
+    let header = {
+      headers: {
+        Authorization: `Bearer ${auth.access_token}`,
+      },
+    };
+    if (object) {
+      Object.keys(object).forEach((key) => {
+        header.headers[key] = object[key];
+      });
+    }
+    return header;
   }
   return null;
 }
@@ -57,11 +67,7 @@ export default new Vuex.Store({
       }
     },
     async logout({ commit }) {
-      let header = {
-        headers: {
-          Authorization: getBearer(),
-        },
-      };
+      let header = getHeaders();
       try {
         let res = await Axios.post("/auth/logout", null, header);
         localStorage.removeItem(auth_key);
@@ -72,11 +78,9 @@ export default new Vuex.Store({
       }
     },
     async register({ commit }, payload) {
-      let header = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
+      let header = getHeaders({
+        "Content-Type": "multipart/form-data",
+      });
       try {
         let res = await Axios.post("/auth/register", payload, header);
         return res;
@@ -85,22 +89,15 @@ export default new Vuex.Store({
       }
     },
     async getMe({ commit }) {
-      let header = {
-        headers: {
-          Authorization: getBearer(),
-        },
-      };
+      let header = getHeaders({ Accept: "application/json" });
       let res = await Axios.post("/auth/me", null, header);
       commit("userStore", res.data);
       return res;
     },
     async update({ commit }, payload) {
-      let header = {
-        headers: {
-          Authorization: getBearer(),
-          "Content-Type": "multipart/form-data",
-        },
-      };
+      let header = getHeaders({
+        "Content-Type": "multipart/form-data",
+      });
       let res = await Axios.post(`/auth/update`, payload, header);
       commit("userStore", res.data);
       return res;
