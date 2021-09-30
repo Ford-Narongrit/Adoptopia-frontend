@@ -241,6 +241,7 @@ export default {
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
         await axios.post("/adopt", payload, config);
+        this.$router.push({ path: '/' })
       } catch (error) {
         console.log(error.response);
       }
