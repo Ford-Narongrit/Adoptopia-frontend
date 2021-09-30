@@ -6,12 +6,7 @@
     <!-- Logo -->
     <div>
       <router-link to="/" class="flex items-center space-x-2">
-        <img
-          src="../assets/logo.png"
-          alt="Logo"
-          title="Adoptopia"
-          class="h-8"
-        />
+        <img src="@/assets/logo.png" alt="Logo" title="Adoptopia" class="h-8" />
         <div class="text-white text-2xl">Adoptopia</div>
       </router-link>
     </div>
@@ -49,7 +44,7 @@
         <button
           v-if="isOpen"
           @click="isOpen = false"
-          class="fixed h-screen w-screen bg-black inset-0 opacity-30"
+          class="fixed h-screen w-screen bg-black inset-0 opacity-30 cursor-default"
         ></button>
 
         <!-- dropdown -->
@@ -57,6 +52,11 @@
           v-if="isOpen"
           class="bg-gray-200 absolute rounded-xl right-0 py-4 px-2"
         >
+          <router-link
+            to="/profile/home"
+            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
+            >Profile</router-link
+          >
           <router-link
             to="myadopt"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
@@ -86,7 +86,8 @@
 </template>
 
 <script>
-import UserStore from "../store/User";
+import UserStore from "@/store/User";
+import Alert from "@/helpers/Alert.js";
 export default {
   data() {
     return {
@@ -125,9 +126,12 @@ export default {
       this.lastScrollPosition = currentScrollPosition;
     },
     async logout() {
-      let res = await UserStore.dispatch("logout");
-      if (res.success) {
-        this.$router.go({ name: "Home" });
+      try {
+        let res = await UserStore.dispatch("logout");
+        Alert.mixin("success", res.data.message);
+        this.$router.push("/login");
+      } catch (error) {
+        console.error(error.message);
       }
     },
   },

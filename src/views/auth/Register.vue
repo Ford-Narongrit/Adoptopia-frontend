@@ -7,7 +7,7 @@
     <div class="md:w-1/2 xl:w-1/3 w-full">
       <div class="flex justify-center items-center h-full bg-shark-500">
         <div class="rounded-lg p-5 space-y-4 w-3/4">
-          <img src="../assets/logo.png" alt="logo" class="h-20 mx-auto" />
+          <img src="@/assets/logo.png" alt="logo" class="h-20 mx-auto" />
           <div class="my-text-title text-center text-white">REGISTER</div>
 
           <!-- input image -->
@@ -170,8 +170,8 @@
 </template>
 
 <script>
-import Alert from "../helpers/Alert";
-import axios from "axios";
+import Alert from "@/helpers/Alert";
+import UserStore from "@/store/User.js";
 export default {
   data() {
     return {
@@ -199,13 +199,10 @@ export default {
       Object.keys(this.form).forEach((key) => {
         payload.append(key, this.form[key]);
       });
-      let config = {
-        headers: { "Content-Type": "multipart/form-data" },
-      };
       try {
-        let res = await axios.post("/auth/register", payload, config);
+        let res = await UserStore.dispatch("register", payload);
         Alert.mixin("success", res.data.message);
-        this.$router.push('Login');
+        this.$router.push("Login");
       } catch (error) {
         this.errors = error.response.data;
         Alert.window(
