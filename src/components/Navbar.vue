@@ -22,7 +22,7 @@
       </div>
       <div class="nav text-white text-xl">
         <router-link
-          to="post"
+          to="/post"
           class="border-b-2 border-transparent hover:border-blue-500"
           >Post</router-link
         >
@@ -58,7 +58,7 @@
             >Profile</router-link
           >
           <router-link
-            to="myadopt"
+            to="/profile/adopt"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >MyAdop</router-link
           >

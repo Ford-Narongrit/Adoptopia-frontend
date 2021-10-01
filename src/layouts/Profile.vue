@@ -70,6 +70,9 @@
     <div class="container mx-auto pt-10">
       <slot />
     </div>
+    <div class="bg-gray-700 h-32 mt-10">
+      footer
+    </div>
   </div>
 </template>
 
