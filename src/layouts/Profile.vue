@@ -80,9 +80,7 @@ export default {
   name: "ProfileLayout",
   data() {
     return {
-      user: {},
-      bgImage:
-        "https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      user: {}
     };
   },
   mounted() {
