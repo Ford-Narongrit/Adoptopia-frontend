@@ -3,21 +3,25 @@
     <div class="flex flex-nowrap py-8">
       <div class="flex flex-nowrap py-8">
         <label class="px-4 mt-2 text-white">Type</label>
-        <multiselect
+        <multiselect 
           v-model="valueTrade"
-          :options="optionsTrade"
-          placeholder="Select one"
+          placeholder="Select one" 
+          select-label="" 
+          deselectLabel=""
           label="name"
           track-by="name"
-          class="typeSelect"
-        >
+          :options="optionsTrade" 
+          :allow-empty="false" 
+          :max-height="150">
         </multiselect>
       </div>
       <div class="flex flex-nowrap py-8">
         <label class="px-4 mt-2 text-white">Category</label>
         <multiselect
           v-model="valueCat"
-          tag-placeholder="Add this as new tag"
+          select-label=""
+          tag-placeholder=""
+          deselectLabel=""
           placeholder="Search or add a tag"
           label="name"
           track-by="code"
@@ -33,32 +37,23 @@
         <button class="bg-blue-500 text-white py-2 px-6 rounded">seach</button>
       </div>
     </div>
-    <div class="grid grid-cols-4 gap-4 px-4 pb-8 h-screen">
-      <router-link to="/ota" class="bg-blue-500 text-white py-2 px-6 rounded text-center">
-        <button>OTA</button>
-      </router-link>
-      <router-link to="/dta" class="bg-purple-500 text-white py-2 px-6 rounded text-center">
-        <button>DTA</button>
-      </router-link>
-      <router-link to="/sale" class="bg-pink-500 text-white py-2 px-6 rounded text-center">
-        <button>Sale</button>
-      </router-link>
-      <router-link to="/auction" class="bg-gray-500 text-white py-2 px-6 rounded text-center">
-        <button>Auction</button>
-      </router-link>
-      <router-link to="/ota" class="bg-green-500 text-white py-2 px-6 rounded text-center">
-        <button>OTA</button>
-      </router-link>
-      <router-link to="/dta" class="bg-blue-500 text-white py-2 px-6 rounded text-center">
-        <button>DTA</button>
-      </router-link>
-      <router-link to="/sale" class="bg-purple-500 text-white py-2 px-6 rounded text-center">
-        <button>Sale</button>
-      </router-link>
-      <router-link to="/auction" class="bg-red-500 text-white py-2 px-6 rounded text-center">
-        <button>Auction</button>
-      </router-link>
-    </div>
+    <vue-flex-waterfall
+      :col="4"
+      :col-spacing="15"
+      :break-at="breakAt"
+      :break-by-container="true"
+      @order-update="onOrderUpdate"
+    >
+      <div v-for="image in images" :key="image.url" class="px-2">
+        
+        <router-link :to="{path:image.tag }">
+          <img :src="require(`../assets/${image.url}`)" 
+            height="200px"
+            width="350px" />
+        </router-link>
+        px
+      </div>
+    </vue-flex-waterfall>
   </div>
 </template>
 <script>
@@ -84,6 +79,20 @@ export default {
         { name: "Draw to Adop" },
         { name: "Set Price" },
       ],
+      images: [
+        { url : "drawer.jpg", tag: "/ota" },
+        { url : "slap.jpg", tag: "/dta" },
+        { url : "Kiwi.jpg", tag: "/sale" },
+        { url : "Camel.jpeg", tag: "/auction" },
+        { url : "blessed.jpg", tag: "/ota" },
+        { url : "Rino.jpg", tag: "/dta" },
+        { url : "marr.jpg", tag: "/auction" },
+        { url : "Cute.jpg", tag: "/sale" },
+        { url : "marr8bit.jpg", tag: "/sale" },
+        { url : "Lena.jpg", tag: "/dta"},
+        { url : "seal.jpg", tag: "/ota"}
+      ],
+      selectedImage: null
     };
   },
   methods: {
@@ -95,6 +104,9 @@ export default {
       this.options.push(tag);
       this.value.push(tag);
     },
+    onOrderUpdate() {
+      console.log('order updated');
+    }
   },
 };
 </script>
