@@ -1,19 +1,12 @@
 <template>
   <div class="grid grid-cols-4">
-    <vue-flex-waterfall
-      :col="4"
-      :col-spacing="15"
-      :break-at="breakAt"
-      :break-by-container="true"
-      @order-update="onOrderUpdate"
-    >
-      <div v-for="adopt in adopts" :key="adopt.id" class="py-2">
-        <img
-          class="rounded-lg"
-          :src="getImagePath(adopt.adopt_image[0].path)"
-          :height="`${adopt.adopt_image[0].height}px`"
-          :width="`${adopt.adopt_image[0].height}px`"
-        />
+    <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
+      <div
+        v-for="adopt in adopts"
+        :key="adopt.id"
+        class="my-2 relative border-4 border-shark-400 rounded-lg bg-black"
+      >
+        <pop-up-adopt :adopt="adopt" />
       </div>
     </vue-flex-waterfall>
   </div>
@@ -22,6 +15,8 @@
 <script>
 import AdoptStore from "@/store/Adopt";
 import VueFlexWaterfall from "vue-flex-waterfall";
+import PopUpAdopt from "@/components/PopUpAdopt.vue";
+
 export default {
   data() {
     return {
@@ -29,6 +24,7 @@ export default {
     };
   },
   components: {
+    PopUpAdopt,
     VueFlexWaterfall,
   },
   mounted() {
@@ -39,13 +35,9 @@ export default {
       try {
         let res = await AdoptStore.dispatch("getAdopts");
         this.adopts = AdoptStore.getters.adopts;
-        console.log(this.adopts);
       } catch (error) {
         console.error(error);
       }
-    },
-    getImagePath(image) {
-      return process.env.VUE_APP_APIURL + image;
     },
   },
 };

@@ -1,25 +1,26 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import History from "../views/History.vue";
-import PaymentHistory from "../views/PaymentHistory.vue";
-import Topup from "../views/Topup.vue";
-import Notification from "../views/Notification.vue";
-import Auction from "../views/Auction.vue";
-import Sale from "../views/Sale.vue";
-import Ota from "../views/Ota.vue";
-import Dta from "../views/Dta.vue";
-import AddAdopt from "../views/AddAdopt.vue";
-import PostAdopt from "../views/PostAdopt.vue";
+import Home from "@/views/Home.vue";
+import History from "@/views/History.vue";
+import PaymentHistory from "@/views/PaymentHistory.vue";
+import Topup from "@/views/Topup.vue";
+import Notification from "@/views/Notification.vue";
+import Auction from "@/views/Auction.vue";
+import Sale from "@/views/Sale.vue";
+import Ota from "@/views/Ota.vue";
+import Dta from "@/views/Dta.vue";
+import AddAdopt from "@/views/AddAdopt.vue";
+import PostAdopt from "@/views/PostAdopt.vue";
 
 //profile
-import HomeUser from "../views/user/Home.vue";
-import PostUser from "../views/user/Post.vue";
-import AdoptUser from "../views/user/Adopt.vue";
-import EditProfile from "../views/user/EditProfile.vue";
+import HomeUser from "@/views/user/Home.vue";
+import PostUser from "@/views/user/Post.vue";
+import AdoptUser from "@/views/user/Adopt.vue";
+import EditProfile from "@/views/user/EditProfile.vue";
+import AdoptIDUser from "@/views/user/Adopt_id.vue";
 //auth
-import Login from "../views/auth/Login.vue";
-import Register from "../views/auth/Register.vue";
+import Login from "@/views/auth/Login.vue";
+import Register from "@/views/auth/Register.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -137,7 +138,7 @@ const routes = [
     },
   },
   {
-    path: "/profile/Adopt",
+    path: "/profile/adopt",
     component: AdoptUser,
     meta: {
       layout: "Profile",
@@ -150,7 +151,13 @@ const routes = [
       layout: "Main",
     },
   },
-  
+  {
+    path: "/profile/adopt/:id",
+    component: AdoptIDUser,
+    meta: {
+      layout: "Profile",
+    },
+  },
 ];
 
 const router = new VueRouter({

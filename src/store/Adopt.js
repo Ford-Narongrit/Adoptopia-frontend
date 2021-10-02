@@ -20,7 +20,6 @@ export default new Vuex.Store({
     async getAdopts({ commit }) {
       let header = Header.getHeaders({ Accept: "application/json" });
       let res = await Axios.get("/adopt", header);
-      console.log("in getAdopts", res);
       commit("fetchAdopts", res.data);
       return res;
     },

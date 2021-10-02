@@ -44,7 +44,7 @@
         <button
           v-if="isOpen"
           @click="isOpen = false"
-          class="fixed h-screen w-screen bg-black inset-0 opacity-30 cursor-default"
+          class="fixed h-screen w-full bg-black inset-0 opacity-30 cursor-default"
         ></button>
 
         <!-- dropdown -->
