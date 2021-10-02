@@ -18,9 +18,7 @@
       </div>
       <div class="text-white my-text-subtitle">Agreement</div>
       <div class="text-white my-text-content bg-gray-600 rounded-lg p-2">
-        1. ไม่ขายต่อในราคาที่สูงกว่า(ยกเว้นกรณีมีรูปจากคอมมิชชัน) 2.
-        ไม่แอบอ้างว่าเป็นผู้ออกแบบเอง 3. เมื่อนำภาพไปใช้ จะต้องใส่เครดิตทุกครั้ง
-        4. ไม่อนุญาติให้นำไปเเจก 5. ดัดเเปลงได้เเต่ต้องยังเหลือเค้าโครงเดิม
+        {{ adopt.agreement }}
       </div>
       <div class="text-white my-text-base">
         Created at: {{ getFormatTime(adopt.created_at) }}
