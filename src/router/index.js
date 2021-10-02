@@ -155,7 +155,7 @@ const routes = [
     path: "/profile/adopt/:id",
     component: AdoptIDUser,
     meta: {
-      layout: "Profile",
+      layout: "Image",
     },
   },
 ];

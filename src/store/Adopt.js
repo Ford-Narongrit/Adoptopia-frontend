@@ -6,21 +6,32 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    adopts: "",
+    adopts_list: [],
+    adopt: {},
   },
   getters: {
-    adopts: (state) => state.adopts,
+    adopts_list: (state) => state.adopts_list,
+    adopt: (state) => state.adopt,
   },
   mutations: {
-    fetchAdopts(state, adopts) {
-      state.adopts = adopts;
+    fetchAdopts_list(state, adopts_list) {
+      state.adopts_list = adopts_list;
+    },
+    fetchAdopt(state, adopt) {
+      state.adopt = adopt;
     },
   },
   actions: {
-    async getAdopts({ commit }) {
+    async getAdopts_list({ commit }) {
       let header = Header.getHeaders({ Accept: "application/json" });
       let res = await Axios.get("/adopt", header);
-      commit("fetchAdopts", res.data);
+      commit("fetchAdopts_list", res.data);
+      return res;
+    },
+    async getAdopt_id({ commit }, id) {
+      let header = Header.getHeaders();
+      let res = await Axios.get(`/adopt/${id}`, header);
+      commit("fetchAdopt", res.data);
       return res;
     },
   },

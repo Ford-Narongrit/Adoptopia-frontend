@@ -1,11 +1,15 @@
 <template>
-  <div class="relative" @mouseover="isShow = true" @mouseleave="isShow = false">
+  <div
+    class="relative overflow-hidden"
+    @mouseover="isShow = true"
+    @mouseleave="isShow = false"
+  >
     <router-link
       :to="{ path: '/profile/adopt/' + adopt.id }"
       class="cursor-default"
     >
       <img
-        class="rounded-md hover:opacity-80"
+        class="rounded-md transition duration-300 ease-in-out transform hover:scale-110"
         :src="getImagePath(adopt.adopt_image[0].path)"
         :height="`${adopt.adopt_image[0].height}px`"
         :width="`${adopt.adopt_image[0].height}px`"
@@ -15,7 +19,10 @@
         class="absolute bottom-0 bg-gray-100 w-full px-4 py-2 rounded-b-md hidden md:block shadow-lg animate-fade-in-up"
       >
         <div class="my-text-subtitle">
-          <router-link to="##" class="hover:underline">
+          <router-link
+            :to="{ path: '/profile/adopt/' + adopt.id }"
+            class="hover:underline "
+          >
             {{ adopt.name }}
           </router-link>
         </div>

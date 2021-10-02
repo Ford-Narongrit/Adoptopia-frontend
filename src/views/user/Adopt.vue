@@ -33,8 +33,8 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await AdoptStore.dispatch("getAdopts");
-        this.adopts = AdoptStore.getters.adopts;
+        let res = await AdoptStore.dispatch("getAdopts_list");
+        this.adopts = AdoptStore.getters.adopts_list;
       } catch (error) {
         console.error(error);
       }
