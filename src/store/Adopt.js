@@ -23,16 +23,24 @@ export default new Vuex.Store({
   },
   actions: {
     async getAdopts_list({ commit }) {
-      let header = Header.getHeaders({ Accept: "application/json" });
-      let res = await Axios.get("/adopt", header);
-      commit("fetchAdopts_list", res.data);
-      return res;
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get("/adopt", header);
+        commit("fetchAdopts_list", res.data);
+        return res;
+      } catch (error) {
+        throw error;
+      }
     },
     async getAdopt_id({ commit }, id) {
-      let header = Header.getHeaders();
-      let res = await Axios.get(`/adopt/${id}`, header);
-      commit("fetchAdopt", res.data);
-      return res;
+      try {
+        let header = Header.getHeaders();
+        let res = await Axios.get(`/adopt/${id}`, header);
+        commit("fetchAdopt", res.data);
+        return res;
+      } catch (error) {
+        throw error;
+      }
     },
   },
   modules: {},
