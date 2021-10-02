@@ -30,7 +30,14 @@
             Upload Image
           </div>
           <div class="absolute -bottom-8 left-48 text-red-500 text-center">
-            Maximum: 5 images
+            <ul v-if="errors.images" class="">
+              <li v-for="(message, index) in errors.images" :key="index">
+                {{ message }}
+              </li>
+            </ul>
+            <p v-if="!errors.images" class="">
+              Maximum: 5 images
+            </p>
           </div>
         </div>
         <!-- sroll wrap -->
@@ -117,30 +124,38 @@
         <div class="justify-center h-full bg-shark-500">
           <div class="ml-8">
             <!-- Name -->
-            <div class="space-y-1 w-4/5 flex justify-evenly mb-4">
+            <div class="space-y-1 w-4/5 justify-evenly ">
               <label
                 for="name"
                 class="my-text-content w-32 items-center flex text-white "
                 >Name:
               </label>
+
               <input
                 type="text"
                 placeholder="Name"
                 class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
+                :class="errors.name ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.name"
               />
             </div>
+            <ul v-if="errors.name" class="text-red-400 flex-none mb-4">
+              <li v-for="(message, index) in errors.name" :key="index">
+                {{ message }}
+              </li>
+            </ul>
 
             <!--Catagory -->
-            <div class="space-y-1 w-4/5 flex justify-evenly mb-4">
+            <div class="space-y-1 w-4/5 mt-4 justify-evenly">
               <label
                 for="catagory"
-                class="my-text-content w-32 items-center flex text-white"
+                class="my-text-content w-32 items-center text-white"
                 >Catagory:
               </label>
 
               <multiselect
-                class="my-text-base rounded-lg w-2/3 px-2 py-1 my-block-focus"
+                class="my-text-base rounded-lg w-2/3 my-block-focus"
+                :class="errors.category ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.catagory"
                 :options="categories"
                 :multiple="true"
@@ -156,27 +171,39 @@
               >
               </multiselect>
             </div>
+            <ul v-if="errors.category" class="text-red-400 flex-none mb-4">
+              <li v-for="(message, index) in errors.category" :key="index">
+                {{ message }}
+              </li>
+            </ul>
 
             <!--Agreement -->
-            <div class="space-y-1 w-4/5 flex justify-evenly">
-              <label for="agreement" class="my-text-content w-32 text-white"
-                >Agreement:
-              </label>
+            <div class="space-y-1 w-4/5 mt-4 justify-evenly">
+              <div>
+                <label for="agreement" class="my-text-content w-32 text-white"
+                  >Agreement:
+                </label>
+              </div>
               <textarea
                 type="text"
                 placeholder="Agreement"
                 class="my-text-content rounded-lg w-2/3 h-40 px-2 py-1 my-block-focus"
+                :class="errors.agreement ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.agreement"
               />
             </div>
-            <div></div>
+            <ul v-if="errors.agreement" class="text-red-400 flex-none mb-4">
+              <li v-for="(message, index) in errors.agreement" :key="index">
+                {{ message }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
     <div class="text-center">
       <button
-        class="bg-blue-600 rounded-full w-28 p-2 text-white my-text-content hover:bg-blue-400 my-block-focus"
+        class="bg-blue-600 rounded-full w-28 p-2 mt-8 text-white my-text-content hover:bg-blue-400 my-block-focus"
         @click="addAdopt()"
       >
         Add
@@ -202,13 +229,14 @@ export default {
 
       user: {},
       maxItemsSelected: false,
+      errors: [],
 
       images: [],
       categories: ["A", "B", "C"],
       form: {
-        name: "",
-        catagory: null,
-        agreement: "",
+        name: null,
+        catagory: [],
+        agreement: null,
         images: [],
       },
     };
@@ -222,31 +250,39 @@ export default {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
       } catch (error) {
-        Alert.window(
-          "error",
-          "Unauthorized",
-          "Please login before add adopt."
-        );
+        Alert.window("error", "Unauthorized", "Please login before add adopt.");
         console.error(error);
       }
       let payload = new FormData();
-      payload.append("name", this.form.name);
+      if (this.form.name !== null) {
+        console.log("here");
+        payload.append("name", this.form.name);
+      }
       Object.keys(this.form.catagory).forEach((key) => {
         payload.append(`category[${key}]`, this.form.catagory[key].id);
       });
-      payload.append("agreement", this.form.agreement);
+      if (this.form.agreement !== null) {
+        payload.append("agreement", this.form.agreement);
+      }
       Object.keys(this.form.images).forEach((key) => {
         payload.append(`images[${key}]`, this.form.images[key]);
       });
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
-        await axios.post("/adopt", payload, config);
-        this.$router.push({ path: '/' })
+        let res = await axios.post("/adopt", payload, config);
+        console.log(res.data);
+        Alert.mixin("success", "Add adopt successfully");
       } catch (error) {
-        console.log(error.response);
-      }
+        this.errors = error.response.data.errors;
 
-      Alert.mixin("success", "Add adopt successfully");
+        Alert.window(
+          "error",
+          "Add adopt failed",
+          "Sorry, an unexpected error occurred. Please try again."
+        );
+        console.log(this.errors);
+        // console.log(error.response);
+      }
     },
     addImage(e) {
       let files = null;
