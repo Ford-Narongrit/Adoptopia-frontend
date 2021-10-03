@@ -91,7 +91,7 @@ const routes = [
     },
   },
   {
-    path: '/add',
+    path: '/addadopt',
     name: 'AddAdopt',
     component: AddAdopt,
     meta: {

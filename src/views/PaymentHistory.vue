@@ -1,72 +1,95 @@
 <template>
-    <div class="main-container">
-        <h1 class="title">Payment History</h1>
-        <div class="wrap-btn">
-          <button @click="toHistory" >History</button>
-          <button class="disable">Payment History</button>
-        </div>
-        <HistoryBoard :data="data"/>
+  <div class="main-container">
+    <h1 class="text-3xl text-white my-8">Payment History</h1>
+    <div class="wrap-btn">
+      <button @click="toHistory">History</button>
+      <button class="disable">Payment History</button>
     </div>
+    <HistoryBoard class="h-96" v-if="data.length" :data="data" />
+    <PageCard
+      v-if="allPages > 1"
+      :allPages="allPages"
+      :currPage="currPage"
+      @update="updateCurrPage"
+    />
+  </div>
 </template>
 
 <script>
-import HistoryBoard from '@/components/HistoryBoard'
+import HistoryBoard from "@/components/HistoryBoard";
+import Axios from "axios";
+import UserStore from "../store/User";
+import PageCard from "../components/PageCard.vue";
+
 export default {
-    components: {
-        HistoryBoard,
+  components: {
+    HistoryBoard,
+    PageCard,
+  },
+  data() {
+    return {
+      data: [
+        // {
+        // date: "",
+        // name: "",
+        // type: "",
+        // amount: "",
+        // },
+      ],
+      currPage: 1,
+      allPages: "",
+    };
+  },
+  created() {
+    // console.log(UserStore.getters.jwt);
+    this.fetchData();
+  },
+  methods: {
+    toHistory() {
+      this.$router.push("/history");
     },
-    data(){
-        return {
-            data: [
-                {
-                    "date": "2021-02-01",
-                    "name": "namenhai",
-                    "type": "Deposit",
-                    "amount": 5000
-                },
-                {
-                    "date": "2021-02-02",
-                    "name": "namenhaiaa",
-                    "type": "Deposit",
-                    "amount": 2000
-                },
-            ],
-        }
+    fetchData() {
+      Axios.get(`/payment-histories?page= ${this.currPage}`, {
+        headers: {
+          Authorization: "Bearer " + UserStore.getters.jwt,
+        },
+      }).then((response) => {
+        // console.log(response.data);
+        this.data = response.data.data;
+        this.allPages = response.data.meta.last_page;
+        // console.log(this.lastPage);
+      });
     },
-    methods: {
-        toHistory() {
-            this.$router.push("/history")
-        }
-    }
-}
+    updateCurrPage(page) {
+      this.currPage = page;
+      this.fetchData();
+      // console.log(this.currPage);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .main-container {
-    text-align: center;
-    .title {
-        font-size: 2em;
-        margin-top: 1em;
-    }
-    .wrap-btn {
-        display: flex;
-        width: 500px;
-        margin: 1em auto;
-        justify-content: space-evenly;
+  text-align: center;
+  .wrap-btn {
+    display: flex;
+    width: 500px;
+    margin: 1em auto;
+    justify-content: space-evenly;
 
-        button {
-            width: 140px;
-            height: 40px;
-            color: white;
-            background-color: #1E63E9;
-            border-radius: 30px;
-        }
-        .disable {
-            background-color: #E5E5E5;
-            color: black;
-            cursor:default;
-        }
+    button {
+      width: 140px;
+      height: 40px;
+      color: white;
+      background-color: #1e63e9;
+      border-radius: 30px;
     }
-}
-</style>>
-
+    .disable {
+      background-color: #e5e5e5;
+      color: black;
+      cursor: default;
+    }
+  }
+}</style
+>>
