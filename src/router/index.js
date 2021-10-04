@@ -15,13 +15,14 @@ import AddAdopt from "../views/AddAdopt.vue";
 import PostAdopt from "../views/PostAdopt.vue";
 
 //profile
-import HomeUser from "../views/user/Home.vue";
-import PostUser from "../views/user/Post.vue";
-import AdoptUser from "../views/user/Adopt.vue";
-import EditProfile from "../views/user/EditProfile.vue";
+import HomeUser from "@/views/user/Home.vue";
+import PostUser from "@/views/user/Post.vue";
+import AdoptUser from "@/views/user/Adopt.vue";
+import EditProfile from "@/views/user/EditProfile.vue";
+import AdoptIDUser from "@/views/user/Adopt_id.vue";
 //auth
-import Login from "../views/auth/Login.vue";
-import Register from "../views/auth/Register.vue";
+import Login from "@/views/auth/Login.vue";
+import Register from "@/views/auth/Register.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -155,7 +156,7 @@ const routes = [
     },
   },
   {
-    path: "/profile/Adopt",
+    path: "/profile/adopt",
     component: AdoptUser,
     meta: {
       layout: "Profile",
@@ -168,7 +169,13 @@ const routes = [
       layout: "Main",
     },
   },
-  
+  {
+    path: "/profile/adopt/:id",
+    component: AdoptIDUser,
+    meta: {
+      layout: "Image",
+    },
+  },
 ];
 
 const router = new VueRouter({
