@@ -1,16 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
-import History from "@/views/History.vue";
-import PaymentHistory from "@/views/PaymentHistory.vue";
-import Topup from "@/views/Topup.vue";
-import Notification from "@/views/Notification.vue";
-import Auction from "@/views/Auction.vue";
-import Sale from "@/views/Sale.vue";
-import Ota from "@/views/Ota.vue";
-import Dta from "@/views/Dta.vue";
-import AddAdopt from "@/views/AddAdopt.vue";
-import PostAdopt from "@/views/PostAdopt.vue";
+import Home from "../views/Home.vue";
+import History from "../views/History.vue";
+import PaymentHistory from "../views/PaymentHistory.vue";
+import Topup from "../views/Topup.vue";
+import Notification from "../views/Notification.vue";
+import Auction from "../views/Auction.vue";
+import Sale from "../views/Sale.vue";
+import Ota from "../views/Ota.vue";
+import OtaSug from "../views/OtaSug.vue";
+import Dta from "../views/Dta.vue";
+import DtaSug from "../views/DtaSug.vue";
+import AddAdopt from "../views/AddAdopt.vue";
+import PostAdopt from "../views/PostAdopt.vue";
 
 //profile
 import HomeUser from "@/views/user/Home.vue";
@@ -81,9 +83,25 @@ const routes = [
     },
   },
   {
+    path: "/ota-sug",
+    name: "OtaSug",
+    component: OtaSug,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
     path: "/dta",
     name: "Dta",
     component: Dta,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/dta-sug",
+    name: "DtaSug",
+    component: DtaSug,
     meta: {
       layout: "Main",
     },

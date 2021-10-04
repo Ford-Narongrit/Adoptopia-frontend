@@ -1,4 +1,5 @@
 const colors = require("tailwindcss/colors");
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   purge: [],
@@ -96,5 +97,73 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addComponents }) {
+      const buttons = {
+        '.btn-rounded': {
+          background: '#1E63E9',
+          borderRadius: '20px',
+          flex: 'none',
+          width: '6em',
+          height: '2.2em',
+          fontSize: '1rem',
+          fontWeight: '600',
+
+          '&:hover': {
+            color: '#1E63E9',
+            background: '#ffffff'
+          }
+        },
+
+        '.btn-square': {
+          background: '#1E63E9',
+          borderRadius: '5px',
+          flex: 'none',
+          width: '6em',
+          height: '2.2em',
+          fontSize: '1rem',
+          fontWeight: '600',
+
+          '&:hover': {
+            color: '#1E63E9',
+            background: '#ffffff'
+          }
+        },
+
+        '.btn-sugges': {
+          background: '#1E63E9',
+          borderRadius: '5px',
+          flex: 'none',
+          width: '8em',
+          height: '2.2em',
+          fontSize: '1rem',
+          marginLeft: '64em',
+          fontWeight: '600',
+
+          '&:hover': {
+            color: '#1E63E9',
+            background: '#ffffff'
+          }
+        }
+      }
+      addComponents(buttons);
+
+      const cards = {
+        '.my-card': {
+          background: '#FFFFFF',
+          width: '16rem',
+          borderRadius: '0.25rem',
+          overflow: 'hidden',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          transition: '0.25s',
+
+          '&:hover': {
+            transform: 'scale(1.05)',
+            transition: '0.25s',
+          }
+        },
+      }
+      addComponents(cards);
+    })
+  ],
 };

@@ -42,7 +42,7 @@
 
 <script>
 import AdoptStore from "@/store/Adopt";
-import slideImage from "@/components/SlideImage.vue";
+import slideImage from "@/components/slideImage.vue";
 import moment from "moment";
 export default {
   components: { slideImage },
