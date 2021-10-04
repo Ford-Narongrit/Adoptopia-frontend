@@ -8,7 +8,9 @@ import Notification from "../views/Notification.vue";
 import Auction from "../views/Auction.vue";
 import Sale from "../views/Sale.vue";
 import Ota from "../views/Ota.vue";
+import OtaSug from "../views/OtaSug.vue";
 import Dta from "../views/Dta.vue";
+import DtaSug from "../views/DtaSug.vue";
 import AddAdopt from "../views/AddAdopt.vue";
 import PostAdopt from "../views/PostAdopt.vue";
 
@@ -80,9 +82,25 @@ const routes = [
     },
   },
   {
+    path: "/ota-sug",
+    name: "OtaSug",
+    component: OtaSug,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
     path: "/dta",
     name: "Dta",
     component: Dta,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/dta-sug",
+    name: "DtaSug",
+    component: DtaSug,
     meta: {
       layout: "Main",
     },

@@ -1,7 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400&display=swap');
 
 .my-text-super {
     @apply md:text-5xl text-4xl font-bold;
@@ -21,10 +22,22 @@
 .my-block-focus {
     @apply focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-blue-700
 }
-
 .my-block-error {
     @apply border-red-500 border-4 focus:outline-none focus:ring ring-white ring-offset-4 focus:ring-offset-pink-700
 }
-.my-font{
-    font-family: 'Be Vietnam Pro', sans-serif;
+.my-font-eng{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+}
+.my-font-eng-b{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+}
+.my-font-th{
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-weight: 200;
+}
+.my-font-th-b{
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-weight: 400;
 }
