@@ -136,6 +136,7 @@ module.exports = {
           flex: 'none',
           width: '8em',
           height: '2.2em',
+          right: '10rem',
           fontSize: '1rem',
           marginLeft: '64em',
           fontWeight: '600',
