@@ -12,8 +12,8 @@
             v-for="(heading, index) in keys"
             :key="index"
             :class="{
-              left: heading === 'name' || heading === 'user',
-              right: heading === 'amount',
+              left: heading === 'Name' || heading === 'User' || heading === 'Description',
+              right: heading === 'Amount',
             }"
           >
             {{ data[heading] }}

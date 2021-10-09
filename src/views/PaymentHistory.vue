@@ -5,13 +5,14 @@
       <button @click="toHistory">History</button>
       <button class="disable">Payment History</button>
     </div>
-    <HistoryBoard class="h-96" v-if="data.length" :data="data" />
+    <HistoryBoard v-if="data.length" :data="data" />
     <PageCard
       v-if="allPages > 1"
       :allPages="allPages"
       :currPage="currPage"
       @update="updateCurrPage"
     />
+    <button class="text-white bg-blue-500 mt-6" @click="toTopup">TO TOPUP</button>
   </div>
 </template>
 
@@ -47,6 +48,9 @@ export default {
   methods: {
     toHistory() {
       this.$router.push("/history");
+    },
+    toTopup(){
+      this.$router.push("/topup")
     },
     fetchData() {
       Axios.get(`/payment-histories?page= ${this.currPage}`, {
