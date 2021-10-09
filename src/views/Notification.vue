@@ -29,16 +29,11 @@ export default {
     NotificationCard,
   },
   created() {
-    axios.get("/user/" + "6").then((response) => {
-      // console.log(response.data);
+    axios.get("user/" + "6").then((response) => {
       this.user = response.data;
-      console.log(this.user.profile);
     });
     axios.get("/user/notification/" + "6").then((response) => {
-      // console.log(response.data);
       this.notiList = response.data;
-      // console.log(this.notilist);
-      console.log(this.notiList[0]);
     });
   },
 };

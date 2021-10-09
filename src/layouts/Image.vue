@@ -1,9 +1,7 @@
 <template>
   <div>
     <navbar />
-    <div class="container mx-auto min-h-screen bg-shark-500">
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>
 
@@ -17,5 +15,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

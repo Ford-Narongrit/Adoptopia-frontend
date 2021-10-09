@@ -6,12 +6,7 @@
     <!-- Logo -->
     <div>
       <router-link to="/" class="flex items-center space-x-2">
-        <img
-          src="../assets/logo.png"
-          alt="Logo"
-          title="Adoptopia"
-          class="h-8"
-        />
+        <img src="@/assets/logo.png" alt="Logo" title="Adoptopia" class="h-8" />
         <div class="text-white text-2xl">Adoptopia</div>
       </router-link>
     </div>
@@ -27,7 +22,7 @@
       </div>
       <div class="nav text-white text-xl">
         <router-link
-          to="post"
+          to="/post"
           class="border-b-2 border-transparent hover:border-blue-500"
           >Post</router-link
         >
@@ -49,7 +44,7 @@
         <button
           v-if="isOpen"
           @click="isOpen = false"
-          class="fixed h-screen w-screen bg-black inset-0 opacity-30"
+          class="fixed h-screen w-full bg-black inset-0 opacity-30 cursor-default"
         ></button>
 
         <!-- dropdown -->
@@ -58,17 +53,22 @@
           class="bg-gray-200 absolute rounded-xl right-0 py-4 px-2"
         >
           <router-link
-            to="myadopt"
+            to="/profile/home"
+            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
+            >Profile</router-link
+          >
+          <router-link
+            to="/profile/adopt"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >MyAdop</router-link
           >
           <router-link
-            to="addadopt"
+            to="/adopt/add"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >AddAdop</router-link
           >
           <router-link
-            to="history"
+            to="/history"
             class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >History</router-link
           >
@@ -86,7 +86,8 @@
 </template>
 
 <script>
-import UserStore from "../store/User";
+import UserStore from "@/store/User";
+import Alert from "@/helpers/Alert.js";
 export default {
   data() {
     return {
@@ -125,9 +126,12 @@ export default {
       this.lastScrollPosition = currentScrollPosition;
     },
     async logout() {
-      let res = await UserStore.dispatch("logout");
-      if (res.success) {
-        this.$router.go({ name: "Home" });
+      try {
+        let res = await UserStore.dispatch("logout");
+        Alert.mixin("success", res.data.message);
+        this.$router.push("/login");
+      } catch (error) {
+        console.error(error.message);
       }
     },
   },

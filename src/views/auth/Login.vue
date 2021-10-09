@@ -7,7 +7,7 @@
     <div class="md:w-1/2 xl:w-1/3 w-full">
       <div class="flex justify-center items-center h-full bg-shark-500">
         <div class="rounded-lg p-5 space-y-4 w-3/4">
-          <img src="../assets/logo.png" alt="logo" class="h-20 mx-auto" />
+          <img src="@/assets/logo.png" alt="logo" class="h-20 mx-auto" />
           <div class="my-text-title text-center text-white">LOGIN</div>
 
           <!-- username -->
@@ -75,8 +75,8 @@
 </template>
 
 <script>
-import Alert from "../helpers/Alert";
-import UserStore from "../store/User";
+import Alert from "@/helpers/Alert";
+import UserStore from "@/store/User";
 export default {
   data() {
     return {
@@ -97,10 +97,9 @@ export default {
         password: this.form.password,
       };
       try {
-        let res = await UserStore.dispatch("login", payload).then((res) => {
-          Alert.mixin("success", "Login successful");
-          this.$router.push("/profile")
-        });
+        let res = await UserStore.dispatch("login", payload);
+        Alert.mixin("success", "Login successful");
+        this.$router.push("/profile/home");
       } catch (error) {
         this.errors = error.response.data;
         Alert.window(
@@ -108,7 +107,7 @@ export default {
           "Sign in Failed",
           "Sorry, an unexpected error occurred. Please try again."
         );
-        // console.error(error.response);
+        console.error(error.response);
       }
     },
   },
