@@ -64,7 +64,7 @@
           v-for="adopt in adopts"
           :key="adopt.id"
         >
-          <display-post-image :adopt="adopt" />
+          <select-adop :adopt="adopt" />
           <br>
         </div>
       </vue-flex-waterfall>
@@ -76,13 +76,13 @@ import Multiselect from "vue-multiselect";
 import VueFlexWaterfall from "vue-flex-waterfall";
 import TradeAdopStore from "../store/TradeAdop.js";
 import TradeCoinStore from "../store/TradeAdop.js";
-import DisplayPostImage from "@/components/DisplayPostImage.vue";
+import SelectAdop from "@/components/SelectAdop.vue";
 
 export default {
   components: {
     Multiselect,
     VueFlexWaterfall,
-    DisplayPostImage
+    SelectAdop
   },
   data() {
     return {
