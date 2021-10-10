@@ -13,6 +13,13 @@
 
     <!-- menu -->
     <div class="flex items-center space-x-4">
+      <div class="nav text-white text-xl" v-if="login">
+        <router-link
+          to="/topup"
+          class="border-b-2 border-transparent"
+          >0.00 Coin</router-link
+        >
+      </div>
       <div class="nav text-white text-xl">
         <router-link
           to="/"
@@ -20,7 +27,7 @@
           >Trade</router-link
         >
       </div>
-      <div class="nav text-white text-xl">
+      <div class="nav text-white text-xl" v-if="login">
         <router-link
           to="/post"
           class="border-b-2 border-transparent hover:border-blue-500"
@@ -35,7 +42,14 @@
           Login
         </router-link>
       </div>
-
+      <div v-if="login">
+        <router-link
+          to="/notification"
+          class="p-2 border-b-2 border-transparent"
+        >
+          <font-awesome-icon icon="bell" class="text-xl text-white" />
+        </router-link>
+      </div>
       <!-- if login -->
       <div v-if="login" class="relative">
         <button class="p-2" @click="isOpen = !isOpen">
@@ -54,22 +68,22 @@
         >
           <router-link
             to="/profile/home"
-            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
+            class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
             >Profile</router-link
           >
           <router-link
             to="/profile/adopt"
-            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
-            >MyAdop</router-link
+            class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
+            >My Adop</router-link
           >
           <router-link
             to="/adopt/add"
-            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
-            >AddAdop</router-link
+            class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
+            >Add Adop</router-link
           >
           <router-link
             to="history"
-            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
+            class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
             >History</router-link
           >
           <div class="border-b-2 border-gray-400 mx-2 my-1"></div>
