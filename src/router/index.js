@@ -9,6 +9,7 @@ import Auction from "../views/Auction.vue";
 import Sale from "../views/Sale.vue";
 import Ota from "../views/Ota.vue";
 import OtaSug from "../views/OtaSug.vue";
+import OtaSelect from "../views/OtaSelect.vue";
 import Dta from "../views/Dta.vue";
 import DtaSug from "../views/DtaSug.vue";
 import AddAdopt from "../views/AddAdopt.vue";
@@ -78,6 +79,7 @@ const routes = [
     path: "/ota",
     name: "Ota",
     component: Ota,
+    props: true,
     meta: {
       layout: "Main",
     },
@@ -86,6 +88,14 @@ const routes = [
     path: "/ota-sug",
     name: "OtaSug",
     component: OtaSug,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/ota-select",
+    name: "OtaSelect",
+    component: OtaSelect,
     meta: {
       layout: "Main",
     },

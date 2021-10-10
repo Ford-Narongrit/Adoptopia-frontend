@@ -82,8 +82,8 @@
             >Add Adop</router-link
           >
           <router-link
-            to="history"
-            class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
+            to="/history"
+            class="block px-8 py-2 hover:bg-gray-300 rounded-xl text-center"
             >History</router-link
           >
           <div class="border-b-2 border-gray-400 mx-2 my-1"></div>

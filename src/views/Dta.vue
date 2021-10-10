@@ -10,10 +10,9 @@
           </span>
         </h1></b>
       </div>
-      
 
       <div class="mt-12 h-0">
-        <coverflow :coverList="coverList" :coverWidth="230" :index="2" @change="handleChange"></coverflow>
+        <coverflow :coverList="coverList" :coverWidth="230" :index="2" ></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
@@ -21,12 +20,30 @@
         <h2 class="py-3 text-2xl">Name</h2>
         <h2 class="py-3 pb-12 text-2xl">Catagory:</h2>
 
-        <div class="py-3">
+        <div class="py-3 mb-3">
           <label  class="text-2xl">Requirement: Picture</label>
-          <button class="btn-rounded absolute right-48">Attach</button>
+          <!-- <button class="btn-rounded absolute right-48">Attach</button> -->
+          <!-- <button class="btn-rounded absolute right-40">Request</button> -->
         </div>
 
-        <button class="mt-12 btn-rounded absolute">Request</button> 
+        <!-- input image -->
+        <input type="file" ref="file" style="display: none" @change="addImage"/>
+        <div class="w-3/4 h-80 border-white border-2 relative"
+          @click="$refs.file.click()"
+          @drop.prevent="addImage($event)"
+          @dragover.prevent
+          @mouseover="hoverImage = true"
+          @mouseleave="hoverImage = false"
+          :style="{ backgroundImage: 'url(' + `${dta_image}` + ')' }"
+          tabindex="1"
+        >
+          <font-awesome-icon v-if="!dta_image" icon="camera" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
+          <div v-if="hoverImage" class="absolute w-full h-full flex justify-center items-center bg-black opacity-80 text-white text-xl">
+            Upload Image
+          </div>
+        </div>
+
+        <button class="btn-rounded absolute right-40 mt-6">Request</button>
       </div>
 
       <br><br>
@@ -54,6 +71,8 @@ export default {
   name: 'Dta',
     data () {
     return {
+      hoverImage: false,
+      dta_image: "",
 
       coverList: [
         {
@@ -73,7 +92,21 @@ export default {
   },
   components: {
     coverflow
-  }
+  },
+  methods: {
+    addImage(e) {
+      let files = null;
+      if (e.type === "drop") {
+        files = e.dataTransfer.files;
+      }
+      else if (e.type === "change") {
+        files = e.target.files;
+      }
+      if (files) {
+        this.dta_image = URL.createObjectURL(files[0]);
+      }
+    },
+  },
 }
 </script>
 
