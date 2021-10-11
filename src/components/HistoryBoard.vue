@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="w-2/4 max-h-96">
+    <table class="w-3/5 max-h-96">
       <thead>
         <tr>
           <th v-for="(heading, index) in keys" :key="index">{{ heading }}</th>
