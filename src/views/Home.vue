@@ -2,11 +2,7 @@
   <div>
     <div class="flex flex-nowrap py-8">
       <div class="flex-nowrap py-8">
-        <label
-          for="type"
-          class="px-5 mt-2 text-white"
-          >Type:
-        </label>
+        <label for="type" class="px-5 mt-2 text-white">Type: </label>
         <select
           v-model="type"
           class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
@@ -17,8 +13,9 @@
             v-for="(type, index) in types"
             :key="index"
             class="hover:bg-black"
-            >{{ type }}</option
           >
+            {{ type }}
+          </option>
         </select>
       </div>
       <div class="flex flex-nowrap py-8">
@@ -40,33 +37,47 @@
         </multiselect>
       </div>
       <div class="py-8 px-4">
-        <button class="bg-blue-600 rounded-full w-28 p-2 text-white my-text-content hover:bg-blue-400 my-block-focus">seach</button>
+        <button
+          class="
+            bg-blue-600
+            rounded-full
+            w-28
+            p-2
+            text-white
+            my-text-content
+            hover:bg-blue-400
+            my-block-focus
+          "
+        >
+          seach
+        </button>
       </div>
     </div>
-    <vue-flex-waterfall
-      :col="4"
-      :col-spacing="15"
-      :break-by-container="true"
-    >
+    <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
       <div v-for="image in images" :key="image.url" class="px-2">
-        
-        <router-link :to="{path:image.tag }">
-          <img :src="require(`../assets/${image.url}`)" 
+        <router-link :to="{ path: image.tag }">
+          <img
+            :src="require(`../assets/${image.url}`)"
             height="200px"
-            width="350px" />
+            width="350px"
+          />
         </router-link>
-        <br>
+        <br />
       </div>
     </vue-flex-waterfall>
     <div class="px-7">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
-        <div
-          v-for="adopt in adopts"
-          :key="adopt.id"
-        >
-          <select-adop :adopt="adopt" />
-          <br>
-        </div>
+        <div v-for="(adopt_list, index) in adopts" :key="index">
+            <router-link :to="{ path: '/' + adopt_list.type }">
+             <img
+              :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
+              height="200px"
+              width="350px"
+              class="transition duration-300 ease-in-out transform hover:scale-110"
+            />
+            </router-link>
+            <br>
+          </div>
       </vue-flex-waterfall>
     </div>
   </div>
@@ -74,15 +85,14 @@
 <script>
 import Multiselect from "vue-multiselect";
 import VueFlexWaterfall from "vue-flex-waterfall";
-import TradeAdopStore from "../store/TradeAdop.js";
-import TradeCoinStore from "../store/TradeAdop.js";
+import TradeStore from "../store/Trade.js";
 import SelectAdop from "@/components/SelectAdop.vue";
 
 export default {
   components: {
     Multiselect,
     VueFlexWaterfall,
-    SelectAdop
+    SelectAdop,
   },
   data() {
     return {
@@ -95,14 +105,13 @@ export default {
       type: "",
       types: ["Auction", "OTA", "DTA", "For Sale"],
       adopts: [],
-      adopts_coin: [],
       images: [
-        { url : "drawer.jpg", tag: "/ota" },
-        { url : "slap.jpg", tag: "/dta" },
-        { url : "Kiwi.jpg", tag: "/sale" },
-        { url : "Camel.jpeg", tag: "/auction" },
+        { url: "drawer.jpg", tag: "/ota" },
+        { url: "slap.jpg", tag: "/dta" },
+        { url: "Kiwi.jpg", tag: "/sale" },
+        { url: "Camel.jpeg", tag: "/auction" },
       ],
-      selectedImage: null
+      selectedImage: null,
     };
   },
   methods: {
@@ -114,34 +123,22 @@ export default {
       this.options.push(tag);
       this.value.push(tag);
     },
-    async fetchTradeAdop() {
+    async fetchTrade() {
       try {
-        let res = await TradeAdopStore.dispatch("getPost_Adops_list");
-        this.adopts = TradeAdopStore.getters.post_adops_list;
+        let res = await TradeStore.dispatch("getPost_Adops_list");
+        this.adopts = TradeStore.getters.post_adops_list;
         console.log(this.adopts);
       } catch (error) {
         console.error(error.response);
       }
     },
-    async fetchTradeCoin() {
-      try {
-        let res = await TradeCoinStore.dispatch("getPost_Adops_list");
-        this.adopts_coin = TradeCoinStore.getters.post_adops_list;
-        console.log(this.adopts_coin);
-      } catch (error) {
-        console.error(error.response);
-      }
+    getImagePath(image) {
+      return process.env.VUE_APP_APIURL + image;
     },
-    joinAdop(){
-      this.adopts.concat(this.adopts_coin);
-      console.log(this.adopts);
-    }
   },
-  created(){
-    this.fetchTradeAdop();
-    this.fetchTradeCoin();
-    // this.joinAdop();
-  }
+  created() {
+    this.fetchTrade();
+  },
 };
 </script>
 
@@ -149,9 +146,9 @@ export default {
 
 <style>
 .multiselect__tag {
-  background-color: #1E63E9;
+  background-color: #1e63e9;
 }
-.multiselect__tag-icon:after{
+.multiselect__tag-icon:after {
   color: white;
 }
 .multiselect__tag-icon:focus,

@@ -25,8 +25,7 @@ export default new Vuex.Store({
     async getPost_Adops_list({ commit }) {
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
-        let res = await Axios.get("/trade-adop", header);
-        console.log(res)
+        let res = await Axios.get("/trade", header);
         commit("fetchPost_Adops_list", res.data);
         return res;
       } catch (error) {
@@ -36,7 +35,7 @@ export default new Vuex.Store({
     async getPost_Adop_id({ commit }, id) {
       try {
         let header = Header.getHeaders();
-        let res = await Axios.get(`/trade-adop/${id}`, header);
+        let res = await Axios.get(`/trade/${id}`, header);
         commit("fetchPost_Adop", res.data);
         return res;
       } catch (error) {

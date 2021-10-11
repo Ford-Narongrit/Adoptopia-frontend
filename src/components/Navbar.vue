@@ -13,11 +13,11 @@
 
     <!-- menu -->
     <div class="flex items-center space-x-4">
-      <div class="nav text-white text-xl" v-if="login">
+      <div class="text-white text-xl" v-if="login">
         <router-link
           to="/topup"
           class="border-b-2 border-transparent"
-          >0.00 Coin</router-link
+          >0 coin</router-link
         >
       </div>
       <div class="nav text-white text-xl">

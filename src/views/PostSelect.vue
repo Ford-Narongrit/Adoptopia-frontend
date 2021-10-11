@@ -5,7 +5,7 @@
     </div>
 
     <!-- adop -->
-    <div class="grid grid-cols-4 gap-3 ml-14 mt-10">
+    <div class="grid grid-cols-4 gap-3 ml-5 mt-10">
       <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
         <div
           v-for="adopt in adopts"
