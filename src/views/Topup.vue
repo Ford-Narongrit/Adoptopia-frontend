@@ -1,72 +1,94 @@
 <template>
-  <div class="">
+  <div class="my-font-eng">
     <hr />
-    <div class="flex justify-center ...">
-      <div class="text-4xl" v-if="topupStatus">Top up</div>
-      <div class="text-4xl" v-if="withdrawStatus">Withdraw</div>
+    <div class="flex justify-center my-4">
+      <div class="my-text-title text-white" v-if="topupStatus">Top up</div>
+      <div class="my-text-title text-white" v-if="withdrawStatus">Withdraw</div>
     </div>
-    <div class="flex justify-center mt-8">
+    <div class="flex justify-around mt-8 w-1/3 mx-auto">
       <button
-        class="mr-12 px-4 py-2 rounded-full text-sm font-medium border-0 focus:outline-none focus:ring transition text-blue-600 bg-blue-50 hover:text-blue-800 hover:bg-blue-100 active:bg-blue-200 focus:ring-blue-300"
+        class="w-36 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700"
+        :class="topupStatus ? 'bg-blue-700 cursor-default':''"
         type="submit"
         @click="topupBtn"
+        :disabled="topupStatus == 1"
       >
         Top up
       </button>
       <button
-        class="ml-12 px-4 py-2 rounded-full text-sm font-medium border-0 focus:outline-none focus:ring transition text-blue-600 bg-blue-50 hover:text-blue-800 hover:bg-blue-100 active:bg-blue-200 focus:ring-blue-300"
+        class="w-36 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700"
+        :class="withdrawStatus ? 'bg-blue-700 cursor-default':''"
         type="submit"
         @click="withdrawBtn"
+        :disabled="withdrawStatus == 1"
       >
         Withdraw
       </button>
     </div>
-    <div class="flex justify-center mt-8">
-      <div>
-        1 coin = 1 bath
+    <div
+      class="w-2/4 mx-auto mt-8 p-4 rounded-lg"
+      style="background-color:#1344A5"
+    >
+      <div class="my-text-subtitle text-white ">Exchange rate</div>
+      <div class="flex justify-center mt-4 text-white my-text-subtitle ">
+        1 Coin = 1 Baht
+      </div>
+      <div class="flex justify-center items-center mt-6">
+        <label class="text-white my-text-content mx-2" v-if="topupStatus"
+          >Top up Amount:</label
+        >
+        <label class="text-white my-text-content mx-2" v-if="withdrawStatus"
+          >Withdraw Amount:</label
+        >
+        <div class="relative">
+          <input
+            class="w-36 h-8 rounded-lg mx-2 bg-white text-right px-2 my-text-base font-semibold"
+            type="number"
+            name="amount"
+            id=""
+            onfocus="this.value=''"
+            min="0"
+            v-model="amount"
+            @change="inputChange"
+            :class="error ? 'my-block-error' : 'my-block-focus'"
+          />
+          <div
+            v-if="error"
+            class="text-red-400 w-96 flex-none mb-4 absolute left-2"
+          >
+            {{ error }}
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-6 w-2/3 mx-auto mt-8">
+        <div
+          v-for="(amountVal, index) in amounts"
+          :key="index"
+          class="w-32 h-12 bg-white flex justify-center items-center my-text-base font-semibold mx-auto rounded-lg cursor-pointer transform translate hover:scale-125 duration-300"
+          @click="setAmount(amountVal)"
+        >
+          {{ amountVal }}
+        </div>
+      </div>
+      <div class="mt-6 flex justify-center">
+        <div class="text-white my-text-content" v-if="topupStatus">
+          Coin receive:
+        </div>
+        <div class="text-white my-text-content" v-if="withdrawStatus">
+          Coin lose:
+        </div>
+        <div class="text-white my-text-content w-32 text-right">
+          {{ coin }}
+        </div>
       </div>
     </div>
-    <div
-      class="text-white w-2/4 m-auto text-4xl  mt-8"
-      style="background-color:#272727"
-    >
-      <div class="px-8 pt-12 pb-8 ">
-        <div class="table text-center">
-          <label class="table-cell w-3/5" v-if="topupStatus"
-            >Top up amount:</label
-          >
-          <label class="table-cell w-3/5" v-if="withdrawStatus"
-            >Withdraw amount:</label
-          >
-          <span class="table-cell w-1/5  ">
-            <input
-              class="w-full text-green-400"
-              style="background-color:#272727;"
-              type="number"
-              name="amount"
-              id=""
-              onfocus="this.value=''"
-              min="0"
-              v-model="amount"
-              @change="inputChange"
-            />
-          </span>
-          <p class="table-cell w-1/5">B</p>
-        </div>
-        <div class="mt-6">
-          <div class="inline-block w-3/5 text-center" v-if="topupStatus">
-            Coin receive:
-          </div>
-          <div class="inline-block w-3/5 text-center" v-if="withdrawStatus">
-            Coin lose:
-          </div>
-          <div class="inline-block w-1/5 text-green-400">{{ this.coin }}</div>
-          <div class="inline-block w-1/5 text-center">B</div>
-        </div>
-        <div class="mt-6 text-center">
-          <button @click="click">confirm</button>
-        </div>
-      </div>
+    <div class="mt-8 text-center ">
+      <button
+        @click="confirm"
+        class="my-text-subtitle uppercase bg-white p-2 px-6 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transform translate hover:scale-110 duration-300"
+      >
+        c o n f i r m
+      </button>
     </div>
   </div>
 </template>
@@ -74,8 +96,9 @@
 <script>
 import axios from "axios";
 import UserStore from "../store/User";
+import Header from "@/helpers/Header";
+import Alert from "../helpers/Alert";
 
-let api = "http://127.0.0.1:8000/api";
 export default {
   data() {
     return {
@@ -84,37 +107,38 @@ export default {
       topupStatus: 1,
       withdrawStatus: 0,
       user: {},
+      amounts: [25, 50, 100, 200, 500, 1000],
+      error: "",
     };
   },
   mounted() {
     this.fetch();
   },
   methods: {
-    click() {
-      // console.log(this.amount);
-      // api += this.amount.toString();
-      // console.log(api);
-      // axios.put(api).then((response) => {
-      //   console.log(response);
-      //   console.log(response.data);
-      // });
+    async confirm() {
       let status = "";
       this.topupStatus ? (status = "deposit") : (status = "withdraw");
-      axios
-        .put(`${api}/user/${status}/${this.user.id}/${this.amount}`)
-        .then((res) => {
-          console.log(res);
-          console.log(res.data);
-        });
-        
-      let headers = {
-        Authorization: "Bearer " + UserStore.getters.jwt,
-      };
-      let data = {
-        status: status,
-        amount: this.amount,
-      };
-      axios.post(`${api}/payment-histories`, data, {headers: headers});
+      try {
+        let res = await axios.put(
+          `/user/${status}/${this.user.id}/${this.amount}`
+        );
+        console.log(res.data);
+        let headers = Header.getHeaders();
+        let data = {
+          status: status,
+          amount: this.amount,
+        };
+        await axios.post(`/payment-histories`, data, headers);
+        Alert.mixin("success", `${status} successfully`);
+      } catch (error) {
+        if (error.response.status === 404) 
+          this.error = "Invalid amount";
+        else 
+          this.error = error.response.data;
+        Alert.mixin("error", `${this.error}. Please try again.`);
+        // console.error(error.response);
+      }
+
     },
     topupBtn() {
       this.topupStatus = 1;
@@ -125,9 +149,12 @@ export default {
       this.topupStatus = 0;
     },
     inputChange() {
-      console.log("hello");
-      console.log(this.amount);
-      this.coin = this.amount;
+      this.coin = parseFloat(this.amount);
+      this.error = "";
+    },
+    setAmount(amount) {
+      this.amount = amount;
+      this.inputChange();
     },
     async fetch() {
       try {

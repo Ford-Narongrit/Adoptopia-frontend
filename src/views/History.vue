@@ -1,11 +1,11 @@
 <template>
-  <div class="main-container">
-      <h1 class="title">History</h1>
-      <div class="wrap-btn">
-          <button class="disable">History</button>
-          <button @click="toPaymentHistory">Payment History</button>
+  <div class="text-center my-font-eng">
+      <h1 class="my-text-title text-white my-8">History</h1>
+      <div class="flex justify-around mt-8 w-1/3 mx-auto">
+          <button class="w-52 px-4 py-2 rounded-full my-text-content text-white border-2 border-white bg-blue-700 cursor-default">History</button>
+          <button @click="toPaymentHistory" class="w-52 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700">Payment History</button>
       </div>
-      <HistoryBoard :data="data"/>
+      <HistoryBoard :data="data" class="mt-8"/>
   </div>
 </template>
 
