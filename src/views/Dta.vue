@@ -22,13 +22,11 @@
 
         <div class="py-3 mb-3">
           <label  class="text-2xl">Requirement: Picture</label>
-          <!-- <button class="btn-rounded absolute right-48">Attach</button> -->
-          <!-- <button class="btn-rounded absolute right-40">Request</button> -->
         </div>
 
         <!-- input image -->
         <input type="file" ref="file" style="display: none" @change="addImage"/>
-        <div class="w-3/4 h-80 border-white border-2 relative"
+        <div class="w-3/4 h-80 border-white border-2 relative bg-cover bg-center"
           @click="$refs.file.click()"
           @drop.prevent="addImage($event)"
           @dragover.prevent

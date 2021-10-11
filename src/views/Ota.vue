@@ -91,7 +91,6 @@ export default {
   created() {
     if(this.$route.params !== null){
       this.adop_id = this.$route.params.adop_id
-
     }
   },
   mounted() {

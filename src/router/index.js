@@ -14,6 +14,7 @@ import Dta from "../views/Dta.vue";
 import DtaSug from "../views/DtaSug.vue";
 import AddAdopt from "../views/AddAdopt.vue";
 import PostAdopt from "../views/PostAdopt.vue";
+import PostSelect from "../views/PostSelect.vue";
 
 //profile
 import HomeUser from "@/views/user/Home.vue";
@@ -136,6 +137,15 @@ const routes = [
     path: "/post",
     name: "PostAdopt",
     component: PostAdopt,
+    props: true,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/post-select",
+    name: "PostSelect",
+    component: PostSelect,
     meta: {
       layout: "Main",
     },
