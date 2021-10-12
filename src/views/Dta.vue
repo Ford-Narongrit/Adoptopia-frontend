@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Draw To Adop
           <span>
-            <router-link to="/dta-sug">
+            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -12,13 +12,19 @@
       </div>
 
       <div class="mt-12 h-0">
-        <coverflow :coverList="coverList" :coverWidth="230" :index="2" ></coverflow>
+        <coverflow :coverList="coverList" :coverWidth="230" :index="0" ></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
-        <h2 class="py-3 text-3xl">Picture Name</h2>
-        <h2 class="py-3 text-2xl">Name</h2>
-        <h2 class="py-3 pb-12 text-2xl">Catagory:</h2>
+        <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
+        <h2 class="py-3 text-2xl">By:</h2>
+        <h2 class="py-3 text-2xl">Catagory:</h2>
+        <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
+          <span v-for="category in adop_cat" :key="category.id"
+                class="bg-blue-400 px-2 rounded-lg inline-block m-1">
+            {{ category }}
+          </span>
+        </div>
 
         <div class="py-3 mb-3">
           <label  class="text-2xl">Requirement: Picture</label>
@@ -50,11 +56,7 @@
     <div class="text-2xl">
       <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
       <div class="my-font-th ml-32">
-        <p class="py-3">1. ไม่ขายต่อในราคาที่สูงกว่า(ยกเว้นกรณีมีรูปจากคอมมิชชัน)</p>
-        <p class="py-3">2. ไม่แอบอ้างว่าเป็นผู้ออกแบบเอง</p>
-        <p class="py-3">3. เมื่อนำภาพไปใช้ จะต้องใส่เครดิตทุกครั้ง</p>
-        <p class="py-3">4. ไม่อนุญาติให้นำไปเเจก</p>
-        <p class="py-3 pb-16">5. ดัดเเปลงได้เเต่ต้องยังเหลือเค้าโครงเดิม</p>
+        {{ adop_agr }}
       </div>     
     </div>
   </div>
@@ -66,30 +68,42 @@
 import coverflow from 'vue-coverflow'
 
 export default {
-  name: 'Dta',
+  name: 'dta',
     data () {
     return {
       hoverImage: false,
       dta_image: "",
+      postId: "",
 
-      coverList: [
-        {
-          cover: require('../assets/1.jpg'),
-        }, {
-          cover: require('../assets/2.jpg'),
-        }, {
-          cover: require('../assets/3.jpg'),
-        }, {
-          cover: require('../assets/4.jpg'),
-        }, {
-          cover: require('../assets/5.jpg'),
-        },
-      ],
-
+      postInfo: "",
+      adop_name: "",
+      adop_cat: [],
+      adop_agr: "",
+      adop_image: [],
+      coverList: [],
     }
   },
   components: {
     coverflow
+  },
+  created() {
+    if(this.$route.params !== null){
+      this.postInfo = this.$route.params.postInfo
+      this.postId = this.postInfo.id
+      this.adop_name = this.postInfo.adopt.name
+      this.adop_agr = this.postInfo.adopt.agreement
+      for(var i=0; i<this.postInfo.adopt.category.length; i++){
+        this.adop_cat.push(this.postInfo.adopt.category[i].name);
+      }
+      for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+        this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
+        this.coverList.push({
+          cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
+        })
+      }
+    console.log(this.postInfo);
+    console.log(this.coverList);
+    }
   },
   methods: {
     addImage(e) {

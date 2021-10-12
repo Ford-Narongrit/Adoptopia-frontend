@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Offer To Adop
           <span>
-            <router-link to="/ota-sug">
+            <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -12,27 +12,33 @@
       </div>
 
       <div class="mt-12 h-0">
-        <coverflow :coverList="coverList" :coverWidth="230" :index="2"></coverflow>
+        <coverflow :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
-        <h2 class="py-3 text-3xl">Picture Name</h2>
-        <h2 class="py-3 text-2xl">Name</h2>
-        <h2 class="py-3 pb-12 text-2xl">Catagory:</h2>
+        <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
+        <h2 class="py-3 text-2xl">By:</h2>
+        <h2 class="py-3 text-2xl">Catagory:</h2>
+        <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
+          <span v-for="category in adop_cat" :key="category.id"
+                class="bg-blue-400 px-2 rounded-lg inline-block m-1">
+            {{ category }}
+          </span>
+        </div>
 
         <div class="py-3 mb-3">
           <label  class="text-2xl">Offer: Adop</label>
 
-          <router-link to="/ota-select">
+          <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId, postInfo: postInfo} }">
             <button class="btn-rounded absolute right-40">Offer</button>
           </router-link>
         </div>
 
         <!-- adop image -->
-        <div v-if="adop_image" class="w-3/4 h-auto border-white border-2 relative overflow-hidden">
-          <img :src="getImagePath(adop_image)">
+        <div v-if="ota_adop_image" class="w-3/4 h-auto border-white border-2 relative overflow-hidden">
+          <img :src="getImagePath(ota_adop_image)">
         </div>
-        <div v-if="!adop_image" class="w-3/4 h-80 border-white border-2 relative overflow-hidden">
+        <div v-if="!ota_adop_image" class="w-3/4 h-80 border-white border-2 relative overflow-hidden">
           <font-awesome-icon icon="user" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
         </div>
 
@@ -45,11 +51,7 @@
     <div class="text-2xl">
       <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
       <div class="my-font-th ml-32">
-        <p class="py-3">1. ไม่ขายต่อในราคาที่สูงกว่า(ยกเว้นกรณีมีรูปจากคอมมิชชัน)</p>
-        <p class="py-3">2. ไม่แอบอ้างว่าเป็นผู้ออกแบบเอง</p>
-        <p class="py-3">3. เมื่อนำภาพไปใช้ จะต้องใส่เครดิตทุกครั้ง</p>
-        <p class="py-3">4. ไม่อนุญาติให้นำไปเเจก</p>
-        <p class="py-3 pb-16">5. ดัดเเปลงได้เเต่ต้องยังเหลือเค้าโครงเดิม</p>
+        {{ adop_agr }}
       </div>     
     </div>
   </div>
@@ -59,29 +61,22 @@
 <script>
 import coverflow from 'vue-coverflow';
 import AdoptStore from "@/store/Adopt";
-import VueFlexWaterfall from "vue-flex-waterfall";
 
 export default {
-  name: 'Ota',
+  name: 'ota',
     data () {
     return {
-      adop_id: "",
-      adop_image: "",
+      ota_adop_id: "",
+      ota_adop_image: "",
       adopts: [],
+      postId: "",
 
-      coverList: [
-        {
-          cover: require('../assets/1.jpg'),
-        }, {
-          cover: require('../assets/2.jpg'),
-        }, {
-          cover: require('../assets/3.jpg'),
-        }, {
-          cover: require('../assets/4.jpg'),
-        }, {
-          cover: require('../assets/5.jpg'),
-        },
-      ],
+      postInfo: "",
+      adop_name: "",
+      adop_cat: [],
+      adop_agr: "",
+      adop_image: [],
+      coverList: [],
 
     }
   },
@@ -90,7 +85,23 @@ export default {
   },
   created() {
     if(this.$route.params !== null){
-      this.adop_id = this.$route.params.adop_id
+      this.ota_adop_id = this.$route.params.adop_id
+
+      this.postInfo = this.$route.params.postInfo
+      this.postId = this.postInfo.id
+      this.adop_name = this.postInfo.adopt.name
+      this.adop_agr = this.postInfo.adopt.agreement
+      for(var i=0; i<this.postInfo.adopt.category.length; i++){
+        this.adop_cat.push(this.postInfo.adopt.category[i].name);
+      }
+      for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+        this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
+        this.coverList.push({
+          cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
+        })
+      }
+    console.log(this.postInfo);
+    console.log(this.coverList);
     }
   },
   mounted() {
@@ -103,8 +114,8 @@ export default {
         this.adopts = AdoptStore.getters.adopts_list;
 
         for(var i=0; i<this.adopts.length; i++){
-          if(this.adopts[i].id === this.adop_id){
-            this.adop_image = this.adopts[i].adopt_image[0].path;
+          if(this.adopts[i].id === this.ota_adop_id){
+            this.ota_adop_image = this.adopts[i].adopt_image[0].path;
           }
         }
       } catch (error) {

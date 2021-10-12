@@ -30,13 +30,22 @@ import UserStore from "../store/User";
 export default {
     data() {
         return {
+            postId: "",
             adopts: [],
+            postInfo: "",
         };
     },
 
     components: {
         SelectAdop,
         VueFlexWaterfall,
+    },
+
+    created() {
+        if(this.$route.params !== null){
+            this.postInfo = this.$route.params.postInfo
+            this.postId =  this.postInfo.id
+        }
     },
 
     mounted() {
@@ -52,17 +61,16 @@ export default {
                 console.error(error.response);
             }
         },
-        async selectAdopt(id) {
+        async selectAdopt(adop_id) {
             try {
                 let res = await UserStore.dispatch("getMe");
                 this.user = res.data;
-                this.$router.push({path:"ota",name:"Ota", params:{adop_id:id}})
+                this.$router.push({path:"/ota/" + this.postId, name:"ota", params:{adop_id:adop_id, postInfo: this.postInfo, id: this.postId}})
 
             } catch (error) {
                 Alert.window("error", "Unauthorized", "Please login before select adopt.");
                 console.error(error);
             }
-
         },
     },
 }
