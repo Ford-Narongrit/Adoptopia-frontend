@@ -48,7 +48,7 @@
             id=""
             onfocus="this.value=''"
             min="0"
-            v-model="amount"
+            v-model="form.amount"
             @change="inputChange"
             :class="error ? 'my-block-error' : 'my-block-focus'"
           />
@@ -56,7 +56,7 @@
             v-if="error"
             class="text-red-400 w-96 flex-none mb-4 absolute left-2"
           >
-            {{ error }}
+            {{ error.amount[0] }}
           </div>
         </div>
       </div>
@@ -102,7 +102,9 @@ import Alert from "../helpers/Alert";
 export default {
   data() {
     return {
-      amount: 0,
+      form: {
+        amount: 0 
+      },
       coin: 0,
       topupStatus: 1,
       withdrawStatus: 0,
@@ -119,41 +121,38 @@ export default {
       let status = "";
       this.topupStatus ? (status = "deposit") : (status = "withdraw");
       try {
-        let res = await axios.put(
-          `/user/${status}/${this.user.id}/${this.amount}`
-        );
-        console.log(res.data);
         let headers = Header.getHeaders();
+        let res = await axios.put(
+          `/${status}` , this.form , headers
+        );
         let data = {
           status: status,
-          amount: this.amount,
+          amount: this.form.amount,
         };
         await axios.post(`/payment-histories`, data, headers);
         Alert.mixin("success", `${status} successfully`);
       } catch (error) {
-        if (error.response.status === 404) 
-          this.error = "Invalid amount";
-        else 
-          this.error = error.response.data;
-        Alert.mixin("error", `${this.error}. Please try again.`);
-        // console.error(error.response);
+        this.error = error.response.data.errors
+        Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
       }
 
     },
     topupBtn() {
       this.topupStatus = 1;
       this.withdrawStatus = 0;
+      this.clearForm()
     },
     withdrawBtn() {
       this.withdrawStatus = 1;
       this.topupStatus = 0;
+      this.clearForm()
     },
     inputChange() {
-      this.coin = parseFloat(this.amount);
+      this.coin = parseFloat(this.form.amount);
       this.error = "";
     },
     setAmount(amount) {
-      this.amount = amount;
+      this.form.amount = amount;
       this.inputChange();
     },
     async fetch() {
@@ -164,6 +163,11 @@ export default {
         console.error(error);
       }
     },
+    clearForm(){
+      this.form.amount = 0
+      this.error = ""
+      this.coin = 0
+    }
   },
 };
 </script>
