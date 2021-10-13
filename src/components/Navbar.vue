@@ -17,7 +17,14 @@
         <router-link
           to="/topup"
           class="border-b-2 border-transparent"
-          >0 coin</router-link
+          v-if="user.coin <= 1"
+          >{{ user.coin }} Coin</router-link
+        >
+        <router-link
+          to="/topup"
+          class="border-b-2 border-transparent"
+          v-else
+          >{{ user.coin }} Coins</router-link
         >
       </div>
       <div class="nav text-white text-xl">
@@ -110,11 +117,13 @@ export default {
       showNavbar: true,
       ontopNavbar: true,
       lastScrollPosition: 0,
+      user: {}
     };
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
     this.login = UserStore.getters.isAuthen;
+    this.fetchUser();
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.onScroll);
@@ -148,6 +157,15 @@ export default {
         console.error(error.message);
       }
     },
+    async fetchUser(){
+      try {
+        let res = await UserStore.dispatch("getMe");
+        this.user = res.data;
+        // console.log(this.user);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
   },
 };
 </script>

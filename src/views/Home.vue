@@ -109,7 +109,6 @@ export default {
         { url: "drawer.jpg", tag: "/ota" },
         { url: "slap.jpg", tag: "/dta" },
         { url: "Kiwi.jpg", tag: "/sale" },
-        { url: "Camel.jpeg", tag: "/auction" },
       ],
       selectedImage: null,
     };
@@ -127,7 +126,7 @@ export default {
       try {
         let res = await TradeStore.dispatch("getPost_Adops_list");
         this.adopts = TradeStore.getters.post_adops_list;
-        console.log(this.adopts);
+        // console.log(this.adopts);
       } catch (error) {
         console.error(error.response);
       }

@@ -10,11 +10,13 @@ export default new Vuex.Store({
   state: {
     user: "",
     jwt: "",
+    users: [],
     isAuthen: JSON.parse(localStorage.getItem(auth_key)) ? true : false,
   },
   getters: {
     user: (state) => state.user,
     jwt: (state) => state.jwt,
+    users : (state) => state.users,
     isAuthen: (state) => state.isAuthen,
   },
   mutations: {
@@ -33,6 +35,9 @@ export default new Vuex.Store({
       state.user = user;
       state.isAuthen = true;
     },
+    fetchUser(state, users){
+      state.users = users;
+    }
   },
   actions: {
     async login({ commit }, payload) {
@@ -76,6 +81,15 @@ export default new Vuex.Store({
       let res = await Axios.post("/auth/me", null, header);
       commit("userStore", res.data);
       return res;
+    },
+    async getAllUsers({ commit }) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get("/user", header);
+        commit("fetchUser", res.data);
+      } catch (error) {
+        throw error;
+      }
     },
     async update({ commit }, payload) {
       let header = Header.getHeaders({

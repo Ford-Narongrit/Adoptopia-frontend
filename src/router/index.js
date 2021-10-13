@@ -5,7 +5,6 @@ import History from "../views/History.vue";
 import PaymentHistory from "../views/PaymentHistory.vue";
 import Topup from "../views/Topup.vue";
 import Notification from "../views/Notification.vue";
-import Auction from "../views/Auction.vue";
 import Sale from "../views/Sale.vue";
 import Ota from "../views/Ota.vue";
 import OtaSug from "../views/OtaSug.vue";
@@ -32,14 +31,6 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: {
-      layout: "Main",
-    },
-  },
-  {
-    path: "/auction",
-    name: "Auction",
-    component: Auction,
     meta: {
       layout: "Main",
     },

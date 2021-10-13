@@ -216,7 +216,6 @@ export default {
         console.error(error.response);
       }
     },
-
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },

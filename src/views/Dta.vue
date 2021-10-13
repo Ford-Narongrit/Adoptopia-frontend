@@ -17,7 +17,7 @@
 
       <div class="info -mt-20 py-16">
         <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-        <h2 class="py-3 text-2xl">By:</h2>
+        <h2 class="py-3 text-2xl">By: {{ findUserById() }}</h2>
         <h2 class="py-3 text-2xl">Catagory:</h2>
         <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
           <span v-for="category in adop_cat" :key="category.id"
@@ -66,6 +66,7 @@
 <script src="https://unpkg.com/@diracleo/vue-enlargeable-image/dist/vue-enlargeable-image.min.js"></script>
 <script>
 import coverflow from 'vue-coverflow'
+import UserStore from '../store/User.js'
 
 export default {
   name: 'dta',
@@ -81,6 +82,9 @@ export default {
       adop_agr: "",
       adop_image: [],
       coverList: [],
+
+      users:[],
+      name: ""
     }
   },
   components: {
@@ -105,6 +109,9 @@ export default {
     console.log(this.coverList);
     }
   },
+  mounted(){
+    this.fetchUser();
+  },
   methods: {
     addImage(e) {
       let files = null;
@@ -117,6 +124,23 @@ export default {
       if (files) {
         this.dta_image = URL.createObjectURL(files[0]);
       }
+    },
+    async fetchUser(){
+      try {
+        let res = await UserStore.dispatch("getAllUsers");
+        this.users = UserStore.getters.users;
+      } catch (error) {
+        console.error(error.response);
+      }
+    },
+    findUserById(){
+      for(var i = 0;i < this.users.length;i++){
+        if(this.users[i].id === this.postInfo.user_id){
+          this.name = this.users[i].name;
+          break;
+        }
+      }
+      return this.name;
     },
   },
 }

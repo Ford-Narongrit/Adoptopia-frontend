@@ -26,12 +26,33 @@
             <img
               :src="showImage.cover"
               alt="cover"
-              class="w-full xl:h-72 md:h-52 h-40 inline object-cover object-center rounded-xl shadow-lg"
+              class="
+                w-full
+                xl:h-72
+                md:h-52
+                h-40
+                inline
+                object-cover object-center
+                rounded-xl
+                shadow-lg
+              "
               style="z-index: 0"
             />
             <div
               v-if="hoverCover"
-              class="absolute top-0 flex justify-center items-center w-full h-full rounded-xl bg-black opacity-80 my-block-focus"
+              class="
+                absolute
+                top-0
+                flex
+                justify-center
+                items-center
+                w-full
+                h-full
+                rounded-xl
+                bg-black
+                opacity-80
+                my-block-focus
+              "
               @click="$refs.cover.click()"
               tabindex="1"
             >
@@ -66,11 +87,31 @@
                 :src="showImage.profile"
                 alt="profile"
                 :title="form.name"
-                class=" object-cover w-36 h-36 rounded-full shadow-xl border-4 border-gray-900 mx-auto"
+                class="
+                  object-cover
+                  w-36
+                  h-36
+                  rounded-full
+                  shadow-xl
+                  border-4 border-gray-900
+                  mx-auto
+                "
               />
               <div
                 v-if="hoverProfile"
-                class="absolute w-36 h-36 top-0 rounded-full flex justify-center items-center bg-black opacity-80 my-block-focus"
+                class="
+                  absolute
+                  w-36
+                  h-36
+                  top-0
+                  rounded-full
+                  flex
+                  justify-center
+                  items-center
+                  bg-black
+                  opacity-80
+                  my-block-focus
+                "
                 @click="$refs.profile.click()"
                 tabindex="1"
               >
@@ -115,7 +156,7 @@
             class="my-text-content rounded-lg w-full px-2 py-1"
             v-model="form.description"
             :class="errors.description ? 'my-block-error ' : 'my-block-focus'"
-            style="resize: none;"
+            style="resize: none"
           >
           </textarea>
           <ul v-if="errors.description" class="text-red-400">
@@ -127,13 +168,29 @@
         <div class="flex justify-end space-x-4">
           <button
             @click="reset"
-            class="bg-blue-600 rounded-lg p-3 text-white my-text-content hover:bg-blue-400 my-block-focus"
+            class="
+              bg-blue-600
+              rounded-lg
+              p-3
+              text-white
+              my-text-content
+              hover:bg-blue-400
+              my-block-focus
+            "
           >
             Reset
           </button>
           <button
             @click="editProfile"
-            class="bg-green-600 rounded-lg p-3 text-white my-text-content hover:bg-green-400 my-block-focus"
+            class="
+              bg-green-600
+              rounded-lg
+              p-3
+              text-white
+              my-text-content
+              hover:bg-green-400
+              my-block-focus
+            "
           >
             Save Changes
           </button>

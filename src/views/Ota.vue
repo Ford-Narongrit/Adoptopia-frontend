@@ -17,7 +17,7 @@
 
       <div class="info -mt-20 py-16">
         <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-        <h2 class="py-3 text-2xl">By:</h2>
+        <h2 class="py-3 text-2xl">By: {{ findUserById() }}</h2>
         <h2 class="py-3 text-2xl">Catagory:</h2>
         <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
           <span v-for="category in adop_cat" :key="category.id"
@@ -61,6 +61,7 @@
 <script>
 import coverflow from 'vue-coverflow';
 import AdoptStore from "@/store/Adopt";
+import UserStore from '../store/User.js'
 
 export default {
   name: 'ota',
@@ -78,6 +79,8 @@ export default {
       adop_image: [],
       coverList: [],
 
+      users: [],
+      name: "",
     }
   },
   components: {
@@ -106,6 +109,7 @@ export default {
   },
   mounted() {
     this.fetch();
+    this.fetchUser();
   },
   methods: {
     async fetch() {
@@ -122,7 +126,23 @@ export default {
         console.error(error.response);
       }
     },
-
+    async fetchUser(){
+      try {
+        let res = await UserStore.dispatch("getAllUsers");
+        this.users = UserStore.getters.users;
+      } catch (error) {
+        console.error(error.response);
+      }
+    },
+    findUserById(){
+      for(var i = 0;i < this.users.length;i++){
+        if(this.users[i].id === this.postInfo.user_id){
+          this.name = this.users[i].name;
+          break;
+        }
+      }
+      return this.name;
+    },
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
