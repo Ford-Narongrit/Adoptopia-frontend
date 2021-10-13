@@ -25,7 +25,9 @@
                 class="my-text-content w-32 items-center flex text-white "
                 >Name:
               </label>
-              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus">{{ name }}</div>
+              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus">
+                {{ name }}
+              </div>
             </div>
 
             <!--Catagory -->

@@ -53,14 +53,6 @@ const routes = [
     },
   },
   {
-    path: "/sale",
-    name: "Sale",
-    component: Sale,
-    meta: {
-      layout: "Main",
-    },
-  },
-  {
     path: "/topup",
     name: "Topup",
     component: Topup,
@@ -77,8 +69,16 @@ const routes = [
     },
   },
   {
-    path: "/ota",
-    name: "Ota",
+    path: "/sale/:id",
+    name: "sale",
+    component: Sale,
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/ota/:id",
+    name: "ota",
     component: Ota,
     props: true,
     meta: {
@@ -86,33 +86,37 @@ const routes = [
     },
   },
   {
-    path: "/ota-sug",
+    path: "/ota-sug/:id",
     name: "OtaSug",
     component: OtaSug,
+    props: true,
     meta: {
       layout: "Main",
     },
   },
   {
-    path: "/ota-select",
+    path: "/ota-select/:id",
     name: "OtaSelect",
     component: OtaSelect,
+    props: true,
     meta: {
       layout: "Main",
     },
   },
   {
-    path: "/dta",
-    name: "Dta",
+    path: "/dta/:id",
+    name: "dta",
     component: Dta,
+    props: true,
     meta: {
       layout: "Main",
     },
   },
   {
-    path: "/dta-sug",
+    path: "/dta-sug/:id",
     name: "DtaSug",
     component: DtaSug,
+    props: true,
     meta: {
       layout: "Main",
     },
