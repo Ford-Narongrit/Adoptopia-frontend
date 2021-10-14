@@ -83,9 +83,9 @@
             >POST</router-link
           >
           <router-link
-            to="/profile/adopt"
+            to="/profile/adop"
             class="my-text-base text-white hover:bg-gray-700"
-            >ADOPT</router-link
+            >ADOP</router-link
           >
         </div>
       </div>
