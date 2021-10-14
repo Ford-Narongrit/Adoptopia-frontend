@@ -20,10 +20,7 @@
           v-if="user.coin <= 1"
           >{{ user.coin }} Coin</router-link
         >
-        <router-link
-          to="/topup"
-          class="border-b-2 border-transparent"
-          v-else
+        <router-link to="/topup" class="border-b-2 border-transparent" v-else
           >{{ user.coin }} Coins</router-link
         >
       </div>
@@ -52,8 +49,9 @@
       <div v-if="login">
         <router-link
           to="/notification"
-          class="p-2 border-b-2 border-transparent"
+          class="p-2 border-b-2 border-transparent relative inline-block"
         >
+          <span class="absolute text-white -top-1  left-5 bg-red-500 rounded-full h-5  w-5 flex items-center justify-center">1</span>
           <font-awesome-icon icon="bell" class="text-xl text-white" />
         </router-link>
       </div>
@@ -117,7 +115,7 @@ export default {
       showNavbar: true,
       ontopNavbar: true,
       lastScrollPosition: 0,
-      user: {}
+      user: {},
     };
   },
   mounted() {
@@ -157,7 +155,7 @@ export default {
         console.error(error.message);
       }
     },
-    async fetchUser(){
+    async fetchUser() {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
@@ -165,7 +163,7 @@ export default {
       } catch (error) {
         console.error(error.message);
       }
-    }
+    },
   },
 };
 </script>
@@ -205,6 +203,18 @@ export default {
       border-block-color: #60a5fa;
       border-bottom-width: 2px;
     }
+  }
+.notify-bubble {
+    position: absolute;
+    top: -8px;
+    right: -7px;
+    padding: 2px 5px 2px 6px;
+    background-color: green;
+    color: white;
+    font-size: 0.65em;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px gray;
+    // display: none;
   }
 }
 </style>
