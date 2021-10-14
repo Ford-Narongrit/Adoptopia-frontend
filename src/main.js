@@ -5,6 +5,7 @@ import store from './store'
 
 // import css
 import './assets/css/tailwind.css'
+import './assets/css/markdown.css'
 
 //import FontAwesomeIcon
 import { library } from '@fortawesome/fontawesome-svg-core'
