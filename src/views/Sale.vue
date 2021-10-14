@@ -69,8 +69,10 @@ export default {
       users: [],
       name: "",
       user_me: {},
-      amount: 0,
       status: "",
+      form:{
+        amount: 0
+      },
     };
   },
   components: {
@@ -112,26 +114,25 @@ export default {
           "Insufficient coin, please make sure you have enough coin"
         );
       } else {
-        this.status = "spend";
-        this.amount = this.postInfo.price;
+        this.form.amount = this.postInfo.price;
         try {
-          let res = await axios.put(
-            `/user/${this.status}/${this.user_me.id}/${this.amount}`
-          );
-          console.log(res.data);
           let headers = Header.getHeaders();
+          let res = await axios.put(
+            "/spend", this.form , headers
+          );
           let data = {
-            status: this.status,
-            amount: this.amount,
+            status: "spend",
+            amount: this.form.amount,
           };
+          console.log(res.data);
           await axios.post(`/payment-histories`, data, headers);
-          await axios.put(`/trade/sell/${this.postInfo.id}`, {}, headers);
+          await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
           await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`, {}, headers);
+          // await axios.put(`/user/${this.status}/${this.user_me.id}/${this.amount}`, {}, headers);
           Alert.mixin("success", "Purchase successfully");
         } catch (error) {
-          if (error.response.status === 404) this.error = "Invalid purchase";
-          else this.error = error.response.data;
-          Alert.mixin("error", `${this.error}. Please try again.`);
+          this.error = error.response.data.errors
+          Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
         }
       }
     },
