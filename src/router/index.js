@@ -11,16 +11,16 @@ import OtaSug from "../views/OtaSug.vue";
 import OtaSelect from "../views/OtaSelect.vue";
 import Dta from "../views/Dta.vue";
 import DtaSug from "../views/DtaSug.vue";
-import AddAdopt from "../views/AddAdopt.vue";
+import AddAdop from "../views/AddAdop.vue";
 import PostAdopt from "../views/PostAdopt.vue";
 import PostSelect from "../views/PostSelect.vue";
 
 //profile
 import HomeUser from "@/views/user/Home.vue";
 import PostUser from "@/views/user/Post.vue";
-import AdoptUser from "@/views/user/Adopt.vue";
+import AdopUser from "@/views/user/Adop.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
-import AdoptIDUser from "@/views/user/Adopt_id.vue";
+import AdopIDUser from "@/views/user/Adop_id.vue";
 //auth
 import Login from "@/views/auth/Login.vue";
 import Register from "@/views/auth/Register.vue";
@@ -121,9 +121,9 @@ const routes = [
     },
   },
   {
-    path: "/adopt/add",
-    name: "AddAdopt",
-    component: AddAdopt,
+    path: "/adop/add",
+    name: "AddAdop",
+    component: AddAdop,
     meta: {
       layout: "Main",
     },
@@ -171,8 +171,8 @@ const routes = [
     },
   },
   {
-    path: "/profile/adopt",
-    component: AdoptUser,
+    path: "/profile/adop",
+    component: AdopUser,
     meta: {
       layout: "Profile",
     },
@@ -185,8 +185,8 @@ const routes = [
     },
   },
   {
-    path: "/profile/adopt/:id",
-    component: AdoptIDUser,
+    path: "/profile/adop/:id",
+    component: AdopIDUser,
     meta: {
       layout: "Image",
     },

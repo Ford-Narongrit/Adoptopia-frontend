@@ -23,7 +23,17 @@
             @mouseover="hoverCover = true"
             @mouseleave="hoverCover = false"
           >
+            <div
+              v-if="loading"
+              class="w-full
+                xl:h-72
+                md:h-52
+                h-40
+                rounded-xl
+                shadow-lg bg-white animate-pulse"
+            ></div>
             <img
+              v-if="!loading"
               :src="showImage.cover"
               alt="cover"
               class="
@@ -83,7 +93,12 @@
               @mouseover="hoverProfile = true"
               @mouseleave="hoverProfile = false"
             >
+              <div
+                v-if="loading"
+                class="object-cover w-36 h-36 rounded-full shadow-xl border-4 border-gray-900 mx-auto bg-white animate-pulse"
+              ></div>
               <img
+                v-if="!loading"
                 :src="showImage.profile"
                 alt="profile"
                 :title="form.name"
@@ -207,6 +222,7 @@ export default {
   data() {
     return {
       errors: [],
+      loading: true,
       hoverProfile: false,
       hoverCover: false,
       showImage: {
@@ -232,6 +248,7 @@ export default {
         this.form = res.data;
         this.showImage.profile = process.env.VUE_APP_APIURL + this.form.profile;
         this.showImage.cover = process.env.VUE_APP_APIURL + this.form.cover;
+        this.loading = false;
       } catch (error) {
         console.error(error);
       }

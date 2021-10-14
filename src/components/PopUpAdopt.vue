@@ -5,7 +5,7 @@
     @mouseleave="isShow = false"
   >
     <router-link
-      :to="{ path: '/profile/adopt/' + adopt.id }"
+      :to="{ path: '/profile/adop/' + adopt.id }"
       class="cursor-default"
     >
       <img
@@ -20,7 +20,7 @@
       >
         <div class="my-text-subtitle">
           <router-link
-            :to="{ path: '/profile/adopt/' + adopt.id }"
+            :to="{ path: '/profile/adop/' + adopt.id }"
             class="hover:underline "
           >
             {{ adopt.name }}

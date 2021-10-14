@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="flex items-center justify-end space-x-3">
-      <!-- add Adopt -->
+      <!-- add Adop -->
       <router-link
-        to="/adopt/add"
+        to="/adop/add"
         class="bg-shark-400 px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
       >
         <font-awesome-icon icon="plus-square" class="my-text-base text-white" />
         <span class="my-text-base text-white ">
-          Add Adopt
+          Add Adop
         </span>
       </router-link>
 

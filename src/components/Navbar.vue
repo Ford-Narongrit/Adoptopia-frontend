@@ -77,12 +77,12 @@
             >Profile</router-link
           >
           <router-link
-            to="/profile/adopt"
+            to="/profile/adop"
             class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
             >My Adop</router-link
           >
           <router-link
-            to="/adopt/add"
+            to="/adop/add"
             class="block px-3 py-2 hover:bg-gray-300 rounded-xl text-center"
             >Add Adop</router-link
           >

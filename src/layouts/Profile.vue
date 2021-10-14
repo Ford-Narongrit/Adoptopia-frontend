@@ -2,9 +2,31 @@
   <div>
     <navbar />
     <div class="bg-gradient-to-t from-shark-700 space-y-5 py-3">
-      <div class="space-y-3 container mx-auto">
-        <!-- profile -->
-        <div class="relative h-96">
+      <!-- loading -->
+      <div class="space-y-3 container mx-auto" v-if="loading">
+        <div class="relative h-96 bg-white rounded-xl">
+          <div
+            class="absolute w-full h-96 inline object-cover object-center rounded-xl bg-gray-400 animate-pulse"
+          ></div>
+          <div class="bottom-0 w-full absolute flex justify-center">
+            <div class="space-y-2 pb-3">
+              <div
+                class="object-cover w-36 h-36 rounded-full shadow-lg mx-auto border-4 border-gray-500 bg-gray-100 animate-pulse"
+              ></div>
+              <div
+                class=" bg-gray-100 h-12 rounded-lg w-96 animate-pulse"
+              ></div>
+              <div
+                class=" bg-gray-100 h-6 rounded-lg w-72 mx-auto animate-pulse"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- profile -->
+      <div class="space-y-3 container mx-auto" v-if="!loading">
+        <div class="relative h-96 bg-black rounded-xl">
           <img
             :src="getImagePath(user.cover)"
             alt="backimage"
@@ -27,7 +49,8 @@
               </div>
             </div>
             <div class="absolute bottom-0 right-0">
-              <router-link to="/profile/edit"
+              <router-link
+                to="/profile/edit"
                 class="bg-shark-400 block px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
               >
                 <font-awesome-icon
@@ -60,9 +83,9 @@
             >POST</router-link
           >
           <router-link
-            to="/profile/adopt"
+            to="/profile/adop"
             class="my-text-base text-white hover:bg-gray-700"
-            >ADOPT</router-link
+            >ADOP</router-link
           >
         </div>
       </div>
@@ -83,7 +106,8 @@ export default {
   name: "ProfileLayout",
   data() {
     return {
-      user: {}
+      user: {},
+      loading: true,
     };
   },
   mounted() {
@@ -94,6 +118,7 @@ export default {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
+        this.loading = false;
       } catch (error) {
         console.error(error);
       }
