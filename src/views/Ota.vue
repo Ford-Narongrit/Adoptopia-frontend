@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Offer To Adop
           <span>
-            <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId} }">
+            <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId, postInfo: postInfo} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -42,7 +42,7 @@
           <font-awesome-icon icon="user" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
         </div>
 
-        <button class="btn-rounded absolute right-40 mt-6">Request</button>
+        <button class="btn-rounded absolute right-40 mt-6" @click="request()">Request</button>
       </div>
 
       <br><br>   
@@ -62,6 +62,9 @@
 import coverflow from 'vue-coverflow';
 import AdoptStore from "@/store/Adopt";
 import UserStore from '../store/User.js'
+import axios from "axios";
+import Header from "@/helpers/Header";
+import Alert from "../helpers/Alert";
 
 export default {
   name: 'ota',
@@ -81,6 +84,11 @@ export default {
 
       users: [],
       name: "",
+
+      form: {
+        o_adop: "",
+        o_trade: "",
+      },
     }
   },
   components: {
@@ -94,6 +102,10 @@ export default {
       this.postId = this.postInfo.id
       this.adop_name = this.postInfo.adopt.name
       this.adop_agr = this.postInfo.adopt.agreement
+
+      this.form.o_adop = this.ota_adop_id
+      this.form.o_trade = this.postInfo.id
+
       for(var i=0; i<this.postInfo.adopt.category.length; i++){
         this.adop_cat.push(this.postInfo.adopt.category[i].name);
       }
@@ -126,6 +138,7 @@ export default {
         console.error(error.response);
       }
     },
+    
     async fetchUser(){
       try {
         let res = await UserStore.dispatch("getAllUsers");
@@ -134,6 +147,7 @@ export default {
         console.error(error.response);
       }
     },
+
     findUserById(){
       for(var i = 0;i < this.users.length;i++){
         if(this.users[i].id === this.postInfo.user_id){
@@ -143,9 +157,34 @@ export default {
       }
       return this.name;
     },
+
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
+
+    async request() {
+      let payload = new FormData();
+      let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
+      if(this.form.o_adop !== "" && this.form.o_trade !== ""){
+        payload.append("trade_id", this.form.o_trade);
+        payload.append("adopt_id", this.form.o_adop);
+        payload.append("status", 0);
+        // console.log(this.form.o_trade);
+        // console.log(this.form.o_adop);
+
+        try {
+          let res = await axios.post("/ota-sug", payload, config);
+          console.log(res.data);
+          Alert.mixin("success", "Request successfully");
+        } catch (error) {
+          this.errors = error.response.data;
+          console.log(this.errors);
+        Alert.window("error", "Fail to request adop", "Please select adop.");
+        }
+      }else{
+        Alert.window("error", "Fail to request adop", "Please select adop.");
+      }
+    }
   },
 }
 </script>

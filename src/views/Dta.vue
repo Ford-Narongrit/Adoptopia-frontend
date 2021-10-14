@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Draw To Adop
           <span>
-            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId} }">
+            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId, postInfo: postInfo} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -47,7 +47,9 @@
           </div>
         </div>
 
-        <button class="btn-rounded absolute right-40 mt-6">Request</button>
+        <button class="btn-rounded absolute right-40 mt-6" @click="request()">
+          Request
+        </button>
       </div>
 
       <br><br>
@@ -67,16 +69,19 @@
 <script>
 import coverflow from 'vue-coverflow'
 import UserStore from '../store/User.js'
+import axios from "axios";
+import Alert from "../helpers/Alert";
+import Header from "@/helpers/Header";
 
 export default {
   name: 'dta',
-    data () {
+  data () {
     return {
       hoverImage: false,
       dta_image: "",
       postId: "",
-
       postInfo: "",
+      
       adop_name: "",
       adop_cat: [],
       adop_agr: "",
@@ -84,8 +89,14 @@ export default {
       coverList: [],
 
       users:[],
-      name: ""
-    }
+      name: "",
+
+      form: {
+        trade_id: "",
+        status: 0,
+        image: []
+      },
+    };
   },
   components: {
     coverflow
@@ -96,6 +107,8 @@ export default {
       this.postId = this.postInfo.id
       this.adop_name = this.postInfo.adopt.name
       this.adop_agr = this.postInfo.adopt.agreement
+
+      this.form.trade_id = this.postInfo.id
       for(var i=0; i<this.postInfo.adopt.category.length; i++){
         this.adop_cat.push(this.postInfo.adopt.category[i].name);
       }
@@ -123,8 +136,10 @@ export default {
       }
       if (files) {
         this.dta_image = URL.createObjectURL(files[0]);
+        this.form.image = files[0];
       }
     },
+
     async fetchUser(){
       try {
         let res = await UserStore.dispatch("getAllUsers");
@@ -133,6 +148,7 @@ export default {
         console.error(error.response);
       }
     },
+
     findUserById(){
       for(var i = 0;i < this.users.length;i++){
         if(this.users[i].id === this.postInfo.user_id){
@@ -142,6 +158,33 @@ export default {
       }
       return this.name;
     },
+
+    async request(){
+      try {
+        let res = await UserStore.dispatch("getMe");
+        this.user = res.data;
+      } catch (error) {
+        Alert.window("error", "Unauthorized", "Please login before request image.");
+        console.error(error);
+      }
+      let payload = new FormData();
+      if(this.form.trade_id !== "" && this.form.image !== []){
+        payload.append("trade_id", this.form.trade_id);
+        payload.append("status", this.form.status);
+        payload.append("image", this.form.image);
+        console.log(this.form.image);
+      }
+      let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
+      try {
+        let res = await axios.post("/dta-sug", payload, config);
+        console.log(res.data);
+        Alert.mixin("success", "Request image successfully");
+      } 
+      catch (error) {
+        this.errors = error.response.data.errors;
+        Alert.window("error", "Request image failed", "Please select image.");
+      }
+    }
   },
 }
 </script>

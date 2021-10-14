@@ -250,7 +250,7 @@ export default {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
       } catch (error) {
-        Alert.window("error", "Unauthorized", "Please login before add adopt.");
+        Alert.window("error", "Unauthorized", "Please login before add adop.");
         console.error(error);
       }
       let payload = new FormData();
@@ -277,7 +277,7 @@ export default {
 
         Alert.window(
           "error",
-          "Add adopt failed",
+          "Add adop failed",
           "Sorry, an unexpected error occurred. Please try again."
         );
         console.log(this.errors);
@@ -312,7 +312,7 @@ export default {
           Alert.window(
             "error",
             "You adding more than 5 Images",
-            "Maximum images are 5 images per adopt. We will keep your first 5 images. In case you want to change your images consider removing some of those first."
+            "Maximum images are 5 images per adop. We will keep your first 5 images. In case you want to change your images consider removing some of those first."
           );
       }
       this.hoverImage = false;
