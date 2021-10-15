@@ -42,6 +42,16 @@ export default new Vuex.Store({
         throw error;
       }
     },
+    async getUserAdops({ commit }, username) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get(`/adops/${username}`, header);
+        commit("fetchAdopts_list", res.data);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
   modules: {},
 });

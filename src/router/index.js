@@ -162,49 +162,49 @@ const routes = [
   },
 
   {
-    path: "/profile/home",
+    path: "/:username/home",
     component: HomeUser,
     meta: {
       layout: "Profile",
     },
   },
   {
-    path: "/profile/posts",
+    path: "/:username/posts",
     component: PostUser,
     meta: {
       layout: "Profile",
     },
   },
   {
-    path: "/profile/adop",
+    path: "/:username/adop",
     component: AdopUser,
     meta: {
       layout: "Profile",
     },
   },
   {
-    path: "/profile/edit",
+    path: "/:username/edit",
     component: EditProfile,
     meta: {
       layout: "Main",
     },
   },
   {
-    path: "/profile/adop/:id",
+    path: "/:username/adop/:id",
     component: AdopIDUser,
     meta: {
       layout: "Image",
     },
   },
   {
-    path: "/:slug/followers",
+    path: "/:username/followers",
     component: Follower,
     meta: {
       layout: "Follow",
     },
   },
   {
-    path: "/:slug/following",
+    path: "/:username/following",
     component: Following,
     meta: {
       layout: "Follow",

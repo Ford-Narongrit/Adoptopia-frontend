@@ -1,6 +1,6 @@
 <template>
   <div>
-    <follow :follows="followers" :loading="loading"></follow>
+    <follow :follows="followers" :loading="loading" :isFollower="true"></follow>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getMe");
+        let res = await UserStore.dispatch("getUser", this.$route.params.username);
         this.followers = res.data.followers;
         this.loading = false;
       } catch (error) {

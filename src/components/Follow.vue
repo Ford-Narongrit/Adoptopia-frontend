@@ -1,6 +1,7 @@
 <template>
   <div class="bg-shark-800 border-2 ">
-    <div v-if="loading" class="">
+    <!-- if loading -->
+    <div v-if="loading">
       <div v-for="number in 5" :key="number" class="px-4 py-6 flex space-x-4">
         <div
           class="object-cover w-20 h-20 rounded-full shadow-lg bg-white animate-pulse border-4 border-gray-900"
@@ -31,20 +32,35 @@
         </div>
       </div>
     </div>
-    <div v-if="follows.length <= 0 && !loading" class="text-center">
-      <span class="my-text-title text-white">
-        You don’t have any follows yet
-      </span>
-      <div class="my-text-content text-white">
-        When someone follows you, you’ll see them here.
+
+    <!-- if don't have follow -->
+    <div
+      v-if="follows.length <= 0 && !loading"
+      class="text-center h-96 flex justify-center items-center"
+    >
+      <div>
+        <span class="my-text-title text-white">
+          You don’t have any follows yet
+        </span>
+        <div v-if="isFollower" class="my-text-content text-white">
+          When someone follows you, you’ll see them here.
+        </div>
+        <div v-if="!isFollower" class="my-text-content text-white">
+          When you follows someone, you’ll see them here.
+        </div>
       </div>
     </div>
+
+    <!-- follow -->
     <div v-for="follow in follows" :key="follow.id">
-      <div class="px-4 py-6 flex space-x-4 hover:bg-shark-600">
+      <router-link
+        :to="`/${follow.username}/home`"
+        class="px-4 py-6 flex space-x-4 hover:bg-shark-600"
+      >
         <img
           :src="getImagePath(follow.profile)"
           alt="profile"
-          title="user.name"
+          :title="follow.name"
           class="object-cover w-20 h-20 rounded-full shadow-lg border-4 border-gray-900"
         />
         <div class="space-y-1">
@@ -52,7 +68,7 @@
           <div class="my-text-base text-gray-600">@{{ follow.username }}</div>
           <div class="my-text-base text-white">{{ follow.description }}</div>
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -65,6 +81,10 @@ export default {
       default: () => [],
     },
     loading: {
+      type: Boolean,
+      default: true,
+    },
+    isFollower: {
       type: Boolean,
       default: true,
     },

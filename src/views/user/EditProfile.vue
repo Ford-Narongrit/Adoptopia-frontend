@@ -267,7 +267,7 @@ export default {
       try {
         let res = await UserStore.dispatch("update", payload);
         Alert.mixin("success", res.data.message);
-        this.$router.push("/profile/home");
+        this.$router.push({ path: `/${this.form.username}/home` });
       } catch (error) {
         this.errors = error.response.data;
         Alert.window(

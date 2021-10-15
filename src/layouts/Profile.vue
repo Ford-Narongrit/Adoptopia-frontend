@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-h-screen relative pb-48">
     <navbar />
     <div class="bg-gradient-to-t from-shark-700 space-y-5 py-3">
       <!-- loading -->
@@ -38,7 +38,7 @@
               <img
                 :src="getImagePath(user.profile)"
                 alt="profile"
-                title="user.name"
+                :title="user.name"
                 class=" object-cover w-36 h-36 rounded-full shadow-lg mx-auto border-4 border-gray-900"
               />
               <div class="my-text-super text-white text-center">
@@ -48,13 +48,13 @@
                 @{{ user.username }}
               </div>
               <div class="my-text-content text-white text-center">
-                <router-link to="following" class="hover:underline">{{ makeFollower(user.following.length) }} following</router-link> |
-                <router-link to="followers" class="hover:underline">{{ makeFollower(user.followers.length) }} followers</router-link>
+                <router-link to="followers" class="hover:underline">{{ makeFollower(user.followers.length) }} followers</router-link> |
+                <router-link to="following" class="hover:underline">{{ makeFollower(user.following.length) }} following</router-link> 
               </div>
             </div>
             <div class="absolute bottom-0 right-0">
-              <router-link
-                to="/profile/edit"
+              <router-link v-if="user.isOwner"
+                to="edit"
                 class="bg-shark-400 block px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
               >
                 <font-awesome-icon
@@ -77,17 +77,17 @@
         <!-- link -->
         <div class="flex justify-center nav space-x-4">
           <router-link
-            to="/profile/home"
+            to="home"
             class="my-text-base text-white hover:bg-gray-700"
             >HOME</router-link
           >
           <router-link
-            to="/profile/posts"
+            to="posts"
             class="my-text-base text-white hover:bg-gray-700"
             >POST</router-link
           >
           <router-link
-            to="/profile/adop"
+            to="adop"
             class="my-text-base text-white hover:bg-gray-700"
             >ADOP</router-link
           >
@@ -97,7 +97,7 @@
     <div class="container mx-auto pt-10">
       <slot />
     </div>
-    <div class="bg-gray-700 h-32 mt-10">
+    <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
       footer
     </div>
   </div>
@@ -120,7 +120,7 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getMe");
+        let res = await UserStore.dispatch("getUser", this.$route.params.username);
         this.user = res.data;
         this.loading = false;
       } catch (error) {
