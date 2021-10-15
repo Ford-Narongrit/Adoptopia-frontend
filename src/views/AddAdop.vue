@@ -272,6 +272,7 @@ export default {
         let res = await axios.post("/adopt", payload, config);
         console.log(res.data);
         Alert.mixin("success", "Add adopt successfully");
+        this.$router.push({path:"/profile/adop"})
       } catch (error) {
         this.errors = error.response.data.errors;
 

@@ -51,7 +51,11 @@
           to="/notification"
           class="p-2 border-b-2 border-transparent relative inline-block"
         >
-          <span class="absolute text-white -top-1  left-5 bg-red-500 rounded-full h-5  w-5 flex items-center justify-center">1</span>
+          <span
+          v-if="notificationNumber > 0"
+            class="absolute text-white -top-1  left-5 bg-red-500 rounded-full h-5  w-5 flex items-center justify-center"
+            >{{notificationNumber}}</span
+          >
           <font-awesome-icon icon="bell" class="text-xl text-white" />
         </router-link>
       </div>
@@ -107,6 +111,8 @@
 <script>
 import UserStore from "@/store/User";
 import Alert from "@/helpers/Alert.js";
+import axios from 'axios';
+import Header from "@/helpers/Header";
 export default {
   data() {
     return {
@@ -116,12 +122,14 @@ export default {
       ontopNavbar: true,
       lastScrollPosition: 0,
       user: {},
+      notificationNumber:0
     };
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
     this.login = UserStore.getters.isAuthen;
     this.fetchUser();
+    this.fetchNotification();
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.onScroll);
@@ -164,6 +172,16 @@ export default {
         console.error(error.message);
       }
     },
+    async fetchNotification() {
+      try {
+        let config = Header.getHeaders();
+        let res = await axios.get("/notification/unseen" , config);
+        this.notificationNumber = res.data.length
+        console.log("fetchNotification data:" +  this.notificationNumber);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
@@ -204,7 +222,7 @@ export default {
       border-bottom-width: 2px;
     }
   }
-.notify-bubble {
+  .notify-bubble {
     position: absolute;
     top: -8px;
     right: -7px;
