@@ -47,6 +47,10 @@
               <div class="my-text-content text-white text-center">
                 @{{ user.username }}
               </div>
+              <div class="my-text-content text-white text-center">
+                <router-link to="following" class="hover:underline">{{ makeFollower(user.following.length) }} following</router-link> |
+                <router-link to="followers" class="hover:underline">{{ makeFollower(user.followers.length) }} followers</router-link>
+              </div>
             </div>
             <div class="absolute bottom-0 right-0">
               <router-link
@@ -125,6 +129,14 @@ export default {
     },
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
+    },
+    intlFormat(num) {
+      return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
+    },
+    makeFollower(num) {
+      if (num >= 1000000) return this.intlFormat(num / 1000000) + "M";
+      if (num >= 1000) return this.intlFormat(num / 1000) + "k";
+      return this.intlFormat(num);
     },
   },
   components: {

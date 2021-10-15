@@ -24,6 +24,11 @@ import AdopIDUser from "@/views/user/Adop_id.vue";
 //auth
 import Login from "@/views/auth/Login.vue";
 import Register from "@/views/auth/Register.vue";
+
+//follow
+import Follower from "@/views/user/followers.vue";
+import Following from "@/views/user/following.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -189,6 +194,20 @@ const routes = [
     component: AdopIDUser,
     meta: {
       layout: "Image",
+    },
+  },
+  {
+    path: "/:slug/followers",
+    component: Follower,
+    meta: {
+      layout: "Follow",
+    },
+  },
+  {
+    path: "/:slug/following",
+    component: Following,
+    meta: {
+      layout: "Follow",
     },
   },
 ];
