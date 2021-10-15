@@ -1,7 +1,8 @@
 <template>
   <div class="grid grid-cols-1">
     <h1 class="flex justify-center text-7xl my-8 text-white">Notification</h1>
-    <div class="justify-self-center bg-white h-screen w-3/5 " >
+    <Loading v-if="!loading"/>
+    <div v-if="loading" class="justify-self-center bg-white h-3/5 w-2/5 overflow-y-scroll" >
       <div v-for="(noti, index) in notiList" :key="index">
         <notification-card
           :name="noti.user.name"
@@ -22,16 +23,19 @@ import axios from "axios";
 import NotificationCard from "../components/NotificationCard.vue";
 import UserStore from "@/store/User";
 import Header from "@/helpers/Header";
+import Loading from "../components/Loading.vue";
 
 export default {
   data() {
     return {
       notiList: [],
       user: {},
+      loading: false,
     };
   },
   components: {
     NotificationCard,
+    Loading
   },
   created() {
     this.fetchUser();
@@ -50,11 +54,14 @@ export default {
       }
     },
     async fetchNotification() {
+      this.loading = false;
       let header = Header.getHeaders();
       try {
         let res = await axios.get("/notification", header);
         console.log(res.data);
         this.notiList = res.data;
+        this.loading = true;
+        console.log(this.loading);
       } catch (error) {
         console.error(error);
       }

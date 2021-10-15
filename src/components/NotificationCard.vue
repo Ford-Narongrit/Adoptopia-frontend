@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white p-6 flex flex-row hover:bg-blueGray-100"
+    class="bg-white p-6 flex flex-row hover:bg-blueGray-100 cursor-pointer"
     @click="toPost()"
   >
     <img
@@ -19,8 +19,6 @@
 
 <script>
 import moment from 'moment';
-import axios from 'axios';
-import Header from "@/helpers/Header";
 export default {
   data(){
     return{
@@ -48,7 +46,6 @@ export default {
     },
 
     toPost(){
-      // '/trade'
 
       this.$router.push({path:'/'+this.tradeType+'/'+this.tradeID})
 
