@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-h-screen relative pb-48">
     <navbar />
     <div class="bg-gradient-to-t from-shark-700 space-y-5 py-3">
       <!-- loading -->
@@ -38,7 +38,7 @@
               <img
                 :src="getImagePath(user.profile)"
                 alt="profile"
-                title="user.name"
+                :title="user.name"
                 class=" object-cover w-36 h-36 rounded-full shadow-lg mx-auto border-4 border-gray-900"
               />
               <div class="my-text-super text-white text-center">
@@ -47,10 +47,26 @@
               <div class="my-text-content text-white text-center">
                 @{{ user.username }}
               </div>
+              <div class="my-text-content text-white text-center">
+                <router-link to="followers" class="hover:underline"
+                  >{{
+                    makeFollower(user.followers.length)
+                  }}
+                  followers</router-link
+                >
+                |
+                <router-link to="following" class="hover:underline"
+                  >{{
+                    makeFollower(user.following.length)
+                  }}
+                  following</router-link
+                >
+              </div>
             </div>
-            <div class="absolute bottom-0 right-0">
+            <!-- edit profile -->
+            <div class="absolute bottom-0 right-0" v-if="user.isOwner">
               <router-link
-                to="/profile/edit"
+                to="edit"
                 class="bg-shark-400 block px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
               >
                 <font-awesome-icon
@@ -61,6 +77,38 @@
                   Edit Profile
                 </span>
               </router-link>
+            </div>
+
+            <!-- follow -->
+            <div
+              class="absolute bottom-0 right-0"
+              v-if="!user.isOwner && !isFollow"
+              @click="followed()"
+            >
+              <button
+                class="border-4 border-gray-500 bg-white block px-8 py-2 rounded-3xl m-1 hover:bg-gray-200"
+              >
+                <span class="my-text-base text-black">
+                  Follow
+                </span>
+              </button>
+            </div>
+
+            <!-- following -->
+            <div
+              class="absolute bottom-0 right-0"
+              v-if="!user.isOwner && isFollow"
+              @click="unfollow()"
+            >
+              <button
+                class="border-4 border-gray-500 bg-gray-400 block px-8 py-2 rounded-3xl m-1 hover:bg-red-700 hover:border-red-400"
+                @mouseover="unFollow = true"
+                @mouseleave="unFollow = false"
+              >
+                <span class="my-text-base text-white">
+                  {{ unFollow ? "Unfollow" : "Following" }}
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -73,17 +121,17 @@
         <!-- link -->
         <div class="flex justify-center nav space-x-4">
           <router-link
-            to="/profile/home"
+            to="home"
             class="my-text-base text-white hover:bg-gray-700"
             >HOME</router-link
           >
           <router-link
-            to="/profile/posts"
+            to="posts"
             class="my-text-base text-white hover:bg-gray-700"
             >POST</router-link
           >
           <router-link
-            to="/profile/adop"
+            to="adop"
             class="my-text-base text-white hover:bg-gray-700"
             >ADOP</router-link
           >
@@ -93,7 +141,7 @@
     <div class="container mx-auto pt-10">
       <slot />
     </div>
-    <div class="bg-gray-700 h-32 mt-10">
+    <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
       footer
     </div>
   </div>
@@ -108,6 +156,8 @@ export default {
     return {
       user: {},
       loading: true,
+      isFollow: false,
+      unFollow: false,
     };
   },
   mounted() {
@@ -116,8 +166,13 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getMe");
+        let res = await UserStore.dispatch(
+          "getUser",
+          this.$route.params.username
+        );
         this.user = res.data;
+        let me = await UserStore.dispatch("isFollow", this.user.id);
+        this.isFollow = me.data.isFollow;
         this.loading = false;
       } catch (error) {
         console.error(error);
@@ -125,6 +180,24 @@ export default {
     },
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
+    },
+    intlFormat(num) {
+      return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
+    },
+    makeFollower(num) {
+      if (num >= 1000000) return this.intlFormat(num / 1000000) + "M";
+      if (num >= 1000) return this.intlFormat(num / 1000) + "k";
+      return this.intlFormat(num);
+    },
+    async followed() {
+      let res =  await UserStore.dispatch("follow", this.user.id);
+      console.log(res);
+      this.isFollow = true;
+    },
+    async unfollow() {
+      let res =  await UserStore.dispatch("unFollow", this.user.id);
+      console.log(res);
+      this.isFollow = false
     },
   },
   components: {

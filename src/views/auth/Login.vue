@@ -43,6 +43,7 @@
               <button
                 class="absolute my-auto h-full right-0 px-1 rounded-lg bg-transparent"
                 @click="isSee = !isSee"
+                tabindex="-1"
               >
                 <font-awesome-icon
                   :icon="isSee ? 'eye' : 'eye-slash'"
@@ -58,7 +59,7 @@
           <!-- signUp -->
           <div class="my-text-base text-white">
             Don't have an account ?
-            <router-link to="/register" class="text-blue-500 hover:underline"
+            <router-link to="/register" class="text-blue-500 hover:underline" tabindex="-1"
               >Sign Up</router-link
             >
           </div>
@@ -99,7 +100,7 @@ export default {
       try {
         let res = await UserStore.dispatch("login", payload);
         Alert.mixin("success", "Login successful");
-        this.$router.push("/profile/home");
+        this.$router.push(`/${res.data.user.username}/home`);
       } catch (error) {
         this.errors = error.response.data;
         Alert.window(

@@ -1,17 +1,6 @@
 <template>
   <div>
     <div class="flex items-center justify-end space-x-3">
-      <!-- add Adop -->
-      <router-link
-        to="/adop/add"
-        class="bg-shark-400 px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
-      >
-        <font-awesome-icon icon="plus-square" class="my-text-base text-white" />
-        <span class="my-text-base text-white ">
-          Add Adop
-        </span>
-      </router-link>
-
       <!-- Sort By -->
       <div>
         <select
@@ -37,7 +26,14 @@
         />
       </div>
     </div>
-
+    <div v-if="adopts.length <= 0 && !loading" class="text-center">
+      <span class="my-text-title text-white">
+        You don’t have any adop yet
+      </span>
+      <div class="my-text-content text-white">
+        let's go create adop
+      </div>
+    </div>
     <div class="grid grid-cols-4 gap-3">
       <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
         <div
@@ -63,6 +59,7 @@ export default {
       adopts: [],
       selected: "newest",
       searchKeyword: "",
+      loading: true,
     };
   },
   components: {
@@ -127,8 +124,12 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await AdoptStore.dispatch("getAdopts_list");
+        let res = await AdoptStore.dispatch(
+          "getUserAdops",
+          this.$route.params.username
+        );
         this.adopts = AdoptStore.getters.adopts_list;
+        this.loading = false;
       } catch (error) {
         console.error(error.response);
       }

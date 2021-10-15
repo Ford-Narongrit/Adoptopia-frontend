@@ -5,6 +5,7 @@ import Header from "@/helpers/Header";
 Vue.use(Vuex);
 
 let auth_key = process.env.VUE_APP_AUTH_KEY;
+const user_id = 0;
 
 export default new Vuex.Store({
   state: {
@@ -16,7 +17,7 @@ export default new Vuex.Store({
   getters: {
     user: (state) => state.user,
     jwt: (state) => state.jwt,
-    users : (state) => state.users,
+    users: (state) => state.users,
     isAuthen: (state) => state.isAuthen,
   },
   mutations: {
@@ -35,9 +36,9 @@ export default new Vuex.Store({
       state.user = user;
       state.isAuthen = true;
     },
-    fetchUser(state, users){
+    fetchUser(state, users) {
       state.users = users;
-    }
+    },
   },
   actions: {
     async login({ commit }, payload) {
@@ -80,6 +81,13 @@ export default new Vuex.Store({
       let header = Header.getHeaders({ Accept: "application/json" });
       let res = await Axios.post("/auth/me", null, header);
       commit("userStore", res.data);
+      this.user_id = res.data.id;
+      return res;
+    },
+    async getUser({ commit }, slug) {
+      let header = Header.getHeaders({ Accept: "application/json" });
+      let res = await Axios.get(`/user/${slug}`, header);
+      commit("userStore", res.data);
       return res;
     },
     async getAllUsers({ commit }) {
@@ -98,6 +106,33 @@ export default new Vuex.Store({
       let res = await Axios.post(`/auth/update`, payload, header);
       commit("userStore", res.data);
       return res;
+    },
+    async isFollow({ commit }, id) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get(`/follow/${id}`, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async follow({ commit }, id) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.post(`/follow/${id}`,null, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async unFollow({ commit }, id) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.delete(`/follow/${id}`, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
     },
   },
   modules: {},

@@ -9,6 +9,12 @@
       class="cursor-default"
     >
       <img
+        src="/favicon.ico"
+        class="rounded-md transition duration-300 ease-in-out transform hover:scale-110"
+        alt=""
+      />
+      <img
+        v-if="adopt.adopt_image[0]"
         class="rounded-md transition duration-300 ease-in-out transform hover:scale-110"
         :src="getImagePath(adopt.adopt_image[0].path)"
         :height="`${adopt.adopt_image[0].height}px`"
