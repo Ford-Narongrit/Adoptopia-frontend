@@ -48,12 +48,24 @@
                 @{{ user.username }}
               </div>
               <div class="my-text-content text-white text-center">
-                <router-link to="followers" class="hover:underline">{{ makeFollower(user.followers.length) }} followers</router-link> |
-                <router-link to="following" class="hover:underline">{{ makeFollower(user.following.length) }} following</router-link> 
+                <router-link to="followers" class="hover:underline"
+                  >{{
+                    makeFollower(user.followers.length)
+                  }}
+                  followers</router-link
+                >
+                |
+                <router-link to="following" class="hover:underline"
+                  >{{
+                    makeFollower(user.following.length)
+                  }}
+                  following</router-link
+                >
               </div>
             </div>
-            <div class="absolute bottom-0 right-0">
-              <router-link v-if="user.isOwner"
+            <!-- edit profile -->
+            <div class="absolute bottom-0 right-0" v-if="user.isOwner">
+              <router-link
                 to="edit"
                 class="bg-shark-400 block px-5 py-2 rounded-lg m-1 hover:bg-gray-700"
               >
@@ -65,6 +77,38 @@
                   Edit Profile
                 </span>
               </router-link>
+            </div>
+
+            <!-- follow -->
+            <div
+              class="absolute bottom-0 right-0"
+              v-if="!user.isOwner && !isFollow"
+              @click="followed()"
+            >
+              <button
+                class="border-4 border-gray-500 bg-white block px-8 py-2 rounded-3xl m-1 hover:bg-gray-200"
+              >
+                <span class="my-text-base text-black">
+                  Follow
+                </span>
+              </button>
+            </div>
+
+            <!-- following -->
+            <div
+              class="absolute bottom-0 right-0"
+              v-if="!user.isOwner && isFollow"
+              @click="unfollow()"
+            >
+              <button
+                class="border-4 border-gray-500 bg-gray-400 block px-8 py-2 rounded-3xl m-1 hover:bg-red-700 hover:border-red-400"
+                @mouseover="unFollow = true"
+                @mouseleave="unFollow = false"
+              >
+                <span class="my-text-base text-white">
+                  {{ unFollow ? "Unfollow" : "Following" }}
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -112,6 +156,8 @@ export default {
     return {
       user: {},
       loading: true,
+      isFollow: false,
+      unFollow: false,
     };
   },
   mounted() {
@@ -120,8 +166,13 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getUser", this.$route.params.username);
+        let res = await UserStore.dispatch(
+          "getUser",
+          this.$route.params.username
+        );
         this.user = res.data;
+        let me = await UserStore.dispatch("isFollow", this.user.id);
+        this.isFollow = me.data.isFollow;
         this.loading = false;
       } catch (error) {
         console.error(error);
@@ -137,6 +188,16 @@ export default {
       if (num >= 1000000) return this.intlFormat(num / 1000000) + "M";
       if (num >= 1000) return this.intlFormat(num / 1000) + "k";
       return this.intlFormat(num);
+    },
+    async followed() {
+      let res =  await UserStore.dispatch("follow", this.user.id);
+      console.log(res);
+      this.isFollow = true;
+    },
+    async unfollow() {
+      let res =  await UserStore.dispatch("unFollow", this.user.id);
+      console.log(res);
+      this.isFollow = false
     },
   },
   components: {
