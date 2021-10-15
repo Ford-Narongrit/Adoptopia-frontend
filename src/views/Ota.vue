@@ -176,6 +176,7 @@ export default {
           let res = await axios.post("/ota-sug", payload, config);
           console.log(res.data);
           Alert.mixin("success", "Request successfully");
+          this.$router.push("/");
         } catch (error) {
           this.errors = error.response.data;
           console.log(this.errors);

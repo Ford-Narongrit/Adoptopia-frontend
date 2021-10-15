@@ -5,7 +5,7 @@
         <label for="type" class="px-5 mt-2 text-white">Type: </label>
         <select
           v-model="type"
-          class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
+          class="my-text-content rounded-lg px-2 py-1 my-block-focus"
         >
           <option disabled value="">Please select a type</option>
           <!-- Auction, OTA, DTA, SP -->
@@ -22,17 +22,16 @@
         <label class="px-4 mt-2 text-white">Category</label>
         <multiselect
           v-model="valueCat"
-          select-label=""
-          tag-placeholder=""
-          deselectLabel=""
-          placeholder="Search or add a tag"
-          label="name"
-          track-by="code"
-          :options="optionsCat"
+          :options="categories"
           :multiple="true"
-          :taggable="true"
-          @tag="addTag"
-          class="multi"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :preserve-search="true"
+          placeholder="Search or select category"
+          label="name"
+          track-by="name"
+          :max="3"
+          @input="maxSelected()"
         >
         </multiselect>
       </div>
@@ -55,22 +54,35 @@
     </div>
     <div class="px-7">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
-        <div v-for="adopt_list in adopts" :key="adopt_list.index">
-            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {postInfo: adopt_list, id: adopt_list.id} }">
-             <img
+        <div v-for="adopt_list in filterAdop()" :key="adopt_list.index">
+          <router-link
+            :to="{
+              path: '/' + adopt_list.type + '/' + adopt_list.id,
+              name: adopt_list.type,
+              params: { postInfo: adopt_list, id: adopt_list.id },
+            }"
+          >
+            <img
               :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
               height="200px"
               width="350px"
-              class="transition duration-300 ease-in-out transform hover:scale-110"
+              class="
+                transition
+                duration-300
+                ease-in-out
+                transform
+                hover:scale-110
+              "
             />
-            </router-link>
-            <br>
-          </div>
+          </router-link>
+          <br />
+        </div>
       </vue-flex-waterfall>
     </div>
   </div>
 </template>
 <script>
+import axios from "axios";
 import Multiselect from "vue-multiselect";
 import VueFlexWaterfall from "vue-flex-waterfall";
 import TradeStore from "../store/Trade.js";
@@ -85,14 +97,11 @@ export default {
   data() {
     return {
       valueCat: null,
-      optionsCat: [
-        { name: "Fantasy", code: "fts" },
-        { name: "Fan Art", code: "fa" },
-        { name: "Photography", code: "ph" },
-      ],
+      categories: [],
       type: "",
-      types: ["Auction", "OTA", "DTA", "For Sale"],
+      types: ["OTA", "DTA", "For Sale"],
       adopts: [],
+      filtered_adop: [],
       selectedImage: null,
     };
   },
@@ -107,12 +116,24 @@ export default {
     },
     async fetchTrade() {
       try {
-        let res = await TradeStore.dispatch("getPost_Adops_list");
+        await TradeStore.dispatch("getPost_Adops_list");
         this.adopts = TradeStore.getters.post_adops_list;
-        // console.log(this.adopts);
       } catch (error) {
         console.error(error.response);
       }
+    },
+    async fetchCategory() {
+      let res = await axios.get("/category");
+      this.categories = res.data;
+    },
+    filterAdop() {
+      for (var i = 0, j = 0; i < this.adopts.length; i++) {
+        if (this.adopts[i].status !== "off") {
+          this.filtered_adop[j] = this.adopts[i];
+          j++;
+        }
+      }
+      return this.filtered_adop;
     },
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
@@ -120,6 +141,7 @@ export default {
   },
   created() {
     this.fetchTrade();
+    this.fetchCategory();
   },
 };
 </script>
@@ -136,5 +158,25 @@ export default {
 .multiselect__tag-icon:focus,
 .multiselect__tag-icon:hover {
   background: #272727;
+}
+.multiselect {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  text-align: left;
+  color: #272727;
+}
+.multiselect__input::placeholder {
+  color: #272727;
+}
+/* .multiselect__option--highlight {
+  background: #272727;
+  outline: none;
+  color: white;
+} */
+.multiselect__option--selected {
+  background: white;
+  color: #272727;
 }
 </style>
