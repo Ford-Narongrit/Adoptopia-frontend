@@ -47,7 +47,9 @@ export default {
 
     toPost(){
 
-      this.$router.push({path:'/'+this.tradeType+'/'+this.tradeID})
+      if(this.tradeType !== "sale"){
+        this.$router.push({path:'/'+this.tradeType+'/'+this.tradeID})
+      }
 
     }
   }

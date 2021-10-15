@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1">
     <h1 class="flex justify-center text-7xl my-8 text-white">Notification</h1>
     <Loading v-if="!loading"/>
-    <div v-if="loading" class="justify-self-center bg-white h-3/5 w-2/5 overflow-y-scroll" >
+    <div v-if="loading" class="justify-self-center bg-white w-2/5 overflow-auto" >
       <div v-for="(noti, index) in notiList" :key="index">
         <notification-card
           :name="noti.user.name"
