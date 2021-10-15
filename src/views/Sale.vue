@@ -4,11 +4,7 @@
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
 
       <div class="mt-12 h-0">
-        <coverflow
-          :coverList="coverList"
-          :coverWidth="230"
-          :index="0"
-        ></coverflow>
+        <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
@@ -59,26 +55,77 @@ export default {
   name: "sale",
   data() {
     return {
+      wait: false,
+
+      postId: "",
       postInfo: "",
+      postAll: [],
+
       adop_name: "",
       adop_cat: [],
       adop_agr: "",
       adop_price: "",
       adop_image: [],
       coverList: [],
+
       users: [],
       name: "",
       user_me: {},
       status: "",
+
       form:{
         amount: 0
       },
     };
   },
+
   components: {
     coverflow,
   },
+
+  created() {
+    if (this.$route.params !== null) {
+      this.postId = this.$route.params.id
+    }
+  },
+
+  mounted() {
+    this.fetchTrade();
+    this.fetchUser();
+    this.fetchMe();
+  },
+
   methods: {
+    async fetchTrade() {
+      try {
+        let res = await TradeStore.dispatch("getPost_Adops_list");
+        this.postAll = TradeStore.getters.post_adops_list;
+
+        for(var i=0; i<this.postAll.length; i++){
+          if(this.postAll[i].id == this.postId){
+            this.postInfo = this.postAll[i]
+          }
+        }
+        console.log(this.postInfo);
+        this.adop_name = this.postInfo.adopt.name
+        this.adop_agr = this.postInfo.adopt.agreement
+        this.adop_price = this.postInfo.price;
+        for(var i=0; i<this.postInfo.adopt.category.length; i++){
+          this.adop_cat.push(this.postInfo.adopt.category[i].name);
+        }
+        for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+          this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
+          this.coverList.push({
+            cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
+          })
+        }
+        this.wait = true;
+
+      } catch (error) {
+        console.error(error.response);
+      }
+    },
+
     async fetchUser() {
       try {
         let res = await UserStore.dispatch("getAllUsers");
@@ -87,15 +134,16 @@ export default {
         console.error(error.response);
       }
     },
+
     async fetchMe() {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user_me = res.data;
-        // console.log(this.user_me);
       } catch (error) {
         console.error(error.response);
       }
     },
+
     findUserById() {
       for (var i = 0; i < this.users.length; i++) {
         if (this.users[i].id === this.postInfo.user_id) {
@@ -105,6 +153,7 @@ export default {
       }
       return this.name;
     },
+
     async purchase() {
       if (this.user_me.coin < this.postInfo.price) {
         console.log(this.errors);
@@ -114,7 +163,7 @@ export default {
           "Insufficient coin, please make sure you have enough coin"
         );
       } else {
-        this.form.amount = this.postInfo.price;
+          this.form.amount = this.postInfo.price;
         try {
           let headers = Header.getHeaders();
           let res = await axios.put(
@@ -136,31 +185,6 @@ export default {
         }
       }
     },
-  },
-  created() {
-    if (this.$route.params !== null) {
-      this.postInfo = this.$route.params.postInfo;
-      this.adop_name = this.postInfo.adopt.name;
-      this.adop_agr = this.postInfo.adopt.agreement;
-      this.adop_price = this.postInfo.price;
-      for (var i = 0; i < this.postInfo.adopt.category.length; i++) {
-        this.adop_cat.push(this.postInfo.adopt.category[i].name);
-      }
-      for (var j = 0; j < this.postInfo.adopt.adopt_image.length; j++) {
-        this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
-        this.coverList.push({
-          cover:
-            process.env.VUE_APP_APIURL +
-            this.postInfo.adopt.adopt_image[j].path,
-        });
-      }
-      console.log(this.postInfo);
-      // console.log(this.coverList);
-    }
-  },
-  mounted() {
-    this.fetchUser();
-    this.fetchMe();
   },
 };
 </script>
