@@ -255,7 +255,6 @@ export default {
       }
       let payload = new FormData();
       if (this.form.name !== null) {
-        console.log("here");
         payload.append("name", this.form.name);
       }
       Object.keys(this.form.catagory).forEach((key) => {
@@ -270,9 +269,8 @@ export default {
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
         let res = await axios.post("/adopt", payload, config);
-        console.log(res.data);
         Alert.mixin("success", "Add adopt successfully");
-        this.$router.push({path:"/profile/adop"})
+        this.$router.push({path:`/${this.user.username}/adop`})
       } catch (error) {
         this.errors = error.response.data.errors;
 

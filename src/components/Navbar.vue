@@ -189,7 +189,6 @@ export default {
         let config = Header.getHeaders();
         let res = await axios.get("/notification/unseen", config);
         this.notificationNumber = res.data.length;
-        console.log("fetchNotification data:" + this.notificationNumber);
       } catch (error) {
         console.error(error);
       }

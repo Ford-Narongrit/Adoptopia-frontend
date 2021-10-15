@@ -9,6 +9,7 @@
       class="cursor-default"
     >
       <img
+        v-if="!adopt.adopt_image[0]"
         src="/favicon.ico"
         class="rounded-md transition duration-300 ease-in-out transform hover:scale-110"
         alt=""
