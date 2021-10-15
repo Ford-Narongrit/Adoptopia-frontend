@@ -56,7 +56,7 @@
     <div class="px-7">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
         <div v-for="adopt_list in adopts" :key="adopt_list.index">
-            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {postInfo: adopt_list, id: adopt_list.id} }">
+            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {id: adopt_list.id} }">
              <img
               :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
               height="200px"
