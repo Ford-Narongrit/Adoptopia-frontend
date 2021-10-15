@@ -65,6 +65,7 @@
               </label>
               <select
                 v-model="form.type"
+                v-on:click="typeCheck()"
                 class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
               >
                 <option disabled value="">Please select a type</option>
@@ -77,14 +78,14 @@
                 >
               </select>
             </div>
-            <div class="space-y-1 w-4/5 flex justify-evenly mb-4">
+            <div v-if="isForSale" class="space-y-1 w-4/5 flex justify-evenly mb-4">
               <label
                 for="price"
                 class="my-text-content w-32 items-center flex text-white "
                 >Price:
               </label>
               <input
-                type="text"
+                type="number"
                 placeholder="Please input your price tag"
                 class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
                 v-model="form.price"
@@ -114,7 +115,6 @@
 import axios from "axios";
 import Alert from "../helpers/Alert";
 import AdoptStore from "@/store/Adopt";
-import UserStore from "../store/User";
 import VueFlexWaterfall from "vue-flex-waterfall";
 import Header from "@/helpers/Header";
 import marked from "marked";
@@ -128,10 +128,8 @@ export default {
       name: "",
       categories: [],
       agreement: "",
-
+      isForSale: false,
       types: ["OTA", "DTA", "For Sale"],
-      isAuction: false,
-      isSP: false,
       form: {
         type: "",
         price : "",
@@ -180,22 +178,32 @@ export default {
           //console.log("ota");
         }
         if(this.form.type === 'For Sale'){
-          payload.append("type", "sale");
-          payload.append("price", this.form.price);
-          try {
-            let res = await axios.post("/trade", payload, config);
-            console.log(res.data);
-          } catch (error) {
-            this.errors = error.response.data;
-            console.log(this.errors);
-          Alert.window(
+          if(this.form.price !== ""){
+            payload.append("type", "sale");
+            payload.append("price", this.form.price);
+            try {
+              let res = await axios.post("/trade", payload, config);
+              console.log(res.data);
+              Alert.mixin("success", "Post successfully");
+              this.$router.push("/");
+            } catch (error) {
+              this.errors = error.response.data;
+              console.log(this.errors);
+              Alert.window(
+                "error",
+                "Add adopt failed",
+                "Sorry, an unexpected error occurred. Please try again."
+              );
+            }
+          }
+          else{
+            Alert.window(
               "error",
               "Add adopt failed",
-              "Sorry, an unexpected error occurred. Please try again."
+              "Sorry, please put on a price tag."
             );
           }
         }
-        Alert.mixin("success", "Post successfully");
       }else{
         Alert.window("error", "Fail to post adop", "Please select adop and its post type.");
       }
@@ -223,7 +231,15 @@ export default {
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
-
+    typeCheck(){
+      if(this.form.type === "For Sale"){
+        this.isForSale = true;
+      }
+      else{
+        this.isForSale = false;
+        this.form.price = "";
+      }
+    }
   },
 };
 </script>

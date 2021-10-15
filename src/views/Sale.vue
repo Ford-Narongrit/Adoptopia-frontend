@@ -188,6 +188,7 @@ export default {
           // };
           // await axios.post(`/payment-histories`, data_earn, headers);
           Alert.mixin("success", "Purchase successfully");
+          this.$router.push("/");
         } catch (error) {
           this.error = error.response.data.errors
           Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);

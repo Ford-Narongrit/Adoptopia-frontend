@@ -163,7 +163,7 @@
                 :clear-on-select="false"
                 :preserve-search="true"
                 :limit="3"
-                placeholder="Search or select adopt"
+                placeholder="Search or select category"
                 label="name"
                 track-by="name"
                 :max="7"

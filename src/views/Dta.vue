@@ -199,6 +199,7 @@ export default {
         let res = await axios.post("/dta-sug", payload, config);
         console.log(res.data);
         Alert.mixin("success", "Request image successfully");
+        this.$router.push("/");
       } 
       catch (error) {
         this.errors = error.response.data.errors;
