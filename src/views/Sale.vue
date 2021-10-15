@@ -167,13 +167,9 @@ export default {
           "Insufficient coin, please make sure you have enough coin"
         );
       } else {
-<<<<<<< HEAD
         this.form.amount = this.postInfo.price;
         this.form_earn.amount = this.postInfo.price;
         this.form_earn.id = this.postInfo.user_id;
-=======
-          this.form.amount = this.postInfo.price;
->>>>>>> feature/ota_dta
         try {
           let headers = Header.getHeaders();
           await axios.put("/spend", this.form , headers);
