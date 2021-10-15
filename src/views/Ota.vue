@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Offer To Adop
           <span>
-            <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId, postInfo: postInfo} }">
+            <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -12,7 +12,7 @@
       </div>
 
       <div class="mt-12 h-0">
-        <coverflow :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
+        <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
@@ -29,9 +29,9 @@
         <div class="py-3 mb-3">
           <label  class="text-2xl">Offer: Adop</label>
 
-          <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId, postInfo: postInfo} }">
+          <!-- <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId, postInfo: postInfo} }">
             <button class="btn-rounded absolute right-40">Offer</button>
-          </router-link>
+          </router-link> -->
         </div>
 
         <!-- adop image -->
@@ -61,6 +61,7 @@
 <script>
 import coverflow from 'vue-coverflow';
 import AdoptStore from "@/store/Adopt";
+import TradeStore from "../store/Trade.js";
 import UserStore from '../store/User.js'
 import axios from "axios";
 import Header from "@/helpers/Header";
@@ -70,12 +71,14 @@ export default {
   name: 'ota',
     data () {
     return {
-      ota_adop_id: "",
+      wait: false,
       ota_adop_image: "",
       adopts: [],
-      postId: "",
 
+      postId: "",
       postInfo: "",
+      postAll: [],
+      
       adop_name: "",
       adop_cat: [],
       adop_agr: "",
@@ -91,38 +94,24 @@ export default {
       },
     }
   },
+  
   components: {
     coverflow,
   },
+
   created() {
     if(this.$route.params !== null){
-      this.ota_adop_id = this.$route.params.adop_id
-
-      this.postInfo = this.$route.params.postInfo
-      this.postId = this.postInfo.id
-      this.adop_name = this.postInfo.adopt.name
-      this.adop_agr = this.postInfo.adopt.agreement
-
-      this.form.o_adop = this.ota_adop_id
-      this.form.o_trade = this.postInfo.id
-
-      for(var i=0; i<this.postInfo.adopt.category.length; i++){
-        this.adop_cat.push(this.postInfo.adopt.category[i].name);
-      }
-      for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
-        this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
-        this.coverList.push({
-          cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
-        })
-      }
-    console.log(this.postInfo);
-    console.log(this.coverList);
+      this.form.o_adop = this.$route.params.adop_id
+      this.postId = this.$route.params.id
     }
   },
+
   mounted() {
+    this.fetchTrade();
     this.fetch();
     this.fetchUser();
   },
+
   methods: {
     async fetch() {
       try {
@@ -134,6 +123,35 @@ export default {
             this.ota_adop_image = this.adopts[i].adopt_image[0].path;
           }
         }
+      } catch (error) {
+        console.error(error.response);
+      }
+    },
+    
+    async fetchTrade() {
+      try {
+        let res = await TradeStore.dispatch("getPost_Adops_list");
+        this.postAll = TradeStore.getters.post_adops_list;
+
+        for(var i=0; i<this.postAll.length; i++){
+          if(this.postAll[i].id == this.postId){
+            this.postInfo = this.postAll[i]
+          }
+        }
+        this.adop_name = this.postInfo.adopt.name
+        this.adop_agr = this.postInfo.adopt.agreement
+        this.form.o_trade = this.postInfo.id
+        for(var i=0; i<this.postInfo.adopt.category.length; i++){
+          this.adop_cat.push(this.postInfo.adopt.category[i].name);
+        }
+        for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+          this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
+          this.coverList.push({
+            cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
+          })
+        }
+        this.wait = true;
+
       } catch (error) {
         console.error(error.response);
       }

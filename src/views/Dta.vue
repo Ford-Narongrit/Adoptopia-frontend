@@ -4,7 +4,7 @@
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Draw To Adop
           <span>
-            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId, postInfo: postInfo} }">
+            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
           </span>
@@ -12,7 +12,7 @@
       </div>
 
       <div class="mt-12 h-0">
-        <coverflow :coverList="coverList" :coverWidth="230" :index="0" ></coverflow>
+        <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
@@ -69,6 +69,7 @@
 <script>
 import coverflow from 'vue-coverflow'
 import UserStore from '../store/User.js'
+import TradeStore from "../store/Trade.js";
 import axios from "axios";
 import Alert from "../helpers/Alert";
 import Header from "@/helpers/Header";
@@ -77,10 +78,13 @@ export default {
   name: 'dta',
   data () {
     return {
+      wait: false,
       hoverImage: false,
       dta_image: "",
+
       postId: "",
       postInfo: "",
+      postAll: [],
       
       adop_name: "",
       adop_cat: [],
@@ -103,28 +107,15 @@ export default {
   },
   created() {
     if(this.$route.params !== null){
-      this.postInfo = this.$route.params.postInfo
-      this.postId = this.postInfo.id
-      this.adop_name = this.postInfo.adopt.name
-      this.adop_agr = this.postInfo.adopt.agreement
-
-      this.form.trade_id = this.postInfo.id
-      for(var i=0; i<this.postInfo.adopt.category.length; i++){
-        this.adop_cat.push(this.postInfo.adopt.category[i].name);
-      }
-      for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
-        this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
-        this.coverList.push({
-          cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
-        })
-      }
-    console.log(this.postInfo);
-    console.log(this.coverList);
+      this.postId = this.$route.params.id
     }
   },
+
   mounted(){
+    this.fetchTrade();
     this.fetchUser();
   },
+
   methods: {
     addImage(e) {
       let files = null;
@@ -137,6 +128,35 @@ export default {
       if (files) {
         this.dta_image = URL.createObjectURL(files[0]);
         this.form.image = files[0];
+      }
+    },
+
+    async fetchTrade() {
+      try {
+        let res = await TradeStore.dispatch("getPost_Adops_list");
+        this.postAll = TradeStore.getters.post_adops_list;
+
+        for(var i=0; i<this.postAll.length; i++){
+          if(this.postAll[i].id == this.postId){
+            this.postInfo = this.postAll[i]
+          }
+        }
+        this.form.trade_id = this.postInfo.id
+        this.adop_name = this.postInfo.adopt.name
+        this.adop_agr = this.postInfo.adopt.agreement
+        for(var i=0; i<this.postInfo.adopt.category.length; i++){
+          this.adop_cat.push(this.postInfo.adopt.category[i].name);
+        }
+        for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+          this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
+          this.coverList.push({
+            cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
+          })
+        }
+        this.wait = true;
+
+      } catch (error) {
+        console.error(error.response);
       }
     },
 

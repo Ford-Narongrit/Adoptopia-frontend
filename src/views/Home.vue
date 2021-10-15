@@ -53,22 +53,10 @@
         </button>
       </div>
     </div>
-    <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
-      <div v-for="image in images" :key="image.url" class="px-2">
-        <router-link :to="{ path: image.tag }">
-          <img
-            :src="require(`../assets/${image.url}`)"
-            height="200px"
-            width="350px"
-          />
-        </router-link>
-        <br />
-      </div>
-    </vue-flex-waterfall>
     <div class="px-7">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
         <div v-for="adopt_list in adopts" :key="adopt_list.index">
-            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {postInfo: adopt_list, id: adopt_list.id} }">
+            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {id: adopt_list.id} }">
              <img
               :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
               height="200px"
@@ -105,11 +93,6 @@ export default {
       type: "",
       types: ["Auction", "OTA", "DTA", "For Sale"],
       adopts: [],
-      images: [
-        { url: "drawer.jpg", tag: "/ota" },
-        { url: "slap.jpg", tag: "/dta" },
-        { url: "Kiwi.jpg", tag: "/sale" },
-      ],
       selectedImage: null,
     };
   },

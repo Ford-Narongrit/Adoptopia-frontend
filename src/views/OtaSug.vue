@@ -27,6 +27,7 @@
 import AdoptStore from "@/store/Adopt";
 import Alert from "../helpers/Alert";
 import UserStore from "../store/User";
+import TradeStore from "../store/Trade.js";
 import Header from "@/helpers/Header";
 import axios from "axios";
 import VueFlexWaterfall from "vue-flex-waterfall";
@@ -40,6 +41,7 @@ export default {
         return {
             postId: "",
             postInfo: "",
+            postAll: [],
 
             adopPost: [],
             adopts: [],
@@ -56,14 +58,32 @@ export default {
 
     created() {
         if(this.$route.params !== null){
-            this.postInfo = this.$route.params.postInfo;
             this.postId = this.$route.params.id
         }
+    },
+    
+    mounted(){
         this.fetch();
+        this.fetchTrade();
         this.fetchMe();
     },
 
     methods: {
+        async fetchTrade() {
+            try {
+                let res = await TradeStore.dispatch("getPost_Adops_list");
+                this.postAll = TradeStore.getters.post_adops_list;
+
+                for(var i=0; i<this.postAll.length; i++){
+                    if(this.postAll[i].id == this.postId){
+                        this.postInfo = this.postAll[i]
+                    }
+                }
+            } catch (error) {
+                console.error(error.response);
+            }
+        },
+
         async fetch() {
             try {
                 let res = await OtaStore.dispatch("getOta_Adops_list");
@@ -72,7 +92,7 @@ export default {
                 console.log(this.postId);
 
                 for(var i=0; i<this.adopts.length; i++){
-                    if(this.adopts[i].trade_id === this.postId){
+                    if(this.adopts[i].trade_id == this.postId){
                         this.adopPost.push(this.adopts[i])
                     }
                 }
@@ -85,7 +105,6 @@ export default {
             try {
                 let res = await UserStore.dispatch("getMe");
                 this.user_me = res.data;
-                // console.log(this.user_me);
             } catch (error) {
                 console.error(error.response);
             }

@@ -58,10 +58,9 @@
         </div>
         <div
           v-if="!loading"
-          class="text-white my-text-content bg-gray-600 rounded-lg p-2"
-        >
-          {{ adopt.agreement }}
-        </div>
+          class="text-white my-text-content bg-gray-600 rounded-lg p-2 mark-content"
+          v-html="compiledMarkdown(adopt.agreement)"
+        ></div>
         <div
           v-if="loading"
           class="bg-white h-10 rounded-lg animate-pulse"
@@ -85,6 +84,7 @@
 import AdoptStore from "@/store/Adopt";
 import slideImage from "@/components/SlideImage.vue";
 import moment from "moment";
+import marked from "marked";
 export default {
   components: { slideImage },
   data() {
@@ -113,6 +113,9 @@ export default {
     },
     getFormatTime(time) {
       return moment(time).format("l");
+    },
+    compiledMarkdown(text) {
+      return marked(text);
     },
   },
 };
