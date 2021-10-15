@@ -163,7 +163,7 @@
                 :clear-on-select="false"
                 :preserve-search="true"
                 :limit="3"
-                placeholder="Search or select adopt"
+                placeholder="Search or select category"
                 label="name"
                 track-by="name"
                 :max="7"
@@ -272,6 +272,7 @@ export default {
         let res = await axios.post("/adopt", payload, config);
         console.log(res.data);
         Alert.mixin("success", "Add adopt successfully");
+        this.$router.push({path:"/profile/adop"})
       } catch (error) {
         this.errors = error.response.data.errors;
 

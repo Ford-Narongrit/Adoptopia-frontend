@@ -49,8 +49,13 @@
       <div v-if="login">
         <router-link
           to="/notification"
-          class="p-2 border-b-2 border-transparent"
+          class="p-2 border-b-2 border-transparent relative inline-block"
         >
+          <span
+            v-if="notificationNumber > 0"
+            class="absolute text-white -top-1  left-5 bg-red-500 rounded-full h-5  w-5 flex items-center justify-center"
+            >{{ notificationNumber }}</span
+          >
           <font-awesome-icon icon="bell" class="text-xl text-white" />
         </router-link>
       </div>
@@ -79,7 +84,9 @@
             class="block truncate"
             :title="user.username"
             ><div class="px-3">Login as</div>
-            <span class="hover:underline"> @ {{ user.username }} </span></router-link
+            <span class="hover:underline">
+              @ {{ user.username }}
+            </span></router-link
           >
           <div class="border-b-2 border-gray-400 mx-2 my-1"></div>
           <router-link
@@ -113,6 +120,8 @@
 <script>
 import UserStore from "@/store/User";
 import Alert from "@/helpers/Alert.js";
+import axios from "axios";
+import Header from "@/helpers/Header";
 export default {
   data() {
     return {
@@ -122,12 +131,14 @@ export default {
       ontopNavbar: true,
       lastScrollPosition: 0,
       user: {},
+      notificationNumber: 0,
     };
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
     this.login = UserStore.getters.isAuthen;
     this.fetchUser();
+    this.fetchNotification();
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.onScroll);
@@ -173,6 +184,16 @@ export default {
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
+    async fetchNotification() {
+      try {
+        let config = Header.getHeaders();
+        let res = await axios.get("/notification/unseen", config);
+        this.notificationNumber = res.data.length;
+        console.log("fetchNotification data:" + this.notificationNumber);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
@@ -212,6 +233,18 @@ export default {
       border-block-color: #60a5fa;
       border-bottom-width: 2px;
     }
+  }
+  .notify-bubble {
+    position: absolute;
+    top: -8px;
+    right: -7px;
+    padding: 2px 5px 2px 6px;
+    background-color: green;
+    color: white;
+    font-size: 0.65em;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px gray;
+    // display: none;
   }
 }
 </style>
