@@ -73,6 +73,10 @@ export default {
       form:{
         amount: 0
       },
+      form_earn:{
+        amount: 0,
+        id: "",
+      },
     };
   },
   components: {
@@ -115,20 +119,25 @@ export default {
         );
       } else {
         this.form.amount = this.postInfo.price;
+        this.form_earn.amount = this.postInfo.price;
+        this.form_earn.id = this.postInfo.user_id;
         try {
           let headers = Header.getHeaders();
-          let res = await axios.put(
-            "/spend", this.form , headers
-          );
+          await axios.put("/spend", this.form , headers);
           let data = {
             status: "spend",
             amount: this.form.amount,
           };
-          console.log(res.data);
           await axios.post(`/payment-histories`, data, headers);
           await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
           await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`, {}, headers);
-          // await axios.put(`/user/${this.status}/${this.user_me.id}/${this.amount}`, {}, headers);
+          await axios.put("/earn", this.form_earn , headers);
+          // let data_earn = {
+          //   status: "earn",
+          //   amount: this.form_earn.amount,
+          //   id: this.postInfo.user_id
+          // };
+          // await axios.post(`/payment-histories`, data_earn, headers);
           Alert.mixin("success", "Purchase successfully");
         } catch (error) {
           this.error = error.response.data.errors
