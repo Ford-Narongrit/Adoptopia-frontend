@@ -53,7 +53,7 @@
               <label for="agreement" class="my-text-content w-32 text-white"
                 >Agreement:
               </label>
-              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus">{{ agreement }}</div>
+              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus mark-content" v-html="compiledMarkdown(agreement)">{{ agreement }}</div>
             </div>
 
             <!--Type -->
@@ -117,6 +117,7 @@ import AdoptStore from "@/store/Adopt";
 import UserStore from "../store/User";
 import VueFlexWaterfall from "vue-flex-waterfall";
 import Header from "@/helpers/Header";
+import marked from "marked";
 
 export default {
   data() {
@@ -150,6 +151,9 @@ export default {
     this.fetch();
   },
   methods: {
+    compiledMarkdown(text) {
+      return marked(text);
+    },
     async post() {
       let payload = new FormData();
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });

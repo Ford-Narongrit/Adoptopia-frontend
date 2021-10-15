@@ -26,6 +26,7 @@
 import VueFlexWaterfall from "vue-flex-waterfall";
 import DtaStore from "../store/Dta.js";
 import UserStore from "../store/User.js";
+import TradeStore from "../store/Trade.js";
 import Header from "@/helpers/Header";
 import Alert from "../helpers/Alert";
 import axios from "axios";
@@ -37,6 +38,7 @@ export default {
         return {
             postId: "",
             postInfo: "",
+            postAll: [],
 
             dtaPost: [],
             dta_images: [],
@@ -52,14 +54,32 @@ export default {
 
     created() {
         if(this.$route.params !== null){
-            this.postInfo = this.$route.params.postInfo;
             this.postId = this.$route.params.id
         }
+    },
+
+    mounted(){
         this.fetch();
+        this.fetchTrade();
         this.fetchMe();
     },
 
     methods: {
+        async fetchTrade() {
+            try {
+                let res = await TradeStore.dispatch("getPost_Adops_list");
+                this.postAll = TradeStore.getters.post_adops_list;
+
+                for(var i=0; i<this.postAll.length; i++){
+                    if(this.postAll[i].id == this.postId){
+                        this.postInfo = this.postAll[i]
+                    }
+                }
+            } catch (error) {
+                console.error(error.response);
+            }
+        },
+
         async fetch() {
             try {
                 let res = await DtaStore.dispatch("getDta_image_list");
@@ -68,7 +88,7 @@ export default {
                 console.log(this.postId);
 
                 for(var i=0; i<this.dta_images.length; i++){
-                    if(this.dta_images[i].trade_id === this.postId){
+                    if(this.dta_images[i].trade_id == this.postId){
                         this.dtaPost.push(this.dta_images[i])
                     }
                 }
@@ -81,7 +101,6 @@ export default {
             try {
                 let res = await UserStore.dispatch("getMe");
                 this.user_me = res.data;
-                // console.log(this.user_me);
             } catch (error) {
                 console.error(error.response);
             }
