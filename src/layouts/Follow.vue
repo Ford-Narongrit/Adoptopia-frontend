@@ -47,7 +47,7 @@
 import Navbar from "@/components/Navbar.vue";
 import UserStore from "@/store/User";
 export default {
-  name: "MainLayout",
+  name: "FollowLayout",
   components: {
     Navbar,
   },
