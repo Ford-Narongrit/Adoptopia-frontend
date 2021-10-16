@@ -7,11 +7,20 @@
     <div class="flex">
       <!-- adop image -->
       <div class="w-2/3 px-16 py-5 ml-24 justify-center item-center ">
-        <div v-if="adop_image" class="w-3/4 h-auto border-white border-2 relative overflow-hidden">
-          <img :src="getImagePath(adop_image)">
+        <div
+          v-if="adop_image"
+          class="w-3/4 h-auto border-white border-2 relative overflow-hidden"
+        >
+          <img :src="getImagePath(adop_image)" />
         </div>
-        <div v-if="!adop_image" class="w-3/4 h-80 border-white border-2 relative overflow-hidden">
-          <font-awesome-icon icon="user" class="absolute w-full h-full flex text-7xl text-white left-48"/>
+        <div
+          v-if="!adop_image"
+          class="w-3/4 h-80 border-white border-2 relative overflow-hidden"
+        >
+          <font-awesome-icon
+            icon="user"
+            class="absolute w-full h-full flex text-7xl text-white left-48"
+          />
         </div>
       </div>
 
@@ -25,19 +34,25 @@
                 class="my-text-content w-32 items-center flex text-white "
                 >Name:
               </label>
-              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus">
+              <div
+                class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus"
+              >
                 {{ name }}
               </div>
             </div>
 
             <!--Catagory -->
-            <div class="space-y-1 w-4/5 py-1 flex justify-evenly mb-4 text-white">
+            <div
+              class="space-y-1 w-4/5 py-1 flex justify-evenly mb-4 text-white"
+            >
               <label
                 for="catagory"
                 class="my-text-content w-32 items-center flex text-white"
                 >Category:
               </label>
-              <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
+              <div
+                class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
+              >
                 <span
                   v-for="category in categories"
                   :key="category.id"
@@ -53,7 +68,12 @@
               <label for="agreement" class="my-text-content w-32 text-white"
                 >Agreement:
               </label>
-              <div class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus mark-content" v-html="compiledMarkdown(agreement)">{{ agreement }}</div>
+              <div
+                class="text-white my-text-content rounded-lg w-2/3 px-2 my-block-focus mark-content"
+                v-html="compiledMarkdown(agreement)"
+              >
+                {{ agreement }}
+              </div>
             </div>
 
             <!--Type -->
@@ -78,18 +98,34 @@
                 >
               </select>
             </div>
-            <div v-if="isForSale" class="space-y-1 w-4/5 flex justify-evenly mb-4">
-              <label
-                for="price"
-                class="my-text-content w-32 items-center flex text-white "
-                >Price:
-              </label>
-              <input
-                type="number"
-                placeholder="Please input your price tag"
-                class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
-                v-model="form.price"
-              />
+            <div v-if="isForSale">
+              <div class="space-y-1 w-4/5 flex justify-evenly mb-4">
+                <label
+                  for="price"
+                  class="my-text-content w-32 items-center flex text-white "
+                  >Price:
+                </label>
+                <input
+                  type="number"
+                  placeholder="Please input your price tag"
+                  class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
+                  v-model="form.price"
+                />
+              </div>
+              <div class="space-y-1 w-4/5 flex justify-evenly mb-4">
+                <label
+                  class="my-text-content w-32 items-center flex text-white "
+                  >
+                </label>
+                <ul
+                  v-if="errors.price"
+                  class="text-red-400  mb-4  py-1 my-text-content rounded-lg w-2/3 px-2"
+                >
+                  <li v-for="(message, index) in errors.price" :key="index">
+                    {{ message }}
+                  </li>
+                </ul>
+              </div>
             </div>
             <div></div>
           </div>
@@ -107,7 +143,6 @@
         Post
       </button>
     </div>
-
   </div>
 </template>
 
@@ -132,17 +167,18 @@ export default {
       types: ["OTA", "DTA", "For Sale"],
       form: {
         type: "",
-        price : "",
+        price: "",
         images: [],
       },
+      errors: [],
     };
   },
   components: {
     VueFlexWaterfall,
   },
   created() {
-    if(this.$route.params !== null){
-      this.adop_id = this.$route.params.adop_id
+    if (this.$route.params !== null) {
+      this.adop_id = this.$route.params.adop_id;
     }
   },
   mounted() {
@@ -155,9 +191,7 @@ export default {
     async post() {
       let payload = new FormData();
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
-      console.log(this.adop_id);
-      console.log(this.form.type);
-      if(this.adop_id !== 0 && this.form.type !== ""){
+      if (this.adop_id !== 0 && this.form.type !== "") {
         payload.append("adopt_id", this.adop_id);
         payload.append("type", this.form.type);
         payload.append("status", "on");
@@ -174,15 +208,15 @@ export default {
             this.errors = error.response.data;
             console.log(this.errors);
             Alert.window(
-                "error",
-                "Add adopt failed",
-                "Sorry, an unexpected error occurred. Please try again."
-              );
-            }
+              "error",
+              "Add adopt failed",
+              "Sorry, an unexpected error occurred. Please try again."
+            );
+          }
           //console.log("ota");
         }
-        if(this.form.type === 'For Sale'){
-          if(this.form.price !== ""){
+        if (this.form.type === "For Sale") {
+          if (this.form.price !== "") {
             payload.append("type", "sale");
             payload.append("price", this.form.price);
             try {
@@ -192,7 +226,7 @@ export default {
               Alert.mixin("success", "Post successfully");
               this.$router.push("/");
             } catch (error) {
-              this.errors = error.response.data;
+              this.errors = error.response.data.errors;
               console.log(this.errors);
               Alert.window(
                 "error",
@@ -200,8 +234,8 @@ export default {
                 "Sorry, an unexpected error occurred. Please try again."
               );
             }
-          }
-          else{
+          } else {
+            this.errors = {price : ["Please input your price tag."]}
             Alert.window(
               "error",
               "Add adopt failed",
@@ -209,21 +243,25 @@ export default {
             );
           }
         }
-      }else{
-        Alert.window("error", "Fail to post adop", "Please select adop and its post type.");
+      } else {
+        Alert.window(
+          "error",
+          "Fail to post adop",
+          "Please select adop and its post type."
+        );
       }
     },
 
-   async fetch() {
+    async fetch() {
       try {
         let res = await AdoptStore.dispatch("getAdopts_list");
         this.adopts = AdoptStore.getters.adopts_list;
 
-        for(var i=0; i<this.adopts.length; i++){
-          if(this.adopts[i].id === this.adop_id){
+        for (var i = 0; i < this.adopts.length; i++) {
+          if (this.adopts[i].id === this.adop_id) {
             this.adop_image = this.adopts[i].adopt_image[0].path;
             this.name = this.adopts[i].name;
-            for(var j=0; j<this.adopts[i].category.length; j++){
+            for (var j = 0; j < this.adopts[i].category.length; j++) {
               this.categories.push(this.adopts[i].category[j].name);
             }
             this.agreement = this.adopts[i].agreement;
@@ -236,24 +274,25 @@ export default {
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
-    typeCheck(){
-      if(this.form.type === "For Sale"){
+    typeCheck() {
+      this.errors = []
+      if (this.form.type === "For Sale") {
+        
         this.isForSale = true;
-      }
-      else{
+      } else {
         this.isForSale = false;
         this.form.price = "";
       }
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.select{
+.select {
   margin-right: 60%;
 }
-.post{
+.post {
   margin-right: 8%;
-}
-</style>>
+}</style
+>>
