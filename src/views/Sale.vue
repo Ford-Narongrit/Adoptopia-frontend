@@ -1,5 +1,5 @@
 <template>
-  <div class="my-font-eng sale text-white">
+  <div class="my-font-eng sale text-white" v-if="!loading">
     <div class="border-b border-solid border-white">
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
 
@@ -9,7 +9,7 @@
 
       <div class="info -mt-20 py-16">
         <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-        <h2 class="py-3 text-2xl">By: {{ findUserById() }}</h2>
+        <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
         <h2 class="py-3 text-2xl">Catagory:</h2>
         <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
           <span
@@ -23,8 +23,16 @@
 
         <div class="py-3 pt-12">
           <label class="text-2xl">{{ adop_price }} Coins</label>
-          <button class="btn-rounded absolute right-48" @click="purchase">
+          <button class="btn-rounded absolute right-48" @click="purchase" v-if="!checkIfOwner()">
             Purchase
+          </button>
+        </div>
+        <div class="py-3 pt-1" v-if="checkIfOwner()">
+          <button class="btn-rounded absolute">
+            Edit
+          </button>
+          <button class="btn-rounded absolute right-48" @click="deletePost()">
+            Delete
           </button>
         </div>
       </div>
@@ -47,7 +55,6 @@ import axios from "axios";
 import coverflow from "vue-coverflow";
 import UserStore from "../store/User.js";
 import TradeStore from "../store/Trade.js";
-import AdoptStore from "../store/Adopt.js";
 import Header from "@/helpers/Header";
 import Alert from "../helpers/Alert";
 
@@ -56,6 +63,7 @@ export default {
   data() {
     return {
       wait: false,
+      loading: true,
 
       postId: "",
       postInfo: "",
@@ -68,7 +76,7 @@ export default {
       adop_image: [],
       coverList: [],
 
-      users: [],
+      owner: {},
       name: "",
       user_me: {},
       status: "",
@@ -95,9 +103,7 @@ export default {
 
   mounted() {
     this.fetchTrade();
-    this.fetchUser();
     this.fetchMe();
-    console.log(this.postInfo);
   },
 
   methods: {
@@ -125,16 +131,19 @@ export default {
           })
         }
         this.wait = true;
+        this.fetchOwner();
 
       } catch (error) {
         console.error(error.response);
       }
     },
 
-    async fetchUser() {
+    async fetchOwner() {
       try {
-        let res = await UserStore.dispatch("getAllUsers");
-        this.users = UserStore.getters.users;
+        let headers = Header.getHeaders();
+        let res = await axios.get(`/user/owner/${this.postInfo.user_id}`, headers);
+        this.owner = res.data;
+        this.loading = false;
       } catch (error) {
         console.error(error.response);
       }
@@ -147,16 +156,6 @@ export default {
       } catch (error) {
         console.error(error.response);
       }
-    },
-
-    findUserById() {
-      for (var i = 0; i < this.users.length; i++) {
-        if (this.users[i].id === this.postInfo.user_id) {
-          this.name = this.users[i].name;
-          break;
-        }
-      }
-      return this.name;
     },
 
     async purchase() {
@@ -186,12 +185,6 @@ export default {
           await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
           await axios.put("/earn", this.form_earn , headers);
           await axios.post(`/notification/sale-notification/${this.postInfo.id}`, {} , headers);
-          // let data_earn = {
-          //   status: "earn",
-          //   amount: this.form_earn.amount,
-          //   id: this.postInfo.user_id
-          // };
-          // await axios.post(`/payment-histories`, data_earn, headers);
           Alert.mixin("success", "Purchase successfully");
           this.$router.push("/");
         } catch (error) {
@@ -200,6 +193,26 @@ export default {
         }
       }
     },
+    async deletePost(){
+      try {
+        if(Alert.yesNo("This action cannot be undone")){
+          let headers = Header.getHeaders();
+          await axios.delete("/trade", this.postInfo.id , headers);
+          Alert.mixin("success", "Delete successfully");
+          this.$router.push("/");
+        }
+      } catch (error) {
+        console.error(error.response);
+      }
+    },
+     checkIfOwner(){
+      if(this.postInfo.user_id === this.user_me.id){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   },
 };
 </script>

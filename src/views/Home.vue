@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-nowrap py-8">
+    <div class="flex flex-nowrap py-8" v-if="!loading">
       <div class="flex-nowrap py-8">
         <label for="type" class="px-5 mt-2 text-white">Type: </label>
         <select
@@ -97,6 +97,7 @@ export default {
       adopts: [],
       filtered_adop: [],
       selectedImage: null,
+      loading: true
     };
   },
   methods: {
@@ -127,6 +128,7 @@ export default {
           j++;
         }
       }
+      this.loading = false;
       return this.filtered_adop;
     },
     getImagePath(image) {
