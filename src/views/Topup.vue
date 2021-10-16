@@ -1,6 +1,5 @@
 <template>
   <div class="my-font-eng">
-    <hr />
     <div class="flex justify-center my-4">
       <div class="my-text-title text-white" v-if="topupStatus">Top up</div>
       <div class="my-text-title text-white" v-if="withdrawStatus">Withdraw</div>
@@ -8,7 +7,7 @@
     <div class="flex justify-around mt-8 w-1/3 mx-auto">
       <button
         class="w-36 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700"
-        :class="topupStatus ? 'bg-blue-700 cursor-default':''"
+        :class="topupStatus ? 'bg-blue-700 cursor-default' : ''"
         type="submit"
         @click="topupBtn"
         :disabled="topupStatus == 1"
@@ -17,7 +16,7 @@
       </button>
       <button
         class="w-36 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700"
-        :class="withdrawStatus ? 'bg-blue-700 cursor-default':''"
+        :class="withdrawStatus ? 'bg-blue-700 cursor-default' : ''"
         type="submit"
         @click="withdrawBtn"
         :disabled="withdrawStatus == 1"
@@ -54,7 +53,7 @@
           />
           <div
             v-if="error"
-            class="text-red-400 w-96 flex-none mb-4 absolute left-2"
+            class="text-red-400 w-96 flex-none mb-4 absolute left-2 "
           >
             {{ error.amount[0] }}
           </div>
@@ -103,7 +102,7 @@ export default {
   data() {
     return {
       form: {
-        amount: 0 
+        amount: 0,
       },
       coin: 0,
       topupStatus: 1,
@@ -122,30 +121,33 @@ export default {
       this.topupStatus ? (status = "deposit") : (status = "withdraw");
       try {
         let headers = Header.getHeaders();
-        let res = await axios.put(
-          `/${status}` , this.form , headers
-        );
+        let res = await axios.put(`/${status}`, this.form, headers);
         let data = {
           status: status,
           amount: this.form.amount,
         };
         await axios.post(`/payment-histories`, data, headers);
-        Alert.mixin("success", `${status} successfully`);
+        let is_confirm = await Alert.yesNo("Please confirm your payment.");
+        if(is_confirm){
+          this.$router.push(`/${this.user.name}/home`);
+          Alert.mixin("success", `${status} successfully`);
+        }else{
+          this.clearForm()
+        }
       } catch (error) {
-        this.error = error.response.data.errors
+        this.error = error.response.data.errors;
         Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
       }
-
     },
     topupBtn() {
       this.topupStatus = 1;
       this.withdrawStatus = 0;
-      this.clearForm()
+      this.clearForm();
     },
     withdrawBtn() {
       this.withdrawStatus = 1;
       this.topupStatus = 0;
-      this.clearForm()
+      this.clearForm();
     },
     inputChange() {
       this.coin = parseFloat(this.form.amount);
@@ -163,11 +165,11 @@ export default {
         console.error(error);
       }
     },
-    clearForm(){
-      this.form.amount = 0
-      this.error = ""
-      this.coin = 0
-    }
+    clearForm() {
+      this.form.amount = 0;
+      this.error = "";
+      this.coin = 0;
+    },
   },
 };
 </script>

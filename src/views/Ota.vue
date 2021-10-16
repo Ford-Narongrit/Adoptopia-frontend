@@ -29,9 +29,9 @@
         <div class="py-3 mb-3">
           <label  class="text-2xl">Offer: Adop</label>
 
-          <!-- <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId, postInfo: postInfo} }">
+          <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId} }">
             <button class="btn-rounded absolute right-40">Offer</button>
-          </router-link> -->
+          </router-link>
         </div>
 
         <!-- adop image -->
@@ -119,7 +119,7 @@ export default {
         this.adopts = AdoptStore.getters.adopts_list;
 
         for(var i=0; i<this.adopts.length; i++){
-          if(this.adopts[i].id === this.ota_adop_id){
+          if(this.adopts[i].id === this.form.o_adop){
             this.ota_adop_image = this.adopts[i].adopt_image[0].path;
           }
         }
@@ -187,11 +187,11 @@ export default {
         payload.append("trade_id", this.form.o_trade);
         payload.append("adopt_id", this.form.o_adop);
         payload.append("status", 0);
-        // console.log(this.form.o_trade);
-        // console.log(this.form.o_adop);
 
+        let headers = Header.getHeaders();
         try {
           let res = await axios.post("/ota-sug", payload, config);
+          await axios.put(`/adopt/inUse/${this.form.o_adop}`, {}, headers);
           console.log(res.data);
           Alert.mixin("success", "Request successfully");
           this.$router.push("/");

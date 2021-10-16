@@ -97,6 +97,7 @@ export default {
     this.fetchTrade();
     this.fetchUser();
     this.fetchMe();
+    console.log(this.postInfo);
   },
 
   methods: {
@@ -167,19 +168,22 @@ export default {
           "Insufficient coin, please make sure you have enough coin"
         );
       } else {
-        this.form.amount = this.postInfo.price;
-        this.form_earn.amount = this.postInfo.price;
-        this.form_earn.id = this.postInfo.user_id;
+          this.form.amount = this.postInfo.price;
+          this.form_earn.amount = this.postInfo.price;
+          this.form_earn.id = this.postInfo.user_id;
         try {
           let headers = Header.getHeaders();
+          console.log(this.form);
           await axios.put("/spend", this.form , headers);
           let data = {
             status: "spend",
             amount: this.form.amount,
+            trans_user: this.form_earn.id
           };
           await axios.post(`/payment-histories`, data, headers);
           await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
           await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`, {}, headers);
+          await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
           await axios.put("/earn", this.form_earn , headers);
           await axios.post(`/notification/sale-notification/${this.postInfo.id}`, {} , headers);
           // let data_earn = {

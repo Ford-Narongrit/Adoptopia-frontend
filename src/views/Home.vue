@@ -48,7 +48,7 @@
             my-block-focus
           "
         >
-          seach
+          search
         </button>
       </div>
     </div>
