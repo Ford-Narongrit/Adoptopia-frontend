@@ -6,7 +6,7 @@
         @click="toHistory"
         class="w-52 px-4 py-2 rounded-full my-text-content text-white border-2 border-white hover:bg-blue-700"
       >
-        History
+        Adop History
       </button>
       <button
         class="w-52 px-4 py-2 rounded-full my-text-content text-white border-2 border-white bg-blue-700 cursor-default"
@@ -22,18 +22,16 @@
         :allPages="allPages"
         :currPage="currPage"
         @update="updateCurrPage"
+        class="w-2/3 mx-auto"
       />
     </div>
-    <button class="text-white bg-blue-500 mt-6" @click="toTopup">
-      TO TOPUP
-    </button>
   </div>
 </template>
 
 <script>
 import HistoryBoard from "@/components/HistoryBoard";
 import Axios from "axios";
-import UserStore from "../store/User";
+import Header from "@/helpers/Header";
 import PageCard from "../components/PageCard.vue";
 import Loading from "../components/Loading.vue";
 
@@ -45,48 +43,31 @@ export default {
   },
   data() {
     return {
-      data: [
-        // {
-        // date: "",
-        // name: "",
-        // type: "",
-        // amount: "",
-        // },
-      ],
+      data: [],
       currPage: 1,
       allPages: "",
       loading: false,
     };
   },
   created() {
-    // console.log(UserStore.getters.jwt);
     this.fetchData();
   },
   methods: {
     toHistory() {
       this.$router.push("/history");
     },
-    toTopup() {
-      this.$router.push("/topup");
-    },
-    fetchData() {
+    async fetchData() {
       this.loading = false;
-      Axios.get(`/payment-histories?page= ${this.currPage}`, {
-        headers: {
-          Authorization: "Bearer " + UserStore.getters.jwt,
-        },
-      }).then((response) => {
-        // console.log(response.data);
+      let headers = Header.getHeaders();
+      await Axios.get(`/payment-histories?page= ${this.currPage}`, headers).then((response) => {
         this.data = response.data.data;
         this.allPages = response.data.meta.last_page;
         this.loading = true;
-        // console.log(this.lastPage);
       });
     },
     updateCurrPage(page) {
       this.currPage = page;
       this.fetchData();
-      // console.log(this.currPage);
     },
   },
 };
