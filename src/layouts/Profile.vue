@@ -196,7 +196,15 @@
         </div>
       </div>
     </div>
-    <div class="container mx-auto pt-10">
+    <div v-if="errors" class="mt-20">
+      <div class="text-white my-text-title text-center">
+        This account doesn’t exist
+      </div>
+      <div class="text-white my-text-base text-center">
+        Try searching for another.
+      </div>
+    </div>
+    <div v-if="!errors && !loading" class="container mx-auto pt-10">
       <slot />
     </div>
     <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
@@ -225,6 +233,7 @@ export default {
         "They're pretending to be me or someone else",
         "Their Account are abusive or hateful",
       ],
+      errors: null,
     };
   },
   mounted() {
@@ -242,7 +251,7 @@ export default {
         this.isFollow = me.data.isFollow;
         this.loading = false;
       } catch (error) {
-        console.error(error);
+        this.errors = error.response.status;
       }
     },
     getImagePath(image) {
