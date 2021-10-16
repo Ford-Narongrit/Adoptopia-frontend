@@ -99,6 +99,15 @@ export default new Vuex.Store({
         throw error;
       }
     },
+    async getAllBanUsers({ commit }) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get("/ban/user", header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
     async update({ commit }, payload) {
       let header = Header.getHeaders({
         "Content-Type": "multipart/form-data",
@@ -119,7 +128,7 @@ export default new Vuex.Store({
     async follow({ commit }, id) {
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
-        let res = await Axios.post(`/follow/${id}`,null, header);
+        let res = await Axios.post(`/follow/${id}`, null, header);
         return res;
       } catch (error) {
         throw error;
