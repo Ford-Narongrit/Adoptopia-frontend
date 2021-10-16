@@ -119,6 +119,13 @@ export default {
             try {
                 await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${id}`, {}, headers);
                 await axios.put(`/adopt/transfer/${adop}/${this.user_me.id}`, {}, headers);
+                let data = {
+                    status: 'OTA',
+                    trans_user: id,
+                    adopt_id: this.postInfo.adopt.id,
+                    trans_adopt: adop
+                };
+                await axios.post(`/adop-histories`, data, headers);
                 Alert.mixin("success", "Ota successfully");
             } 
             catch (error) {

@@ -61,7 +61,7 @@ export default {
     mounted(){
         this.fetch();
         this.fetchTrade();
-        this.fetchMe();
+        this.fetchMe();  
     },
 
     methods: {
@@ -114,11 +114,17 @@ export default {
             let headers = Header.getHeaders();
             try {
                 await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${id}`, {}, headers);
+                let data = {
+                    status: 'DTA',
+                    trans_user: id,
+                    adopt_id: this.postInfo.adopt.id
+                };
+                await axios.post(`/adop-histories`, data, headers);
                 Alert.mixin("success", "Dta successfully");
             } 
             catch (error) {
                 if (error.response.status === 404) this.error = "Invalid dta suggestion";
-                else this.error = error.response.data;
+                else this.error = error.response;
                 Alert.mixin("error", `${this.error}. Please try again.`);
             }
         }
