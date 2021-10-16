@@ -113,6 +113,13 @@
           </button>
         </div>
       </div>
+      <div class="nav text-white text-xl" v-if="user.role === 'ADMIN'">
+        <router-link
+          to="/admin/report-post"
+          class="border-b-2 border-transparent hover:border-blue-500 bg-blue-900 rounded-xl"
+          ><font-awesome-icon icon="user-shield" class="text-xl text-white" /> Admin</router-link
+        >
+      </div>
     </div>
   </div>
 </template>

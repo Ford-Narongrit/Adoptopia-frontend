@@ -59,7 +59,10 @@
           <!-- signUp -->
           <div class="my-text-base text-white">
             Don't have an account ?
-            <router-link to="/register" class="text-blue-500 hover:underline" tabindex="-1"
+            <router-link
+              to="/register"
+              class="text-blue-500 hover:underline"
+              tabindex="-1"
               >Sign Up</router-link
             >
           </div>
@@ -102,12 +105,8 @@ export default {
         Alert.mixin("success", "Login successful");
         this.$router.push(`/${res.data.user.username}/home`);
       } catch (error) {
-        this.errors = error.response.data;
-        Alert.window(
-          "error",
-          "Sign in Failed",
-          "Sorry, an unexpected error occurred. Please try again."
-        );
+        this.errors = error.response.data.validator;
+        Alert.window("error", "Sign in Failed", error.response.data.error);
         console.error(error.response);
       }
     },

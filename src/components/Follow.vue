@@ -33,14 +33,28 @@
       </div>
     </div>
 
-    <!-- if don't have follow -->
     <div
-      v-if="follows.length <= 0 && !loading"
+      v-if="errors && !loading"
       class="text-center h-96 flex justify-center items-center"
     >
       <div>
         <span class="my-text-title text-white">
-          You don’t have any follows yet
+          Something went wrong.
+        </span>
+        <div class="my-text-content text-white">
+          This is not the page you were looking for.
+        </div>
+      </div>
+    </div>
+
+    <!-- if don't have follow -->
+    <div
+      v-if="follows.length <= 0 && !loading && !errors"
+      class="text-center h-96 flex justify-center items-center"
+    >
+      <div>
+        <span class="my-text-title text-white">
+          You don’t have any follows yet {{ errors }}
         </span>
         <div v-if="isFollower" class="my-text-content text-white">
           When someone follows you, you’ll see them here.
@@ -87,6 +101,10 @@ export default {
     isFollower: {
       type: Boolean,
       default: true,
+    },
+    errors: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

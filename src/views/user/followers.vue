@@ -1,6 +1,11 @@
 <template>
   <div>
-    <follow :follows="followers" :loading="loading" :isFollower="true"></follow>
+    <follow
+      :follows="followers"
+      :loading="loading"
+      :isFollower="true"
+      :errors="errors"
+    ></follow>
   </div>
 </template>
 
@@ -12,6 +17,7 @@ export default {
     return {
       followers: [],
       loading: true,
+      errors: false,
     };
   },
   components: {
@@ -23,12 +29,16 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getUser", this.$route.params.username);
+        let res = await UserStore.dispatch(
+          "getUser",
+          this.$route.params.username
+        );
         this.followers = res.data.followers;
-        this.loading = false;
       } catch (error) {
+        this.errors = true;
         console.error(error);
       }
+      this.loading = false;
     },
   },
 };

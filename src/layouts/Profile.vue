@@ -63,6 +63,7 @@
                 >
               </div>
             </div>
+
             <!-- edit profile -->
             <div class="absolute bottom-0 right-0" v-if="user.isOwner">
               <router-link
@@ -79,29 +80,86 @@
               </router-link>
             </div>
 
-            <!-- follow -->
-            <div
-              class="absolute bottom-0 right-0"
-              v-if="!user.isOwner && !isFollow"
-              @click="followed()"
-            >
+            <div class="absolute bottom-0 right-0 flex items-center">
               <button
-                class="border-4 border-gray-500 bg-white block px-8 py-2 rounded-3xl m-1 hover:bg-gray-200"
+                v-if="!user.isOwner"
+                class="border-4 border-gray-500 h-12 w-12 rounded-full bg-gray-400 hover:bg-yellow-700 transition"
+                @click="menu = true"
+              >
+                <font-awesome-icon icon="flag" class="text-xl text-white" />
+              </button>
+
+              <!-- popup -->
+              <div
+                class="fixed h-screen w-screen inset-0 flex justify-center items-center"
+                v-if="menu"
+              >
+                <button
+                  class="fixed h-screen w-screen bg-black inset-0 opacity-30 cursor-default"
+                  @click="menu = false"
+                  style="z-index: 1;"
+                ></button>
+                <!-- form report -->
+                <div
+                  class="bg-white px-5 py-3 rounded-md space-y-2"
+                  style="z-index: 1;"
+                >
+                  <div class="my-text-subtitle font-bold text-center">
+                    Report an issue
+                  </div>
+                  <div class="border-b-2 border-gray-400 mx-2 my-1"></div>
+                  <div class="my-text-base">
+                    Help us understand the problem. What issue with
+                    <span class="font-bold"> @{{ user.username }} </span>
+                    are you reporting?
+                  </div>
+                  <button
+                    class="my-text-content rounded-lg block w-full px-2 py-3 hover:bg-gray-300 my-block-focus text-left"
+                    v-for="(report, index) in report_list"
+                    :key="index"
+                    @click="sendReport(report)"
+                  >
+                    {{ report }}
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Other problem."
+                    class="my-text-content rounded-lg border-2 w-full px-2 py-3 my-block-focus"
+                    v-model="otherReport"
+                  />
+                  <div class="text-right space-x-2">
+                    <button
+                      class="bg-red-500 rounded-lg p-3 text-white my-text-content hover:bg-red-600 my-block-error-none-border"
+                      @click="cancelReport()"
+                    >
+                      cancel
+                    </button>
+                    <button
+                      class="bg-blue-500 rounded-lg p-3 text-white my-text-content hover:bg-blue-600 my-block-focus"
+                      @click="sendReport(otherReport)"
+                    >
+                      send
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- follow -->
+              <button
+                v-if="!user.isOwner && !isFollow"
+                @click="followed()"
+                class="border-4 border-gray-500 bg-white block px-8 py-2 rounded-3xl m-1 hover:bg-gray-200 w-36 transition"
               >
                 <span class="my-text-base text-black">
                   Follow
                 </span>
               </button>
-            </div>
 
-            <!-- following -->
-            <div
-              class="absolute bottom-0 right-0"
-              v-if="!user.isOwner && isFollow"
-              @click="unfollow()"
-            >
+              <!-- following -->
               <button
-                class="border-4 border-gray-500 bg-gray-400 block px-8 py-2 rounded-3xl m-1 hover:bg-red-700 hover:border-red-400"
+                v-if="!user.isOwner && isFollow"
+                @click="unfollow()"
+                class="border-4 border-gray-500 bg-gray-400 block px-8 py-2 rounded-3xl m-1 hover:bg-red-700 hover:border-red-400 w-36 transition"
                 @mouseover="unFollow = true"
                 @mouseleave="unFollow = false"
               >
@@ -138,7 +196,15 @@
         </div>
       </div>
     </div>
-    <div class="container mx-auto pt-10">
+    <div v-if="errors" class="mt-20">
+      <div class="text-white my-text-title text-center">
+        This account doesn’t exist
+      </div>
+      <div class="text-white my-text-base text-center">
+        Try searching for another.
+      </div>
+    </div>
+    <div v-if="!errors && !loading" class="container mx-auto pt-10">
       <slot />
     </div>
     <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
@@ -150,6 +216,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import UserStore from "@/store/User";
+import ReportStore from "@/store/Report";
 export default {
   name: "ProfileLayout",
   data() {
@@ -158,6 +225,15 @@ export default {
       loading: true,
       isFollow: false,
       unFollow: false,
+      menu: false,
+      otherReport: "",
+      report_list: [
+        "It's suspicious or spam",
+        "It appears their account is hacked",
+        "They're pretending to be me or someone else",
+        "Their Account are abusive or hateful",
+      ],
+      errors: null,
     };
   },
   mounted() {
@@ -175,7 +251,7 @@ export default {
         this.isFollow = me.data.isFollow;
         this.loading = false;
       } catch (error) {
-        console.error(error);
+        this.errors = error.response.status;
       }
     },
     getImagePath(image) {
@@ -190,14 +266,30 @@ export default {
       return this.intlFormat(num);
     },
     async followed() {
-      let res =  await UserStore.dispatch("follow", this.user.id);
+      let res = await UserStore.dispatch("follow", this.user.id);
       console.log(res);
       this.isFollow = true;
     },
     async unfollow() {
-      let res =  await UserStore.dispatch("unFollow", this.user.id);
+      let res = await UserStore.dispatch("unFollow", this.user.id);
       console.log(res);
-      this.isFollow = false
+      this.isFollow = false;
+    },
+    async sendReport(message) {
+      console.log("send", message, this.user.id);
+      let payload = {
+        description: message,
+        user_id: this.user.id,
+      };
+      let res = await ReportStore.dispatch("sentReportUser", payload);
+      this.clearMenu();
+    },
+    cancelReport() {
+      this.clearMenu();
+    },
+    clearMenu() {
+      this.otherReport = "";
+      this.menu = false;
     },
   },
   components: {

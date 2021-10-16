@@ -1,6 +1,11 @@
 <template>
   <div>
-    <follow :follows="followings" :loading="loading" :isFollower="false"></follow>
+    <follow
+      :follows="followings"
+      :loading="loading"
+      :isFollower="false"
+      :errors="errors"
+    ></follow>
   </div>
 </template>
 
@@ -12,6 +17,7 @@ export default {
     return {
       followings: [],
       loading: true,
+      errors: null,
     };
   },
   components: {
@@ -23,12 +29,16 @@ export default {
   methods: {
     async fetch() {
       try {
-        let res = await UserStore.dispatch("getUser", this.$route.params.username);
+        let res = await UserStore.dispatch(
+          "getUser",
+          this.$route.params.username
+        );
         this.followings = res.data.following;
-        this.loading = false;
       } catch (error) {
+        this.errors = true;
         console.error(error);
       }
+      this.loading = false;
     },
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;

@@ -29,6 +29,11 @@ import Register from "@/views/auth/Register.vue";
 import Follower from "@/views/user/followers.vue";
 import Following from "@/views/user/following.vue";
 
+//Admin
+import ReportPost from "@/views/admin/ReportPost.vue";
+import ReportUser from "@/views/admin/ReportUser.vue";
+import BanList from "@/views/admin/BanList.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -208,6 +213,27 @@ const routes = [
     component: Following,
     meta: {
       layout: "Follow",
+    },
+  },
+  {
+    path: "/admin/report-post",
+    component: ReportPost,
+    meta: {
+      layout: "Admin",
+    },
+  },
+  {
+    path: "/admin/report-user",
+    component: ReportUser,
+    meta: {
+      layout: "Admin",
+    },
+  },
+  {
+    path: "/admin/ban-list",
+    component: BanList,
+    meta: {
+      layout: "Admin",
     },
   },
 ];
