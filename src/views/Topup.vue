@@ -135,7 +135,7 @@ export default {
         this.error = error.response.data.errors
         Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
       }
-
+      this.topupStatus ? this.$router.push("/") : this.$router.push("/profile/home");
     },
     topupBtn() {
       this.topupStatus = 1;
