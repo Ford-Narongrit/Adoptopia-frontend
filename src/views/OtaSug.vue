@@ -119,6 +119,10 @@ export default {
             try {
                 await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${id}`, {}, headers);
                 await axios.put(`/adopt/transfer/${adop}/${this.user_me.id}`, {}, headers);
+                await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
+                await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
+                await axios.put(`/adopt/unUse/${adop}`, {}, headers);
+                
                 let data = {
                     status: 'OTA',
                     trans_user: id,
@@ -127,6 +131,7 @@ export default {
                 };
                 await axios.post(`/adop-histories`, data, headers);
                 Alert.mixin("success", "Ota successfully");
+                this.$router.push("/");
             } 
             catch (error) {
                 if (error.response.status === 404) this.error = "Invalid ota suggestion";

@@ -1,14 +1,14 @@
 <template>
   <div class="my-font-eng text-white">
     <div class="ml-14 mt-10">
-        <b><h1 class="text-4xl text-white">Post |<span class="text-2xl"> Please select adop to offer</span></h1></b>
+        <b><h1 class="text-4xl text-white">Post |<span class="text-2xl"> Please select adop to post</span></h1></b>
     </div>
 
     <!-- adop -->
     <div class="grid grid-cols-4 gap-3 ml-5 mt-10">
       <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
         <div
-          v-for="adopt in adopts"
+          v-for="adopt in showAdopt"
           :key="adopt.id"
           class="my-2 relative border-4 border-shark-400 rounded-lg bg-black"
           @click="selectAdopt(adopt.id)"
@@ -31,6 +31,7 @@ export default {
     data() {
         return {
             adopts: [],
+            showAdopt:[]
         };
     },
 
@@ -48,6 +49,12 @@ export default {
             try {
                 let res = await AdoptStore.dispatch("getAdopts_list");
                 this.adopts = AdoptStore.getters.adopts_list;
+                
+                for(var i=0; i<this.adopts.length; i++){
+                    if(this.adopts[i].status == 0){
+                        this.showAdopt.push(this.adopts[i]);
+                    }
+                }
             } catch (error) {
                 console.error(error.response);
             }

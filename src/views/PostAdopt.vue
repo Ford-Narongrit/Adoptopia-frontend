@@ -161,11 +161,15 @@ export default {
         payload.append("adopt_id", this.adop_id);
         payload.append("type", this.form.type);
         payload.append("status", "on");
-
+        
+        let headers = Header.getHeaders();    
         if(this.form.type === 'OTA' || this.form.type === 'DTA'){
           try {
             let res = await axios.post("/trade", payload, config);
+            await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
             console.log(res.data);
+            Alert.mixin("success", "Post successfully");
+            this.$router.push("/");
           } catch (error) {
             this.errors = error.response.data;
             console.log(this.errors);
@@ -182,6 +186,7 @@ export default {
             payload.append("type", "sale");
             payload.append("price", this.form.price);
             try {
+              await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
               let res = await axios.post("/trade", payload, config);
               console.log(res.data);
               Alert.mixin("success", "Post successfully");
