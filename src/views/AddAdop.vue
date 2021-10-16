@@ -163,7 +163,7 @@
                 :clear-on-select="false"
                 :preserve-search="true"
                 :limit="3"
-                placeholder="Search or select adopt"
+                placeholder="Search or select category"
                 label="name"
                 track-by="name"
                 :max="7"
@@ -255,7 +255,6 @@ export default {
       }
       let payload = new FormData();
       if (this.form.name !== null) {
-        console.log("here");
         payload.append("name", this.form.name);
       }
       Object.keys(this.form.catagory).forEach((key) => {
@@ -270,8 +269,8 @@ export default {
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
         let res = await axios.post("/adopt", payload, config);
-        console.log(res.data);
         Alert.mixin("success", "Add adopt successfully");
+        this.$router.push({path:`/${this.user.username}/adop`})
       } catch (error) {
         this.errors = error.response.data.errors;
 

@@ -184,6 +184,7 @@ export default {
           await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
           await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`, {}, headers);
           await axios.put("/earn", this.form_earn , headers);
+          await axios.post(`/notification/sale-notification/${this.postInfo.id}`, {} , headers);
           // let data_earn = {
           //   status: "earn",
           //   amount: this.form_earn.amount,
@@ -191,6 +192,7 @@ export default {
           // };
           // await axios.post(`/payment-histories`, data_earn, headers);
           Alert.mixin("success", "Purchase successfully");
+          this.$router.push("/");
         } catch (error) {
           this.error = error.response.data.errors
           Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
