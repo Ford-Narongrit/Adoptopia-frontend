@@ -42,7 +42,7 @@
       <div class="text-white mr-2">Type:</div>
       <select
         v-model="form.status"
-        class="my-text-content rounded-lg px-2 py-1 my-block-focus mr-4"
+        class="my-text-content rounded-lg px-2 py-1 my-block-focus mr-4 cursor-pointer"
       >
         <option disabled value="">Type</option>
         <option
@@ -141,6 +141,7 @@ export default {
       this.isFilter = false;
       this.form.dateFrom = "";
       this.form.dateTo = "";
+      this.form.status = "all";
       this.errors = [];
       this.fetchData();
     },
