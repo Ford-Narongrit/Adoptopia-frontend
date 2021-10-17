@@ -41,7 +41,7 @@
           :key="adopt.id"
           class="my-2 relative border-4 border-shark-400 rounded-lg bg-black"
         >
-          <pop-up-adopt :adopt="adopt" />
+          <pop-up-adopt :adopt="adopt" :isOwner="isOwner(adopt)" />
         </div>
       </vue-flex-waterfall>
     </div>
@@ -50,6 +50,7 @@
 
 <script>
 import AdoptStore from "@/store/Adopt";
+import UserStore from "@/store/User";
 import VueFlexWaterfall from "vue-flex-waterfall";
 import PopUpAdopt from "@/components/PopUpAdopt.vue";
 
@@ -128,11 +129,15 @@ export default {
           "getUserAdops",
           this.$route.params.username
         );
+
         this.adopts = AdoptStore.getters.adopts_list;
         this.loading = false;
       } catch (error) {
         console.error(error.response);
       }
+    },
+    isOwner(adopt) {
+      return adopt.user_id === UserStore.user_id;
     },
   },
 };

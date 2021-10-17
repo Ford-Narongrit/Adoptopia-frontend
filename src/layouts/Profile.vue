@@ -81,68 +81,7 @@
             </div>
 
             <div class="absolute bottom-0 right-0 flex items-center">
-              <button
-                v-if="!user.isOwner"
-                class="border-4 border-gray-500 h-12 w-12 rounded-full bg-gray-400 hover:bg-yellow-700 transition"
-                @click="menu = true"
-              >
-                <font-awesome-icon icon="flag" class="text-xl text-white" />
-              </button>
-
-              <!-- popup -->
-              <div
-                class="fixed h-screen w-screen inset-0 flex justify-center items-center"
-                v-if="menu"
-              >
-                <button
-                  class="fixed h-screen w-screen bg-black inset-0 opacity-30 cursor-default"
-                  @click="menu = false"
-                  style="z-index: 1;"
-                ></button>
-                <!-- form report -->
-                <div
-                  class="bg-white px-5 py-3 rounded-md space-y-2"
-                  style="z-index: 1;"
-                >
-                  <div class="my-text-subtitle font-bold text-center">
-                    Report an issue
-                  </div>
-                  <div class="border-b-2 border-gray-400 mx-2 my-1"></div>
-                  <div class="my-text-base">
-                    Help us understand the problem. What issue with
-                    <span class="font-bold"> @{{ user.username }} </span>
-                    are you reporting?
-                  </div>
-                  <button
-                    class="my-text-content rounded-lg block w-full px-2 py-3 hover:bg-gray-300 my-block-focus text-left"
-                    v-for="(report, index) in report_list"
-                    :key="index"
-                    @click="sendReport(report)"
-                  >
-                    {{ report }}
-                  </button>
-                  <input
-                    type="text"
-                    placeholder="Other problem."
-                    class="my-text-content rounded-lg border-2 w-full px-2 py-3 my-block-focus"
-                    v-model="otherReport"
-                  />
-                  <div class="text-right space-x-2">
-                    <button
-                      class="bg-red-500 rounded-lg p-3 text-white my-text-content hover:bg-red-600 my-block-error-none-border"
-                      @click="cancelReport()"
-                    >
-                      cancel
-                    </button>
-                    <button
-                      class="bg-blue-500 rounded-lg p-3 text-white my-text-content hover:bg-blue-600 my-block-focus"
-                      @click="sendReport(otherReport)"
-                    >
-                      send
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <report :user="user" :report_list="report_list" type="User"/>
 
               <!-- follow -->
               <button
@@ -184,11 +123,6 @@
             >HOME</router-link
           >
           <router-link
-            to="posts"
-            class="my-text-base text-white hover:bg-gray-700"
-            >POST</router-link
-          >
-          <router-link
             to="adop"
             class="my-text-base text-white hover:bg-gray-700"
             >ADOP</router-link
@@ -217,6 +151,7 @@
 import Navbar from "@/components/Navbar.vue";
 import UserStore from "@/store/User";
 import ReportStore from "@/store/Report";
+import Report from "@/components/Report.vue";
 export default {
   name: "ProfileLayout",
   data() {
@@ -267,16 +202,13 @@ export default {
     },
     async followed() {
       let res = await UserStore.dispatch("follow", this.user.id);
-      console.log(res);
       this.isFollow = true;
     },
     async unfollow() {
       let res = await UserStore.dispatch("unFollow", this.user.id);
-      console.log(res);
       this.isFollow = false;
     },
     async sendReport(message) {
-      console.log("send", message, this.user.id);
       let payload = {
         description: message,
         user_id: this.user.id,
@@ -293,6 +225,7 @@ export default {
     },
   },
   components: {
+    Report,
     Navbar,
   },
 };

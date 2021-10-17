@@ -27,6 +27,9 @@
               {{ category }}
             </span>
           </div>
+          <button v-if="checkIfOwner()" class="btn-rounded absolute right-48 mt-6 bg-red-500 hover:text-red-500" @click="deletePost">
+            Delete
+          </button>
 
           <div v-if="!checkIfOwner()">
             <div class="py-3 mb-3">
@@ -74,6 +77,7 @@ import axios from "axios";
 import Header from "@/helpers/Header";
 import Alert from "../helpers/Alert";
 import Loading from "../components/Loading.vue";
+import OtaStore from "../store/Ota.js";
 
 export default {
   name: 'ota',
@@ -84,6 +88,9 @@ export default {
 
       ota_adop_image: "",
       adopts: [],
+
+      adoptsOta: [],
+      adopPost: [],
 
       postId: "",
       postInfo: "",
@@ -121,6 +128,7 @@ export default {
     this.fetchTrade();
     this.fetchMe();
     this.fetch();
+    this.fetchOta();
   },
 
   methods: {
@@ -189,6 +197,23 @@ export default {
       }
     },
 
+    async fetchOta() {
+        try {
+            let res = await OtaStore.dispatch("getOta_Adops_list");
+            this.adoptsOta = OtaStore.getters.ota_adops_list;
+
+            for(var i=0; i<this.adoptsOta.length; i++){
+              if(this.adoptsOta[i].trade_id == this.postId){
+                this.adopPost.push(this.adoptsOta[i])
+                console.log(this.adopPost);
+              }
+            }
+            this.loading = false;
+        } catch (error) {
+            console.error(error.response);
+        }
+    },
+
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
@@ -225,7 +250,31 @@ export default {
       else{
         return false;
       }
-    }
+    },
+
+    async deletePost() {
+      if(this.adopPost[0] != null){
+        Alert.mixin("error", "You can't delete this post, because it's already have a request");
+      }else{
+        try {
+          let isConfirm = await Alert.yesNo("This action cannot be undone");
+          if (isConfirm) {
+            let headers = Header.getHeaders();
+            await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
+            await axios.delete(`/trade/delete/${this.postInfo.id}`, headers);
+            await axios.put(
+              `/adopt/unUse/${this.postInfo.adopt.id}`,
+              {},
+              headers
+            );
+            Alert.mixin("success", "Delete successfully");
+            this.$router.push("/");
+          }
+        } catch (error) {
+          console.error(error.response);
+        }        
+      }
+    },
   },
 }
 </script>

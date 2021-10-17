@@ -27,6 +27,7 @@ export default {
   },
   props: {
     name: { type: String , default: "Name" },
+    username: { type: String , default: "username" },
     text: { type: String , default: "~~~~~~~~~~~~~~" },
     time: { type: String , default: "" },
     profile: { type: String , default: "favicon.ico" },
@@ -46,8 +47,11 @@ export default {
     },
 
     toPost(){
-
-      if(this.tradeType !== "sale"){
+      
+      if(this.tradeType === "follow"){
+        this.$router.push({path:'/'+this.username+'/home'})
+      }
+      else if(this.tradeType !== "sale"){
         this.$router.push({path:'/'+this.tradeType+'/'+this.tradeID})
       }
 

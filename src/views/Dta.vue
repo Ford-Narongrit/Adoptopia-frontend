@@ -27,6 +27,9 @@
               {{ category }}
             </span>
           </div>
+          <button v-if="checkIfOwner()" class="btn-rounded absolute right-48 mt-6 bg-red-500 hover:text-red-500" @click="deletePost">
+            Delete
+          </button>
 
           <div v-if="!checkIfOwner()">
             <div class="py-3 mb-3">
@@ -80,6 +83,7 @@ import axios from "axios";
 import Alert from "../helpers/Alert";
 import Header from "@/helpers/Header";
 import Loading from "../components/Loading.vue";
+import DtaStore from "../store/Dta.js";
 
 export default {
   name: 'dta',
@@ -103,6 +107,9 @@ export default {
       owner: {},
       user_me: {},
 
+      dtaPost: [],
+      dta_images: [],
+
       form: {
         trade_id: "",
         status: 0,
@@ -123,6 +130,7 @@ export default {
   mounted(){
     this.fetchTrade();
     this.fetchMe();
+    this.fetchDta();
   },
 
   methods: {
@@ -170,6 +178,23 @@ export default {
       }
     },
 
+    async fetchDta() {
+        try {
+            let res = await DtaStore.dispatch("getDta_image_list");
+            this.dta_images = DtaStore.getters.dta_image_list;
+
+            for(var i=0; i<this.dta_images.length; i++){
+              if(this.dta_images[i].trade_id == this.postId){
+                this.dtaPost.push(this.dta_images[i])
+                console.log(this.dtaPost);
+              }
+            }
+            this.loading = false;
+        } catch (error) {
+            console.error(error.response);
+        }
+    },
+
     async fetchMe() {
       try {
         let res = await UserStore.dispatch("getMe");
@@ -209,7 +234,6 @@ export default {
       try {
         let res = await axios.post("/dta-sug", payload, config);
         console.log(res.data);
-        Alert.mixin("success", "Request image successfully");
         this.$router.push("/");
       } 
       catch (error) {
@@ -225,7 +249,31 @@ export default {
       else{
         return false;
       }
-    }
+    },
+
+    async deletePost() {
+      if(this.dtaPost[0] != null){
+        Alert.mixin("error", "You can't delete this post, because it's already have a request");
+      }else{
+        try {
+          let isConfirm = await Alert.yesNo("This action cannot be undone");
+          if (isConfirm) {
+            let headers = Header.getHeaders();
+            await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
+            await axios.delete(`/trade/delete/${this.postInfo.id}`, headers);
+            await axios.put(
+              `/adopt/unUse/${this.postInfo.adopt.id}`,
+              {},
+              headers
+            );
+            Alert.mixin("success", "Delete successfully");
+            this.$router.push("/");
+          }
+        } catch (error) {
+          console.error(error.response);
+        }        
+      }
+    },
   },
 }
 </script>

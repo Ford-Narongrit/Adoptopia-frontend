@@ -42,6 +42,15 @@ export default new Vuex.Store({
         throw error;
       }
     },
+    async getPostByUserId({ commit }, slug) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get(`/trade/${slug}/post`, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
   modules: {},
 });

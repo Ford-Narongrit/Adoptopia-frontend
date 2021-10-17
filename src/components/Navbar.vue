@@ -17,11 +17,7 @@
         <router-link
           to="/topup"
           class="border-b-2 border-transparent"
-          v-if="user.coin <= 1"
           >{{ user.coin }} Coin</router-link
-        >
-        <router-link to="/topup" class="border-b-2 border-transparent" v-else
-          >{{ user.coin }} Coins</router-link
         >
       </div>
       <div class="nav text-white text-xl">
@@ -183,7 +179,6 @@ export default {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
-        // console.log(this.user);
       } catch (error) {
         console.error(error.message);
       }
@@ -196,7 +191,6 @@ export default {
         let config = Header.getHeaders();
         let res = await axios.get("/notification/me/unseen", config);
         this.notificationNumber = res.data.length;
-        console.log(this.notificationNumber);
       } catch (error) {
         console.error(error);
       }
