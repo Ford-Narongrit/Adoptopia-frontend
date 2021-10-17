@@ -27,6 +27,16 @@ export default new Vuex.Store({
         throw error;
       }
     },
+    async fetchPostReport({ commit }) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.get(`/report/post`, header);
+        commit("storeReport", res.data);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
     async sentReportUser({ commit }, payload) {
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
@@ -36,7 +46,7 @@ export default new Vuex.Store({
         throw error;
       }
     },
-    async sentReportUser({ commit }, payload) {
+    async sentReportPost({ commit }, payload) {
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
         let res = await Axios.post(`/report/post`, payload, header);
@@ -58,6 +68,15 @@ export default new Vuex.Store({
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
         let res = await Axios.post(`/unban`, { id: id }, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async deletePost({ commit }, id) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.delete(`/trade/delete/${id}`, header);
         return res;
       } catch (error) {
         throw error;

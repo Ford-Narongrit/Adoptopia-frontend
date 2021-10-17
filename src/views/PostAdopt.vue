@@ -5,7 +5,6 @@
     </div>
 
     <div class="flex">
-      <!-- adop image -->
       <div class="w-2/3 px-16 py-5 ml-24 justify-center item-center ">
         <div
           v-if="adop_image"
@@ -84,18 +83,14 @@
                 >Type:
               </label>
               <select
-                v-model="form.type"
+                v-model="type"
                 v-on:click="typeCheck()"
                 class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
               >
                 <option disabled value="">Please select a type</option>
-                <!-- Auction, OTA, DTA, SP -->
-                <option
-                  v-for="(type, index) in types"
-                  :key="index"
-                  class="hover:bg-black"
-                  >{{ type }}</option
-                >
+                <option value="OTA">OTA(Offer to Adop)</option>
+                <option value="DTA">DTA(Offer to Draw)</option>
+                <option value="For Sale">For Sale</option>
               </select>
             </div>
             <div v-if="isForSale">
@@ -161,12 +156,11 @@ export default {
       adop_id: 0,
       adop_image: "",
       name: "",
+      type: "",
       categories: [],
       agreement: "",
       isForSale: false,
-      types: ["OTA", "DTA", "For Sale"],
       form: {
-        type: "",
         price: "",
         images: [],
       },
@@ -191,43 +185,38 @@ export default {
     async post() {
       let payload = new FormData();
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
-      if (this.adop_id !== 0 && this.form.type !== "") {
+      if (this.adop_id !== 0 && this.type !== "") {
         payload.append("adopt_id", this.adop_id);
-        payload.append("type", this.form.type);
+        payload.append("type", this.type);
         payload.append("status", "on");
         
         let headers = Header.getHeaders();    
-        if(this.form.type === 'OTA' || this.form.type === 'DTA'){
+        if(this.type === 'OTA' || this.type === 'DTA'){
           try {
             let res = await axios.post("/trade", payload, config);
             await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
-            console.log(res.data);
             Alert.mixin("success", "Post successfully");
             this.$router.push("/");
           } catch (error) {
             this.errors = error.response.data;
-            console.log(this.errors);
             Alert.window(
               "error",
               "Add adopt failed",
               "Sorry, an unexpected error occurred. Please try again."
             );
           }
-          //console.log("ota");
         }
-        if (this.form.type === "For Sale") {
+        if (this.type === "For Sale") {
           if (this.form.price !== "") {
             payload.append("type", "sale");
             payload.append("price", this.form.price);
             try {
               await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
               let res = await axios.post("/trade", payload, config);
-              console.log(res.data);
               Alert.mixin("success", "Post successfully");
               this.$router.push("/");
             } catch (error) {
               this.errors = error.response.data.errors;
-              console.log(this.errors);
               Alert.window(
                 "error",
                 "Add adopt failed",
@@ -276,7 +265,7 @@ export default {
     },
     typeCheck() {
       this.errors = []
-      if (this.form.type === "For Sale") {
+      if (this.type === "For Sale") {
         
         this.isForSale = true;
       } else {

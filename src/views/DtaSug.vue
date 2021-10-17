@@ -89,8 +89,8 @@ export default {
             try {
                 let res = await DtaStore.dispatch("getDta_image_list");
                 this.dta_images = DtaStore.getters.dta_image_list;
-                console.log(this.dta_images);
-                console.log(this.postId);
+                // console.log(this.dta_images);
+                // console.log(this.postId);
 
                 for(var i=0; i<this.dta_images.length; i++){
                     if(this.dta_images[i].trade_id == this.postId){
@@ -118,18 +118,21 @@ export default {
 
         async dta_sug(id){
             try {
-                let headers = Header.getHeaders();
-                await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${id}`, {}, headers);
-                await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
-                await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
-                let data = {
-                    status: 'DTA',
-                    trans_user: id,
-                    adopt_id: this.postInfo.adopt.id
-                };
-                await axios.post(`/adop-histories`, data, headers);
-                Alert.mixin("success", "Dta successfully");
-                this.$router.push("/");
+                let isConfirm = await Alert.yesNo("Would you like to transfer your adop to this user ");
+                if (isConfirm) {
+                    let headers = Header.getHeaders();
+                    await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${id}`, {}, headers);
+                    await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
+                    await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
+                    let data = {
+                        status: 'DTA',
+                        trans_user: id,
+                        adopt_id: this.postInfo.adopt.id
+                    };
+                    await axios.post(`/adop-histories`, data, headers);
+                    Alert.mixin("success", "Dta successfully");
+                    this.$router.push("/");   
+                }
             } 
             catch (error) {
                 if (error.response.status === 404) this.error = "Invalid dta suggestion";

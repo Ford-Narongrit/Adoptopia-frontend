@@ -17,11 +17,7 @@
         <router-link
           to="/topup"
           class="border-b-2 border-transparent"
-          v-if="user.coin <= 1"
           >{{ user.coin }} Coin</router-link
-        >
-        <router-link to="/topup" class="border-b-2 border-transparent" v-else
-          >{{ user.coin }} Coins</router-link
         >
       </div>
       <div class="nav text-white text-xl">
