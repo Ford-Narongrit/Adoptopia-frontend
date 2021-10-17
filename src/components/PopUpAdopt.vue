@@ -16,13 +16,14 @@
       />
       <img
         v-if="adopt.adopt_image[0]"
-        class="rounded-md transition duration-300 ease-in-out transform hover:scale-110"
+        class="rounded-md transition duration-300 ease-in-out transform "
         :src="getImagePath(adopt.adopt_image[0].path)"
         :height="`${adopt.adopt_image[0].height}px`"
         :width="`${adopt.adopt_image[0].height}px`"
+        :class="!isOwner ? 'filter blur-xl' : 'hover:scale-110'"
       />
       <div
-        v-if="isShow"
+        v-if="isShow && isOwner"
         class="absolute bottom-0 bg-gray-100 w-full px-4 py-2 rounded-b-md hidden md:block shadow-lg animate-fade-in-up"
       >
         <div class="my-text-subtitle">
@@ -59,6 +60,10 @@ export default {
     adopt: {
       type: Object,
       default: {},
+    },
+    isOwner: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {

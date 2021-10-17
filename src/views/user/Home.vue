@@ -43,7 +43,6 @@ export default {
           this.$route.params.username
         );
         this.posts = res.data;
-        console.log("in post method", res);
       } catch (error) {
         console.error(error.response);
       }
