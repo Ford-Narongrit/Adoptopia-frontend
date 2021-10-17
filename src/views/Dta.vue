@@ -41,7 +41,14 @@
 
         <div class="info -mt-20 py-16">
           <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-          <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
+          <router-link
+            :to="{
+              path: '/' + this.owner.username + '/home',
+            }"
+            class="hover:underline"
+          >
+            <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
+          </router-link>
           <h2 class="py-3 text-2xl">Catagory:</h2>
           <div
             class="text-white my-text-content rounded-lg w-2/3 my-block-focus"

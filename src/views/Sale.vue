@@ -2,7 +2,12 @@
   <div class="my-font-eng sale text-white">
     <div class="flex flex-wrap">
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
-      <report :post="postInfo" :report_list="['1', '2', '3']" type="Post" class="mt-10 px-5"/>
+      <report
+        :post="postInfo"
+        :report_list="['1', '2', '3']"
+        type="Post"
+        class="mt-10 px-5"
+      />
     </div>
 
     <Loading v-if="loading" />
@@ -19,7 +24,14 @@
 
         <div class="info -mt-20 py-16">
           <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-          <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
+          <router-link
+            :to="{
+              path: '/' + this.owner.username + '/home',
+            }"
+            class="hover:underline"
+          >
+            <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
+          </router-link>
           <h2 class="py-3 text-2xl">Catagory:</h2>
           <div
             class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
@@ -70,34 +82,34 @@
             >
               Purchase
             </button>
-          </div>
-          <div class="py-3 pt-1" v-if="checkIfOwner()">
-            <button
-              class="btn-rounded absolute"
-              @click="edit = true"
-              v-if="!edit"
-            >
-              Edit
-            </button>
-            <button
-              class="btn-rounded absolute"
-              v-if="edit"
-              @click="edit = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="
-                btn-rounded
-                bg-red-500
-                hover:text-red-500
-                absolute
-                right-48
-              "
-              @click="deletePost"
-            >
-              Delete
-            </button>
+            <div class="py-3 pt-1" v-if="checkIfOwner()">
+              <button
+                class="btn-rounded absolute"
+                @click="edit = true"
+                v-if="!edit"
+              >
+                Edit
+              </button>
+              <button
+                class="btn-rounded absolute"
+                v-if="edit"
+                @click="edit = false"
+              >
+                Cancel
+              </button>
+              <button
+                class="
+                  btn-rounded
+                  bg-red-500
+                  hover:text-red-500
+                  absolute
+                  right-48
+                "
+                @click="deletePost"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
 

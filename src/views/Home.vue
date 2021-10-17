@@ -8,20 +8,15 @@
           class="my-text-content rounded-lg px-2 py-1 my-block-focus"
         >
           <option disabled value="">Please select a type</option>
-          <!-- Auction, OTA, DTA, SP -->
-          <option
-            v-for="(type, index) in types"
-            :key="index"
-            class="hover:bg-black"
-          >
-            {{ type }}
-          </option>
+          <option value="OTA">OTA(Offer to Adop)</option>
+          <option value="DTA">DTA(Offer to Draw)</option>
+          <option value="For Sale">For Sale</option>
         </select>
       </div>
       <div class="flex flex-nowrap py-8">
         <label class="px-4 mt-2 text-white">Category</label>
         <multiselect
-          v-model="valueCat"
+          v-model="catagory"
           :options="categories"
           :multiple="true"
           :close-on-select="false"
@@ -52,11 +47,18 @@
         </button>
       </div>
     </div>
-    <div class="px-7">
+    <Loading v-if="loading" />
+    <div class="px-7" v-if="!loading">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
-        <div v-for="adopt_list in filterAdop()" :key="adopt_list.index">
-            <router-link :to="{ path: '/' + adopt_list.type + '/' + adopt_list.id, name: adopt_list.type, params: {id: adopt_list.id} }">
-             <img
+        <div v-for="adopt_list in filtered_adop" :key="adopt_list.index">
+          <router-link
+            :to="{
+              path: '/' + adopt_list.type + '/' + adopt_list.id,
+              name: adopt_list.type,
+              params: { id: adopt_list.id },
+            }"
+          >
+            <img
               :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
               height="200px"
               width="350px"
@@ -79,6 +81,7 @@
 import axios from "axios";
 import Multiselect from "vue-multiselect";
 import VueFlexWaterfall from "vue-flex-waterfall";
+import Loading from "../components/Loading.vue";
 import TradeStore from "../store/Trade.js";
 import SelectAdop from "@/components/SelectAdop.vue";
 
@@ -87,32 +90,35 @@ export default {
     Multiselect,
     VueFlexWaterfall,
     SelectAdop,
+    Loading,
   },
   data() {
     return {
-      valueCat: null,
+      catagory: null,
       categories: [],
       type: "",
-      types: ["OTA", "DTA", "For Sale"],
       adopts: [],
       filtered_adop: [],
       selectedImage: null,
-      loading: true
+      loading: true,
     };
   },
-  methods: {
-    addTag(newTag) {
-      const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      };
-      this.options.push(tag);
-      this.value.push(tag);
+  computed: {
+    search_filter: function () {
+      if (this.type === "OTA") {
+        this.filtered_adop.sort((a, b) => {
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+        return this.filtered_adop;
+      }
     },
+  },
+  methods: {
     async fetchTrade() {
       try {
         await TradeStore.dispatch("getPost_Adops_list");
         this.adopts = TradeStore.getters.post_adops_list;
+        this.filterAdop();
       } catch (error) {
         console.error(error.response);
       }
@@ -138,6 +144,13 @@ export default {
   created() {
     this.fetchTrade();
     this.fetchCategory();
+  },
+  maxSelected() {
+    const selectedItems = this.form.catagory.length;
+    this.maxItemsSelected = false;
+    if (selectedItems >= 3) {
+      this.maxItemsSelected = true;
+    }
   },
 };
 </script>
