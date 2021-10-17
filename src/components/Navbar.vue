@@ -46,19 +46,36 @@
           Login
         </router-link>
       </div>
+
       <div v-if="login">
-        <router-link
+        <button 
+        @click="setNotiToSeen()"
+        class="p-2 border-b-2 border-transparent relative inline-block ">
+          
+        <!-- <router-link
           to="/notification"
           class="p-2 border-b-2 border-transparent relative inline-block"
-        >
+        > -->
+        <!-- </router-link> -->
+
           <span
             v-if="notificationNumber > 0"
             class="absolute text-white -top-1  left-5 bg-red-500 rounded-full h-5  w-5 flex items-center justify-center"
             >{{ notificationNumber }}</span
           >
           <font-awesome-icon icon="bell" class="text-xl text-white" />
-        </router-link>
+
+          <notification v-if="is_notiOpen"/>
+
+        </button>
+
+        <button
+          v-if="is_notiOpen"
+          @click="is_notiOpen = false"
+          class="fixed h-screen w-full bg-black inset-0 opacity-30 cursor-default"
+        ></button>
       </div>
+
       <!-- if login -->
       <div v-if="login" class="relative">
         <button @click="isOpen = !isOpen">
@@ -129,6 +146,7 @@ import UserStore from "@/store/User";
 import Alert from "@/helpers/Alert.js";
 import axios from "axios";
 import Header from "@/helpers/Header";
+import Notification from "@/components/Notification"
 export default {
   data() {
     return {
@@ -139,13 +157,19 @@ export default {
       lastScrollPosition: 0,
       user: {},
       notificationNumber: 0,
+      is_notiOpen: false,
+      notiList: []
     };
+  },
+  components:{
+    Notification
+
   },
   mounted() {
     window.addEventListener("scroll", this.onScroll);
     this.login = UserStore.getters.isAuthen;
     this.fetchUser();
-    this.fetchNotification();
+    this.fetchNotificationUnseen();
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.onScroll);
@@ -183,7 +207,6 @@ export default {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
-        // console.log(this.user);
       } catch (error) {
         console.error(error.message);
       }
@@ -191,11 +214,23 @@ export default {
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
-    async fetchNotification() {
+    async fetchNotificationUnseen() {
       try {
         let config = Header.getHeaders();
         let res = await axios.get("/notification/me/unseen", config);
         this.notificationNumber = res.data.length;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+
+    async setNotiToSeen() {
+      this.is_notiOpen = !this.is_notiOpen 
+      this.notificationNumber = 0
+      try {
+        let header = Header.getHeaders();
+        await axios.put("/notification/me/updateStatus",null, header);
       } catch (error) {
         console.error(error);
       }
