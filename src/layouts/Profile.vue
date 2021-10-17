@@ -184,11 +184,6 @@
             >HOME</router-link
           >
           <router-link
-            to="posts"
-            class="my-text-base text-white hover:bg-gray-700"
-            >POST</router-link
-          >
-          <router-link
             to="adop"
             class="my-text-base text-white hover:bg-gray-700"
             >ADOP</router-link
