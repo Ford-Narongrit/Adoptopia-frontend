@@ -183,7 +183,6 @@ export default {
       try {
         let res = await UserStore.dispatch("getMe");
         this.user = res.data;
-        // console.log(this.user);
       } catch (error) {
         console.error(error.message);
       }

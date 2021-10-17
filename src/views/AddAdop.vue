@@ -278,8 +278,7 @@ export default {
           "Add adop failed",
           "Sorry, an unexpected error occurred. Please try again."
         );
-        console.log(this.errors);
-        // console.log(error.response);
+        console.error(this.errors);
       }
     },
     addImage(e) {
@@ -316,7 +315,6 @@ export default {
       this.hoverImage = false;
     },
     removeImage(index) {
-      // console.log("click remove");
       this.images.splice(index, 1);
       this.form.images.splice(index, 1);
     },
