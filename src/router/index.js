@@ -17,7 +17,6 @@ import PostSelect from "../views/PostSelect.vue";
 
 //profile
 import HomeUser from "@/views/user/Home.vue";
-import PostUser from "@/views/user/Post.vue";
 import AdopUser from "@/views/user/Adop.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import AdopIDUser from "@/views/user/Adop_id.vue";
@@ -169,13 +168,6 @@ const routes = [
   {
     path: "/:username/home",
     component: HomeUser,
-    meta: {
-      layout: "Profile",
-    },
-  },
-  {
-    path: "/:username/posts",
-    component: PostUser,
     meta: {
       layout: "Profile",
     },

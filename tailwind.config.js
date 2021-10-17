@@ -95,76 +95,80 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      brightness: ["hover", "focus"],
+      blur: ["hover", "focus"],
+    },
   },
   plugins: [
-    plugin(function ({ addComponents }) {
+    plugin(function({ addComponents }) {
       const buttons = {
-        '.btn-rounded': {
-          background: '#1E63E9',
-          borderRadius: '20px',
-          flex: 'none',
-          width: '6em',
-          height: '2.2em',
-          fontSize: '1rem',
-          fontWeight: '600',
+        ".btn-rounded": {
+          background: "#1E63E9",
+          borderRadius: "20px",
+          flex: "none",
+          width: "6em",
+          height: "2.2em",
+          fontSize: "1rem",
+          fontWeight: "600",
 
-          '&:hover': {
-            color: '#1E63E9',
-            background: '#ffffff'
-          }
+          "&:hover": {
+            color: "#1E63E9",
+            background: "#ffffff",
+          },
         },
 
-        '.btn-square': {
-          background: '#1E63E9',
-          borderRadius: '5px',
-          flex: 'none',
-          width: '6em',
-          height: '2.2em',
-          fontSize: '1rem',
-          fontWeight: '600',
+        ".btn-square": {
+          background: "#1E63E9",
+          borderRadius: "5px",
+          flex: "none",
+          width: "6em",
+          height: "2.2em",
+          fontSize: "1rem",
+          fontWeight: "600",
 
-          '&:hover': {
-            color: '#1E63E9',
-            background: '#ffffff'
-          }
+          "&:hover": {
+            color: "#1E63E9",
+            background: "#ffffff",
+          },
         },
 
-        '.btn-sugges': {
-          background: '#1E63E9',
-          borderRadius: '5px',
-          flex: 'none',
-          width: '8em',
-          height: '2.2em',
-          right: '10rem',
-          fontSize: '1rem',
-          marginLeft: '64em',
-          fontWeight: '600',
+        ".btn-sugges": {
+          background: "#1E63E9",
+          borderRadius: "5px",
+          flex: "none",
+          width: "8em",
+          height: "2.2em",
+          right: "10rem",
+          fontSize: "1rem",
+          marginLeft: "64em",
+          fontWeight: "600",
 
-          '&:hover': {
-            color: '#1E63E9',
-            background: '#ffffff'
-          }
-        }
-      }
+          "&:hover": {
+            color: "#1E63E9",
+            background: "#ffffff",
+          },
+        },
+      };
       addComponents(buttons);
 
       const cards = {
-        '.my-card': {
-          background: '#FFFFFF',
-          width: '16rem',
-          borderRadius: '0.25rem',
-          overflow: 'hidden',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-          transition: '0.25s',
+        ".my-card": {
+          background: "#FFFFFF",
+          width: "16rem",
+          borderRadius: "0.25rem",
+          overflow: "hidden",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          transition: "0.25s",
 
-          '&:hover': {
-            transform: 'scale(1.05)',
-            transition: '0.25s',
-          }
+          "&:hover": {
+            transform: "scale(1.05)",
+            transition: "0.25s",
+          },
         },
-      }
+      };
       addComponents(cards);
-    })
+    }),
   ],
 };
