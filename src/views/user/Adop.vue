@@ -41,7 +41,7 @@
           :key="adopt.id"
           class="my-2 relative border-4 border-shark-400 rounded-lg bg-black"
         >
-          <pop-up-adopt :adopt="adopt" :isOwner="isOwner(adopt)"/>
+          <pop-up-adopt :adopt="adopt" :isOwner="isOwner(adopt)" />
         </div>
       </vue-flex-waterfall>
     </div>
@@ -137,7 +137,7 @@ export default {
       }
     },
     isOwner(adopt) {
-      return adopt.id === UserStore.id;
+      return adopt.user_id === UserStore.user_id;
     },
   },
 };
