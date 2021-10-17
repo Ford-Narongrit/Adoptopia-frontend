@@ -4,8 +4,9 @@
         <b><h1 class="text-4xl text-white">Offer To Adop |<span class="text-2xl"> Please select adop to offer</span></h1></b>
     </div>
 
+    <Loading v-if="loading"/>
     <!-- adop -->
-    <div class="grid grid-cols-4 gap-3 ml-14 mt-10">
+    <div class="grid grid-cols-4 gap-3 ml-14 mt-10" v-if="!loading">
       <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
         <div
           v-for="adopt in showAdopt"
@@ -29,10 +30,13 @@ import VueFlexWaterfall from "vue-flex-waterfall";
 import SelectAdop from "@/components/SelectAdop.vue";
 import Alert from "../helpers/Alert";
 import UserStore from "../store/User";
+import Loading from "../components/Loading.vue";
 
 export default {
     data() {
         return {
+            loading: true,
+
             postId: "",
             postInfo: "",
             postAll: [],
@@ -46,6 +50,7 @@ export default {
     components: {
         SelectAdop,
         VueFlexWaterfall,
+        Loading
     },
 
     created() {
@@ -70,6 +75,7 @@ export default {
                         this.showAdopt.push(this.adopts[i]);
                     }
                 }
+                this.loading = false;
             } catch (error) {
                 console.error(error.response);
             }

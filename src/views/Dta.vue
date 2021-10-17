@@ -1,69 +1,72 @@
 <template>
-  <div class="my-font-eng text-white" v-if="!loading">
-    <div class="border-b border-solid border-white">
-      <div class="ml-14 mt-10">
-        <b><h1 class="text-4xl">Draw To Adop
-          <span v-if="checkIfOwner()">
-            <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId} }">
-              <button class="btn-sugges absolute">Suggestion</button>
-            </router-link>
-          </span>
-        </h1></b>
-      </div>
-
-      <div class="mt-12 h-0">
-        <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
-      </div>
-
-      <div class="info -mt-20 py-16">
-        <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-        <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
-        <h2 class="py-3 text-2xl">Catagory:</h2>
-        <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
-          <span v-for="category in adop_cat" :key="category.id"
-                class="bg-blue-400 px-2 rounded-lg inline-block m-1">
-            {{ category }}
-          </span>
-        </div>
-
-        <div v-if="!checkIfOwner()">
-          <div class="py-3 mb-3">
-            <label  class="text-2xl">Requirement: Picture</label>
-          </div>
-
-          <!-- input image -->
-          <input type="file" ref="file" style="display: none" @change="addImage"/>
-          <div class="w-3/4 h-80 border-white border-2 relative bg-cover bg-center"
-            @click="$refs.file.click()"
-            @drop.prevent="addImage($event)"
-            @dragover.prevent
-            @mouseover="hoverImage = true"
-            @mouseleave="hoverImage = false"
-            :style="{ backgroundImage: 'url(' + `${dta_image}` + ')' }"
-            tabindex="1"
-          >
-            <font-awesome-icon v-if="!dta_image" icon="camera" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
-            <div v-if="hoverImage" class="absolute w-full h-full flex justify-center items-center bg-black opacity-80 text-white text-xl">
-              Upload Image
-            </div>
-          </div>
-
-          <button class="btn-rounded absolute right-40 mt-6" @click="request()">
-            Request
-          </button>
-        </div>
-
-      </div>
-
-      <br><br>
-  </div>
-        
-    <div class="text-2xl">
-      <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
-      <div class="my-font-th ml-32">
-        {{ adop_agr }}
-      </div>     
+  <div class="my-font-eng text-white">
+    <div class="ml-14 mt-10">
+      <b><h1 class="text-4xl">Draw To Adop
+        <span v-if="!loading">
+          <router-link :to="{ path: '/dta-sug/' + postId, name: 'DtaSug', params: {id: postId} }">
+            <button v-if="checkIfOwner()" class="btn-sugges absolute">Suggestion</button>
+          </router-link>
+        </span>
+      </h1></b>
     </div>
+    
+    <Loading v-if="loading"/>
+    <div v-if="!loading">
+      <div class="border-b border-solid border-white">
+        <div class="mt-12 h-0">
+          <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
+        </div>
+
+        <div class="info -mt-20 py-16">
+          <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
+          <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
+          <h2 class="py-3 text-2xl">Catagory:</h2>
+          <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
+            <span v-for="category in adop_cat" :key="category.id"
+                  class="bg-blue-400 px-2 rounded-lg inline-block m-1">
+              {{ category }}
+            </span>
+          </div>
+
+          <div v-if="!checkIfOwner()">
+            <div class="py-3 mb-3">
+              <label  class="text-2xl">Requirement: Picture</label>
+            </div>
+
+            <!-- input image -->
+            <input type="file" ref="file" style="display: none" @change="addImage"/>
+            <div class="w-3/4 h-80 border-white border-2 relative bg-cover bg-center"
+              @click="$refs.file.click()"
+              @drop.prevent="addImage($event)"
+              @dragover.prevent
+              @mouseover="hoverImage = true"
+              @mouseleave="hoverImage = false"
+              :style="{ backgroundImage: 'url(' + `${dta_image}` + ')' }"
+              tabindex="1"
+            >
+              <font-awesome-icon v-if="!dta_image" icon="camera" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
+              <div v-if="hoverImage" class="absolute w-full h-full flex justify-center items-center bg-black opacity-80 text-white text-xl">
+                Upload Image
+              </div>
+            </div>
+
+            <button class="btn-rounded absolute right-40 mt-6" @click="request()">
+              Request
+            </button>
+          </div>
+
+        </div>
+        <br><br>
+      </div>
+          
+      <div class="text-2xl">
+        <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
+        <div class="my-font-th ml-32">
+          {{ adop_agr }}
+        </div>     
+      </div>
+    </div>
+
   </div>
 
 </template>
@@ -76,6 +79,7 @@ import TradeStore from "../store/Trade.js";
 import axios from "axios";
 import Alert from "../helpers/Alert";
 import Header from "@/helpers/Header";
+import Loading from "../components/Loading.vue";
 
 export default {
   name: 'dta',
@@ -107,7 +111,8 @@ export default {
     };
   },
   components: {
-    coverflow
+    coverflow,
+    Loading
   },
   created() {
     if(this.$route.params !== null){
