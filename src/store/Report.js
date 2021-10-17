@@ -36,6 +36,15 @@ export default new Vuex.Store({
         throw error;
       }
     },
+    async sentReportUser({ commit }, payload) {
+      try {
+        let header = Header.getHeaders({ Accept: "application/json" });
+        let res = await Axios.post(`/report/post`, payload, header);
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
     async ban({ commit }, id) {
       try {
         let header = Header.getHeaders({ Accept: "application/json" });
