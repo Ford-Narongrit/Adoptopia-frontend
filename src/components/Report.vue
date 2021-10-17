@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="z-index: 100;">
     <div v-if="user">
       <button
         v-if="!user.isOwner"
@@ -29,7 +29,7 @@
         style="z-index: 1;"
       ></button>
       <!-- form report -->
-      <div class="bg-white px-5 py-3 rounded-md space-y-2" style="z-index: 1;">
+      <div class="bg-white px-5 py-3 rounded-md space-y-2 text-black" style="z-index: 1;">
         <div class="my-text-subtitle font-bold text-center">
           Report an issue
         </div>

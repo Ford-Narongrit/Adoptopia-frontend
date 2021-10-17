@@ -4,7 +4,7 @@
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
       <report
         :post="postInfo"
-        :report_list="['1', '2', '3']"
+        :report_list="['This post is inappropriate', 'Duplicate post', 'Plagiarism']"
         type="Post"
         class="mt-10 px-5"
       />
@@ -75,6 +75,7 @@
                 Confirm
               </button>
             </div>
+            <br>
             <button
               class="btn-rounded absolute right-48"
               @click="purchase"
