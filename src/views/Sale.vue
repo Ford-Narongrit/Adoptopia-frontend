@@ -4,7 +4,12 @@
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
 
       <div class="mt-12 h-0">
-        <coverflow v-if="wait" :coverList="coverList" :coverWidth="230" :index="0"></coverflow>
+        <coverflow
+          v-if="wait"
+          :coverList="coverList"
+          :coverWidth="230"
+          :index="0"
+        ></coverflow>
       </div>
 
       <div class="info -mt-20 py-16">
@@ -22,16 +27,50 @@
         </div>
 
         <div class="py-3 pt-12">
-          <label class="text-2xl">{{ adop_price }} Coins</label>
-          <button class="btn-rounded absolute right-48" @click="purchase" v-if="!checkIfOwner()">
+          <label class="text-2xl" v-if="!edit">{{ adop_price }} Coins</label>
+          <div v-if="edit">
+            <input
+              type="number"
+              class="
+                my-text-content
+                rounded-lg
+                w-2/3
+                px-2
+                py-1
+                my-block-focus my-font-eng
+                sale
+                text-black
+              "
+              v-model="form_edit.edit_price"
+            />
+            <button class="btn-rounded absolute right-14" @click="editPost">
+              Confirm
+            </button>
+          </div>
+          <button
+            class="btn-rounded absolute right-48"
+            @click="purchase"
+            v-if="!checkIfOwner()"
+          >
             Purchase
           </button>
         </div>
         <div class="py-3 pt-1" v-if="checkIfOwner()">
-          <button class="btn-rounded absolute">
+          <button
+            class="btn-rounded absolute"
+            @click="edit = true"
+            v-if="!edit"
+          >
             Edit
           </button>
-          <button class="btn-rounded absolute right-48" @click="deletePost()">
+          <button
+            class="btn-rounded absolute"
+            v-if="edit"
+            @click="edit = false"
+          >
+            Cancel
+          </button>
+          <button class="btn-rounded absolute right-48" @click="deletePost">
             Delete
           </button>
         </div>
@@ -64,6 +103,7 @@ export default {
     return {
       wait: false,
       loading: true,
+      edit: false,
 
       postId: "",
       postInfo: "",
@@ -75,19 +115,24 @@ export default {
       adop_price: "",
       adop_image: [],
       coverList: [],
+      edit_price: 0,
 
       owner: {},
       name: "",
       user_me: {},
       status: "",
 
-      form:{
-        amount: 0
+      form: {
+        amount: 0,
       },
-      form_earn:{
+      form_earn: {
         amount: 0,
         id: "",
       },
+      form_edit:{
+        id: "",
+        edit_price: 0,
+      }
     };
   },
 
@@ -97,7 +142,7 @@ export default {
 
   created() {
     if (this.$route.params !== null) {
-      this.postId = this.$route.params.id
+      this.postId = this.$route.params.id;
     }
   },
 
@@ -112,27 +157,30 @@ export default {
         let res = await TradeStore.dispatch("getPost_Adops_list");
         this.postAll = TradeStore.getters.post_adops_list;
 
-        for(var i=0; i<this.postAll.length; i++){
-          if(this.postAll[i].id == this.postId){
-            this.postInfo = this.postAll[i]
+        for (var i = 0; i < this.postAll.length; i++) {
+          if (this.postAll[i].id == this.postId) {
+            this.postInfo = this.postAll[i];
           }
         }
         console.log(this.postInfo);
-        this.adop_name = this.postInfo.adopt.name
-        this.adop_agr = this.postInfo.adopt.agreement
+        this.adop_name = this.postInfo.adopt.name;
+        this.adop_agr = this.postInfo.adopt.agreement;
         this.adop_price = this.postInfo.price;
-        for(var i=0; i<this.postInfo.adopt.category.length; i++){
+        this.form_edit.edit_price = this.postInfo.price;
+        this.form_edit.id = this.postInfo.id
+        for (var i = 0; i < this.postInfo.adopt.category.length; i++) {
           this.adop_cat.push(this.postInfo.adopt.category[i].name);
         }
-        for(var j=0; j<this.postInfo.adopt.adopt_image.length; j++){
+        for (var j = 0; j < this.postInfo.adopt.adopt_image.length; j++) {
           this.adop_image.push(this.postInfo.adopt.adopt_image[j].path);
           this.coverList.push({
-            cover: process.env.VUE_APP_APIURL + this.postInfo.adopt.adopt_image[j].path
-          })
+            cover:
+              process.env.VUE_APP_APIURL +
+              this.postInfo.adopt.adopt_image[j].path,
+          });
         }
         this.wait = true;
         this.fetchOwner();
-
       } catch (error) {
         console.error(error.response);
       }
@@ -141,7 +189,10 @@ export default {
     async fetchOwner() {
       try {
         let headers = Header.getHeaders();
-        let res = await axios.get(`/user/owner/${this.postInfo.user_id}`, headers);
+        let res = await axios.get(
+          `/user/owner/${this.postInfo.user_id}`,
+          headers
+        );
         this.owner = res.data;
         this.loading = false;
       } catch (error) {
@@ -167,37 +218,56 @@ export default {
           "Insufficient coin, please make sure you have enough coin"
         );
       } else {
-          this.form.amount = this.postInfo.price;
-          this.form_earn.amount = this.postInfo.price;
-          this.form_earn.id = this.postInfo.user_id;
+        this.form.amount = this.postInfo.price;
+        this.form_earn.amount = this.postInfo.price;
+        this.form_earn.id = this.postInfo.user_id;
         try {
           let headers = Header.getHeaders();
           console.log(this.form);
-          await axios.put("/spend", this.form , headers);
+          await axios.put("/spend", this.form, headers);
           let data = {
             status: "spend",
             amount: this.form.amount,
-            trans_user: this.form_earn.id
+            trans_user: this.form_earn.id,
           };
           await axios.post(`/payment-histories`, data, headers);
           await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
-          await axios.put(`/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`, {}, headers);
-          await axios.put(`/adopt/unUse/${this.postInfo.adopt.id}`, {}, headers);
-          await axios.put("/earn", this.form_earn , headers);
-          await axios.post(`/notification/sale-notification/${this.postInfo.id}`, {} , headers);
+          await axios.put(
+            `/adopt/transfer/${this.postInfo.adopt.id}/${this.user_me.id}`,
+            {},
+            headers
+          );
+          await axios.put(
+            `/adopt/unUse/${this.postInfo.adopt.id}`,
+            {},
+            headers
+          );
+          await axios.put("/earn", this.form_earn, headers);
+          await axios.post(
+            `/notification/sale-notification/${this.postInfo.id}`,
+            {},
+            headers
+          );
           Alert.mixin("success", "Purchase successfully");
           this.$router.push("/");
         } catch (error) {
-          this.error = error.response.data.errors
+          this.error = error.response.data.errors;
           Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
         }
       }
     },
-    async deletePost(){
+    async deletePost() {
       try {
-        if(Alert.yesNo("This action cannot be undone")){
+        let isConfirm = await Alert.yesNo("This action cannot be undone");
+        if (isConfirm) {
           let headers = Header.getHeaders();
-          await axios.delete("/trade", this.postInfo.id , headers);
+          await axios.put(`/trade/close_sale/${this.postInfo.id}`, {}, headers);
+          await axios.delete(`/trade/delete/${this.postInfo.id}`, headers);
+          await axios.put(
+            `/adopt/unUse/${this.postInfo.adopt.id}`,
+            {},
+            headers
+          );
           Alert.mixin("success", "Delete successfully");
           this.$router.push("/");
         }
@@ -205,14 +275,33 @@ export default {
         console.error(error.response);
       }
     },
-     checkIfOwner(){
-      if(this.postInfo.user_id === this.user_me.id){
-        return true;
+    async editPost() {
+      try {
+        let isConfirm = await Alert.yesNo(
+          "You can change it later on everytime."
+        );
+        if (isConfirm) {
+          let headers = Header.getHeaders();
+          await axios.put(
+            `/trade/edit/${this.form_edit.id}/${this.form_edit.edit_price}`,
+            {},
+            headers
+          );
+          Alert.mixin("success", "Edit successfully");
+          location.reload();
+          this.edit = false;
+        }
+      } catch (error) {
+        console.error(error.response);
       }
-      else{
+    },
+    checkIfOwner() {
+      if (this.postInfo.user_id === this.user_me.id) {
+        return true;
+      } else {
         return false;
       }
-    }
+    },
   },
 };
 </script>
