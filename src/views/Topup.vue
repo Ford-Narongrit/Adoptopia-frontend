@@ -84,7 +84,7 @@
     <div class="mt-8 text-center ">
       <button
         @click="confirm"
-        class="my-text-subtitle uppercase bg-white p-2 px-6 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transform translate hover:scale-110 duration-300"
+        class="my-text-base uppercase bg-white p-2 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transform translate hover:scale-110 duration-300"
       >
         c o n f i r m
       </button>
@@ -129,7 +129,7 @@ export default {
         await axios.post(`/payment-histories`, data, headers);
         let is_confirm = await Alert.yesNo("Please confirm your payment.");
         if(is_confirm){
-          this.$router.push(`/${this.user.name}/home`);
+          this.$router.push(`/${this.user.username}/home`);
           Alert.mixin("success", `${status} successfully`);
         }else{
           this.clearForm()

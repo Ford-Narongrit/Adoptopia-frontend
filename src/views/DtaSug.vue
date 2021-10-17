@@ -4,7 +4,8 @@
             <b><h1 class="text-4xl text-white">Draw To Adop |<span class="text-2xl"> Suggestion</span></h1></b>
         </div>
 
-        <div class="ml-14 mt-10">
+        <Loading v-if="loading"/>
+        <div class="ml-14 mt-10" v-if="!loading">
             <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
                 <div v-for="dta_list in dtaPost" :key="dta_list.index">
                     <img
@@ -30,12 +31,15 @@ import TradeStore from "../store/Trade.js";
 import Header from "@/helpers/Header";
 import Alert from "../helpers/Alert";
 import axios from "axios";
+import Loading from "../components/Loading.vue";
 
 export default {
     name: 'DtaSug',
 
     data() {
         return {
+            loading: true,
+
             postId: "",
             postInfo: "",
             postAll: [],
@@ -50,6 +54,7 @@ export default {
 
     components: {
         VueFlexWaterfall,
+        Loading
     },
 
     created() {
@@ -92,6 +97,7 @@ export default {
                         this.dtaPost.push(this.dta_images[i])
                     }
                 }
+                this.loading = false;
             } catch (error) {
                 console.error(error.response);
             }
