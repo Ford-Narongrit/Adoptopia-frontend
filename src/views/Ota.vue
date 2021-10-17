@@ -1,9 +1,9 @@
 <template>
-  <div class="my-font-eng text-white">
+  <div class="my-font-eng text-white" v-if="!loading">
     <div class="border-b border-solid border-white">
       <div class="ml-14 mt-10">
         <b><h1 class="text-4xl">Offer To Adop
-          <span>
+          <span v-if="checkIfOwner()">
             <router-link :to="{ path: '/ota-sug/' + postId, name: 'OtaSug', params: {id: postId} }">
               <button class="btn-sugges absolute">Suggestion</button>
             </router-link>
@@ -17,7 +17,7 @@
 
       <div class="info -mt-20 py-16">
         <h2 class="py-3 text-3xl">{{ adop_name }}</h2>
-        <h2 class="py-3 text-2xl">By: {{ findUserById() }}</h2>
+        <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
         <h2 class="py-3 text-2xl">Catagory:</h2>
         <div class="text-white my-text-content rounded-lg w-2/3 my-block-focus">
           <span v-for="category in adop_cat" :key="category.id"
@@ -26,23 +26,26 @@
           </span>
         </div>
 
-        <div class="py-3 mb-3">
-          <label  class="text-2xl">Offer: Adop</label>
+        <div v-if="!checkIfOwner()">
+          <div class="py-3 mb-3">
+            <label  class="text-2xl">Offer: Adop</label>
 
-          <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId} }">
-            <button class="btn-rounded absolute right-40">Offer</button>
-          </router-link>
+            <router-link :to="{ path: '/ota-select/' + postId, name: 'OtaSelect', params: {id: postId} }">
+              <button class="btn-rounded absolute right-40">Offer</button>
+            </router-link>
+          </div>
+
+          <!-- adop image -->
+          <div v-if="ota_adop_image" class="w-3/4 h-auto border-white border-2 relative overflow-hidden">
+            <img :src="getImagePath(ota_adop_image)">
+          </div>
+          <div v-if="!ota_adop_image" class="w-3/4 h-80 border-white border-2 relative overflow-hidden">
+            <font-awesome-icon icon="user" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
+          </div>
+
+          <button class="btn-rounded absolute right-40 mt-6" @click="request()">Request</button>
         </div>
 
-        <!-- adop image -->
-        <div v-if="ota_adop_image" class="w-3/4 h-auto border-white border-2 relative overflow-hidden">
-          <img :src="getImagePath(ota_adop_image)">
-        </div>
-        <div v-if="!ota_adop_image" class="w-3/4 h-80 border-white border-2 relative overflow-hidden">
-          <font-awesome-icon icon="user" class="absolute w-full h-full flex justify-center items-center text-7xl text-white left-40"/>
-        </div>
-
-        <button class="btn-rounded absolute right-40 mt-6" @click="request()">Request</button>
       </div>
 
       <br><br>   
@@ -72,6 +75,8 @@ export default {
     data () {
     return {
       wait: false,
+      loading: true,
+
       ota_adop_image: "",
       adopts: [],
 
@@ -85,8 +90,8 @@ export default {
       adop_image: [],
       coverList: [],
 
-      users: [],
-      name: "",
+      owner: {},
+      user_me: {},
 
       form: {
         o_adop: "",
@@ -108,8 +113,8 @@ export default {
 
   mounted() {
     this.fetchTrade();
+    this.fetchMe();
     this.fetch();
-    this.fetchUser();
   },
 
   methods: {
@@ -151,29 +156,31 @@ export default {
           })
         }
         this.wait = true;
+        this.fetchOwner();
 
       } catch (error) {
         console.error(error.response);
       }
     },
-    
-    async fetchUser(){
+
+    async fetchMe() {
       try {
-        let res = await UserStore.dispatch("getAllUsers");
-        this.users = UserStore.getters.users;
+        let res = await UserStore.dispatch("getMe");
+        this.user_me = res.data;
       } catch (error) {
         console.error(error.response);
       }
     },
 
-    findUserById(){
-      for(var i = 0;i < this.users.length;i++){
-        if(this.users[i].id === this.postInfo.user_id){
-          this.name = this.users[i].name;
-          break;
-        }
+    async fetchOwner() {
+      try {
+        let headers = Header.getHeaders();
+        let res = await axios.get(`/user/owner/${this.postInfo.user_id}`, headers);
+        this.owner = res.data;
+        this.loading = false;
+      } catch (error) {
+        console.error(error.response);
       }
-      return this.name;
     },
 
     getImagePath(image) {
@@ -202,6 +209,15 @@ export default {
         }
       }else{
         Alert.window("error", "Fail to request adop", "Please select adop.");
+      }
+    },
+
+    checkIfOwner(){
+      if(this.postInfo.user_id === this.user_me.id){
+        return true;
+      }
+      else{
+        return false;
       }
     }
   },

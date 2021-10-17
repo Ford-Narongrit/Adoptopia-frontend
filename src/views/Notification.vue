@@ -70,7 +70,7 @@ export default {
     async setNotiToSeen() {
       try {
         let header = Header.getHeaders();
-        await axios.put("/notification/updateStatus",null, header);
+        await axios.put("/notification/me/updateStatus",null, header);
       } catch (error) {
         console.error(error);
       }
