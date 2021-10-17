@@ -195,19 +195,16 @@ export default {
           try {
             let res = await axios.post("/trade", payload, config);
             await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
-            console.log(res.data);
             Alert.mixin("success", "Post successfully");
             this.$router.push("/");
           } catch (error) {
             this.errors = error.response.data;
-            console.log(this.errors);
             Alert.window(
               "error",
               "Add adopt failed",
               "Sorry, an unexpected error occurred. Please try again."
             );
           }
-          //console.log("ota");
         }
         if (this.type === "For Sale") {
           if (this.form.price !== "") {
@@ -216,12 +213,10 @@ export default {
             try {
               await axios.put(`/adopt/inUse/${this.adop_id}`, {}, headers);
               let res = await axios.post("/trade", payload, config);
-              console.log(res.data);
               Alert.mixin("success", "Post successfully");
               this.$router.push("/");
             } catch (error) {
               this.errors = error.response.data.errors;
-              console.log(this.errors);
               Alert.window(
                 "error",
                 "Add adopt failed",
