@@ -273,7 +273,6 @@ export default {
         this.$router.push({path:`/${this.user.username}/adop`})
       } catch (error) {
         this.errors = error.response.data.errors;
-
         Alert.window(
           "error",
           "Add adop failed",
