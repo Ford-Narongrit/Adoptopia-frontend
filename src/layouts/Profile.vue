@@ -262,16 +262,13 @@ export default {
     },
     async followed() {
       let res = await UserStore.dispatch("follow", this.user.id);
-      console.log(res);
       this.isFollow = true;
     },
     async unfollow() {
       let res = await UserStore.dispatch("unFollow", this.user.id);
-      console.log(res);
       this.isFollow = false;
     },
     async sendReport(message) {
-      console.log("send", message, this.user.id);
       let payload = {
         description: message,
         user_id: this.user.id,

@@ -278,7 +278,7 @@ export default {
           "Add adop failed",
           "Sorry, an unexpected error occurred. Please try again."
         );
-        console.log(this.errors);
+        console.error(error);
         // console.log(error.response);
       }
     },

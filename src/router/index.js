@@ -4,7 +4,6 @@ import Home from "../views/Home.vue";
 import History from "../views/History.vue";
 import PaymentHistory from "../views/PaymentHistory.vue";
 import Topup from "../views/Topup.vue";
-import Notification from "../views/Notification.vue";
 import Sale from "../views/Sale.vue";
 import Ota from "../views/Ota.vue";
 import OtaSug from "../views/OtaSug.vue";
@@ -56,14 +55,6 @@ const routes = [
     path: "/topup",
     name: "Topup",
     component: Topup,
-    meta: {
-      layout: "Main",
-    },
-  },
-  {
-    path: "/notification",
-    name: "Notification",
-    component: Notification,
     meta: {
       layout: "Main",
     },

@@ -1,17 +1,16 @@
 <template>
   <div
-    class="bg-white p-6 flex flex-row hover:bg-blueGray-100 cursor-pointer"
+    class="p-4 flex flex-row hover:bg-blueGray-100 cursor-pointer"
     @click="toPost()"
   >
     <img
-      class="h-16 w-16 rounded-full mr-4"
+      class="h-12 w-12 rounded-full mr-2"
       :src="getImagePath(profile)"
       alt=""
     />
-    <div>
-      <h2>{{ name }}</h2>
-      <div>{{ text }}</div>
-      <div>{{ notitime }}</div>
+    <div class="overflow-x-hidden">
+      <div class="truncate" :title="text">{{ text }}</div>
+      <div class="text-left text-sm">{{ notitime }}</div>
     </div>
     <hr />
   </div>
