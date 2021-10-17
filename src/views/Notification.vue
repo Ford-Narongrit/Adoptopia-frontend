@@ -4,13 +4,22 @@
     <Loading v-if="!loading"/>
     <div v-if="loading" class="justify-self-center bg-white w-2/5 overflow-auto" >
       <div v-for="(noti, index) in notiList" :key="index">
-        <notification-card
+        <notification-card v-if="noti.trade_id !== null"
           :name="noti.user.name"
+          :username ="noti.user.username"
           :text="noti.text"
           :profile="noti.user.profile"
           :time="noti.created_at"
           :tradeID="noti.trade_id"
           :tradeType="noti.trade.type"
+        />
+        <notification-card v-if="noti.trade_id === null"
+          :name="noti.user.name"
+          :username ="noti.user.username"
+          :text="noti.text"
+          :profile="noti.user.profile"
+          :time="noti.created_at"
+          :tradeType="'follow'"
         />
         <hr />
       </div>
@@ -58,10 +67,8 @@ export default {
       let header = Header.getHeaders();
       try {
         let res = await axios.get("/notification", header);
-        console.log(res.data);
         this.notiList = res.data;
         this.loading = true;
-        console.log(this.loading);
       } catch (error) {
         console.error(error);
       }
