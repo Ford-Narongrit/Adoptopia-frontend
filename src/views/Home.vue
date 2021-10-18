@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="flex flex-nowrap py-8" v-if="!loading">
-      <div class="flex-nowrap py-8">
-        <label for="type" class="px-5 mt-2 text-white">Type: </label>
+    <div class="flex items-center py-8">
+      <!-- select type -->
+      <div class="flex items-center">
+        <label for="type" class="px-5 text-white">Type: </label>
         <select
           v-model="type"
           class="my-text-content rounded-lg px-2 py-1 my-block-focus"
@@ -13,8 +14,10 @@
           <option value="sale">For Sale</option>
         </select>
       </div>
-      <div class="flex flex-nowrap py-8">
-        <label class="px-4 mt-2 text-white">Category</label>
+
+      <!-- search category -->
+      <div class="flex items-center">
+        <label class="px-4 text-white">Category</label>
         <multiselect
           v-model="catagory"
           :options="categories"
@@ -29,24 +32,11 @@
         >
         </multiselect>
       </div>
-      <!-- <div class="py-8 px-4">
-        <button
-          class="
-            bg-blue-600
-            rounded-full
-            w-28
-            p-2
-            text-white
-            my-text-content
-            hover:bg-blue-400
-            my-block-focus
-          "
-        >
-          search
-        </button>
-      </div> -->
     </div>
+
     <Loading v-if="loading" />
+
+    <!-- post -->
     <div class="px-7" v-if="!loading">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
         <div v-for="adopt_list in search_filter" :key="adopt_list.index">
@@ -103,15 +93,15 @@ export default {
     };
   },
   computed: {
-    search_filter: function () {
+    search_filter: function() {
       if (this.type === "ota" || this.type === "dta" || this.type === "sale") {
-        let res = this.filtered_adop.filter(v => v.type == this.type);
+        let res = this.filtered_adop.filter((v) => v.type == this.type);
         res.sort((a, b) => {
           return new Date(b.created_at) - new Date(a.created_at);
         });
         return res;
       }
-      if(this.type === "All"){
+      if (this.type === "All") {
         let res = this.filtered_adop.sort((a, b) => {
           return new Date(b.created_at) - new Date(a.created_at);
         });
@@ -148,7 +138,7 @@ export default {
     },
     filterProduct(category) {
       this.activeCategory = category;
-    }
+    },
   },
   created() {
     this.fetchTrade();
