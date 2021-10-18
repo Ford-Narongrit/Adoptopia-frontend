@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="mt-8 mb-6 ml-8 text-white text-3xl">Add Adopt</div>
+    <div class="mt-8 mb-6 ml-8 text-white text-3xl">Add Adop</div>
     <div class="flex">
       <div class="w-2/3 h-full px-10 py-5 flex justify-center item-center">
         <!-- upload images -->
@@ -150,7 +150,7 @@
               <label
                 for="catagory"
                 class="my-text-content w-32 items-center text-white"
-                >Catagory:
+                >Category:
               </label>
 
               <multiselect
@@ -163,10 +163,13 @@
                 :clear-on-select="false"
                 :preserve-search="true"
                 :limit="3"
+                :taggable="true"
+                tag-placeholder="Add this as new tag"
                 placeholder="Search or select category"
                 label="name"
                 track-by="name"
                 :max="7"
+                @tag="addTag"
                 @input="maxSelected()"
               >
               </multiselect>
@@ -238,6 +241,7 @@ export default {
         catagory: [],
         agreement: null,
         images: [],
+        new_category: "",
       },
     };
   },
@@ -258,8 +262,9 @@ export default {
         payload.append("name", this.form.name);
       }
       Object.keys(this.form.catagory).forEach((key) => {
-        payload.append(`category[${key}]`, this.form.catagory[key].id);
+        payload.append(`category[${key}]`, this.form.catagory[key].name);
       });
+
       if (this.form.agreement !== null) {
         payload.append("agreement", this.form.agreement);
       }
@@ -270,7 +275,7 @@ export default {
       try {
         let res = await axios.post("/adopt", payload, config);
         Alert.mixin("success", "Add adopt successfully");
-        this.$router.push({path:`/${this.user.username}/adop`})
+        this.$router.push({ path: `/${this.user.username}/adop` });
       } catch (error) {
         this.errors = error.response.data.errors;
         Alert.window(
@@ -329,6 +334,17 @@ export default {
       if (selectedItems >= 7) {
         this.maxItemsSelected = true;
       }
+    },
+    addTag(newTag) {
+      const tag = {
+        created_at: "",
+        deleted_at: null,
+        id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
+        updated_at: "",
+        name: newTag,
+      };
+      this.categories.push(tag);
+      this.form.catagory.push(tag)
     },
   },
   created() {
