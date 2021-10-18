@@ -30,8 +30,20 @@
       v-if="isShow"
       class="absolute bottom-0 w-full px-4 py-2 rounded-b-md hidden md:block shadow-lg animate-fade-in-up"
     >
-      <div class="my-text-content truncate text-gray-100 font-bold">
+      <div
+        class="my-text-content truncate text-gray-100 font-bold cursor-default"
+      >
         {{ post.adopt.name }}
+      </div>
+      <div class="my-text-base truncate text-gray-100 space-x-1">
+        <span
+          v-for="category in post.adopt.category"
+          :key="category.id"
+          class="p-1 rounded-2xl "
+          :class="randomcolor()"
+        >
+          {{ category.name }}
+        </span>
       </div>
       <div class="flex space-x-3 items-center">
         <img
@@ -47,7 +59,7 @@
           >
             {{ post.user.name }}
           </router-link>
-          <div class="my-text-base text-gray-100 truncate ">
+          <div class="my-text-base text-gray-100 truncate cursor-default">
             @{{ post.user.username }}
           </div>
         </div>
@@ -88,6 +100,23 @@ export default {
         default:
           return "bg-white";
       }
+    },
+    randomcolor() {
+      let colorList = [
+        "bg-red-400",
+        "bg-green-400",
+        "bg-yellow-400",
+        "bg-blue-400",
+        "bg-pink-400",
+        "bg-purple-400",
+        "bg-black",
+        "bg-orange-400",
+        "bg-lime-400",
+        "bg-amber-400",
+        "bg-sky-400",
+      ];
+      let index = Math.floor(Math.random() * 10);
+      return colorList[index];
     },
   },
 };

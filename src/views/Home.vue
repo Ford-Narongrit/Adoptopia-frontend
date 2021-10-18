@@ -1,183 +1,145 @@
 <template>
   <div>
+    <!-- search -->
     <div class="flex items-center py-8">
       <!-- select type -->
-      <div class="flex items-center">
+      <div class="flex items-center w-3/12">
         <label for="type" class="px-5 text-white">Type: </label>
-        <select
+        <multiselect
           v-model="type"
-          class="my-text-content rounded-lg px-2 py-1 my-block-focus"
-        >
-          <option value="All">All</option>
-          <option value="ota">OTA(Offer to Adop)</option>
-          <option value="dta">DTA(Offer to Draw)</option>
-          <option value="sale">For Sale</option>
-        </select>
+          :options="type_list"
+          track-by="value"
+          label="text"
+          :searchable="false"
+          :close-on-select="false"
+          :show-labels="false"
+          placeholder="Select post type"
+        ></multiselect>
       </div>
 
       <!-- search category -->
-      <div class="flex items-center">
+      <div class="flex items-center w-2/5 space-x-2">
         <label class="px-4 text-white">Category</label>
         <multiselect
-          v-model="catagory"
-          :options="categories"
-          :multiple="true"
-          :close-on-select="false"
-          :clear-on-select="false"
-          :preserve-search="true"
-          placeholder="Search or select category"
+          v-model="selectedCategories"
+          id="ajax"
           label="name"
           track-by="name"
-          :max="1"
+          placeholder="Search or select category"
+          open-direction="bottom"
+          :options="categories"
+          :multiple="true"
+          :searchable="true"
+          :loading="isLoading"
+          :internal-search="false"
+          :clear-on-select="false"
+          :close-on-select="false"
+          :options-limit="300"
+          :limit="3"
+          :limit-text="limitText"
+          :max-height="600"
+          :show-no-results="false"
+          :hide-selected="true"
+          @search-change="asyncFind"
         >
         </multiselect>
+        <button
+          @click="clearAll()"
+          v-if="selectedCategories.length > 0 || type.value !== ''"
+        >
+          <font-awesome-icon
+            icon="times-circle"
+            class="text-3xl text-red-500"
+          />
+        </button>
       </div>
     </div>
 
-    <Loading v-if="loading" />
-
     <!-- post -->
-    <div class="px-7" v-if="!loading">
-      <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
-        <div v-for="adopt_list in search_filter" :key="adopt_list.index">
-          <router-link
-            :to="{
-              path: '/' + adopt_list.type + '/' + adopt_list.id,
-              name: adopt_list.type,
-              params: { id: adopt_list.id },
-            }"
-          >
-            <img
-              :src="getImagePath(adopt_list.adopt.adopt_image[0].path)"
-              height="200px"
-              width="350px"
-              class="
-                transition
-                duration-300
-                ease-in-out
-                transform
-                hover:scale-110
-              "
-            />
-          </router-link>
-          <br />
+    <div class="grid grid-cols-4 gap-3">
+      <vue-flex-waterfall :col="4" :col-spacing="15" :break-by-container="true">
+        <div
+          v-for="post in filter_post"
+          :key="post.id"
+          class="my-2 relative border-4 border-shark-400 rounded-lg bg-black"
+        >
+          <pop-up-post :post="post" />
         </div>
       </vue-flex-waterfall>
     </div>
   </div>
 </template>
 <script>
-import axios from "axios";
 import Multiselect from "vue-multiselect";
 import VueFlexWaterfall from "vue-flex-waterfall";
-import Loading from "../components/Loading.vue";
-import TradeStore from "../store/Trade.js";
-import SelectAdop from "@/components/SelectAdop.vue";
+import PopUpPost from "@/components/PopUpPost.vue";
+import TradeStore from "@/store/Trade";
+import Axios from "axios";
 
 export default {
   components: {
     Multiselect,
     VueFlexWaterfall,
-    SelectAdop,
-    Loading,
+    PopUpPost,
   },
   data() {
     return {
-      catagory: "",
       categories: [],
-      type: "All",
-      adopts: [],
-      filtered_adop: [],
-      selectedImage: null,
-      loading: true,
+      selectedCategories: [],
+      type_list: [
+        { value: "ota", text: "OTA (Offer to Adop)" },
+        { value: "dta", text: "DTA (Draw to Adop)" },
+        { value: "sale", text: "For sale" },
+      ],
+      type: { value: "", text: "Select post type" },
+      isLoading: false,
+      posts: [],
     };
   },
+  mounted() {
+    this.fetchCat();
+    this.fetchPost();
+  },
   computed: {
-    search_filter: function() {
-      if (this.type === "ota" || this.type === "dta" || this.type === "sale") {
-        let res = this.filtered_adop.filter((v) => v.type == this.type);
-        res.sort((a, b) => {
-          return new Date(b.created_at) - new Date(a.created_at);
-        });
-        return res;
-      }
-      if (this.type === "All") {
-        let res = this.filtered_adop.sort((a, b) => {
-          return new Date(b.created_at) - new Date(a.created_at);
-        });
-        return res;
-      }
+    filter_post: function() {
+      let filter_by_type = this.posts.filter((post) => {
+        return post.type.includes(this.type.value);
+      });
+      return filter_by_type.filter((post) => {
+        return this.selectedCategories
+          .map((item) => item.name)
+          .every(
+            (element) =>
+              post.adopt.category.map((item) => item.name).indexOf(element) > -1
+          );
+      });
     },
   },
   methods: {
-    async fetchTrade() {
-      try {
-        await TradeStore.dispatch("getPost_Adops_list");
-        this.adopts = TradeStore.getters.post_adops_list;
-        this.filterAdop();
-      } catch (error) {
-        console.error(error.response);
-      }
-    },
-    async fetchCategory() {
-      let res = await axios.get("/category");
+    async fetchCat() {
+      let res = await Axios.get(`/category`);
       this.categories = res.data;
     },
-    filterAdop() {
-      for (var i = 0, j = 0; i < this.adopts.length; i++) {
-        if (this.adopts[i].status !== "off") {
-          this.filtered_adop[j] = this.adopts[i];
-          j++;
-        }
-      }
-      this.loading = false;
-      return this.filtered_adop;
+    async fetchPost() {
+      let res = await TradeStore.dispatch("getPost_Adops_list");
+      this.posts = res.data;
     },
-    getImagePath(image) {
-      return process.env.VUE_APP_APIURL + image;
+    limitText(count) {
+      return `and ${count} other countries`;
     },
-    filterProduct(category) {
-      this.activeCategory = category;
+    asyncFind(query) {
+      this.isLoading = true;
+      Axios.post(`/category/search`, { slug: query }).then((response) => {
+        this.categories = response.data;
+        this.isLoading = false;
+      });
     },
-  },
-  created() {
-    this.fetchTrade();
-    this.fetchCategory();
+    clearAll() {
+      this.type = { value: "", text: "Select post type" };
+      this.selectedCategories = [];
+    },
   },
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style>
-.multiselect__tag {
-  background-color: #1e63e9;
-}
-.multiselect__tag-icon:after {
-  color: white;
-}
-.multiselect__tag-icon:focus,
-.multiselect__tag-icon:hover {
-  background: #272727;
-}
-.multiselect {
-  display: block;
-  position: relative;
-  width: 100%;
-  min-height: 40px;
-  text-align: left;
-  color: #272727;
-}
-.multiselect__input::placeholder {
-  color: #272727;
-}
-/* .multiselect__option--highlight {
-  background: #272727;
-  outline: none;
-  color: white;
-} */
-.multiselect__option--selected {
-  background: white;
-  color: #272727;
-}
-</style>
+<style></style>
