@@ -2,12 +2,15 @@
   <div class="my-font-eng text-white">
     <div class="flex flex-wrap">
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
-      <report
-        :post="postInfo"
-        :report_list="['This post is inappropriate', 'Duplicate post', 'Plagiarism']"
-        type="Post"
-        class="mt-10 px-5"
-      />
+      <div v-if="!loading" class="flex flex-wrap">
+        <report v-if="!checkIfOwner()"
+          :post="postInfo"
+          :report_list="['This post is inappropriate', 'Duplicate post', 'Plagiarism']"
+          type="Post"
+          class="mt-10 px-5"
+        />          
+      </div>
+      
     </div>
 
     <Loading v-if="loading" />

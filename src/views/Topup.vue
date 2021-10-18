@@ -119,24 +119,24 @@ export default {
     async confirm() {
       let status = "";
       this.topupStatus ? (status = "deposit") : (status = "withdraw");
-      try {
-        let headers = Header.getHeaders();
-        let res = await axios.put(`/${status}`, this.form, headers);
-        let data = {
-          status: status,
-          amount: this.form.amount,
-        };
-        await axios.post(`/payment-histories`, data, headers);
-        let is_confirm = await Alert.yesNo("Please confirm your payment.");
-        if(is_confirm){
-          this.$router.push(`/${this.user.username}/home`);
+      let is_confirm = await Alert.yesNo("Please confirm your payment.");
+      if (is_confirm) {
+        try {
+          let headers = Header.getHeaders();
+          let res = await axios.put(`/${status}`, this.form, headers);
+          let data = {
+            status: status,
+            amount: this.form.amount,
+          };
+          await axios.post(`/payment-histories`, data, headers);
           Alert.mixin("success", `${status} successfully`);
-        }else{
-          this.clearForm()
+          this.$router.push(`/${this.user.username}/home`);
+        } catch (error) {
+          this.error = error.response.data.errors;
+          Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
         }
-      } catch (error) {
-        this.error = error.response.data.errors;
-        Alert.mixin("error", `${this.error.amount[0]}. Please try again.`);
+      } else {
+        this.clearForm();
       }
     },
     topupBtn() {
