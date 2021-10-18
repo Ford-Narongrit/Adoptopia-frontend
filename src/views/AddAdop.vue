@@ -134,7 +134,7 @@
               <input
                 type="text"
                 placeholder="Name"
-                class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
+                class="my-text-content rounded-lg w-full px-2 py-1 my-block-focus"
                 :class="errors.name ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.name"
               />
@@ -154,7 +154,7 @@
               </label>
 
               <multiselect
-                class="my-text-base rounded-lg w-2/3 my-block-focus"
+                class="my-text-base rounded-lg my-block-focus"
                 :class="errors.category ? 'my-block-error ' : 'my-block-focus'"
                 v-model="form.catagory"
                 :options="categories"
@@ -339,12 +339,12 @@ export default {
       const tag = {
         created_at: "",
         deleted_at: null,
-        id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000)),
+        id: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
         updated_at: "",
         name: newTag,
       };
       this.categories.push(tag);
-      this.form.catagory.push(tag)
+      this.form.catagory.push(tag);
     },
   },
   created() {
