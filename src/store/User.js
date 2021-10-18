@@ -87,7 +87,7 @@ export default new Vuex.Store({
     async getUser({ commit }, slug) {
       let header = Header.getHeaders({ Accept: "application/json" });
       let res = await Axios.get(`/user/${slug}`, header);
-      commit("userStore", res.data);
+      
       return res;
     },
     async getAllUsers({ commit }) {

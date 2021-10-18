@@ -81,7 +81,7 @@
             </div>
 
             <div class="absolute bottom-0 right-0 flex items-center">
-              <report :user="user" :report_list="report_list" type="User"/>
+              <report :user="user" :report_list="report_list" type="User" />
 
               <!-- follow -->
               <button
@@ -182,8 +182,10 @@ export default {
           this.$route.params.username
         );
         this.user = res.data;
-        let me = await UserStore.dispatch("isFollow", this.user.id);
-        this.isFollow = me.data.isFollow;
+        if (UserStore.getters.isAuthen) {
+          let me = await UserStore.dispatch("isFollow", this.user.id);
+          this.isFollow = me.data.isFollow;
+        }
         this.loading = false;
       } catch (error) {
         this.errors = error.response.status;
