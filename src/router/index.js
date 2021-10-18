@@ -254,7 +254,7 @@ router.beforeEach((to, from, next) => {
       Alert.window(
         "warning",
         "warning",
-        "You need to sign in to user this feature"
+        "You need to sign in to use this feature"
       );
       next({ name: "Login" });
     } else {
