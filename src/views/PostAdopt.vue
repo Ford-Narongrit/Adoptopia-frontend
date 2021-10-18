@@ -122,6 +122,9 @@
                 </ul>
               </div>
             </div>
+            <button class="mt-4 post btn-sugges absolute text-center my-font-eng-b text-white" @click="post()">
+              Post
+            </button>
             <div></div>
           </div>
         </div>
@@ -134,9 +137,9 @@
           Select Adop
         </button>
       </router-link>
-      <button class="mt-4 post btn-sugges absolute" @click="post()">
+      <!-- <button class="mt-4 post btn-sugges absolute" @click="post()">
         Post
-      </button>
+      </button> -->
     </div>
   </div>
 </template>

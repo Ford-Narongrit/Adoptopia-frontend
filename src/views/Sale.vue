@@ -18,6 +18,7 @@
             v-if="wait"
             :coverList="coverList"
             :coverWidth="230"
+            :width="900"
             :index="0"
           ></coverflow>
         </div>
@@ -32,18 +33,20 @@
           >
             <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
           </router-link>
-          <h2 class="py-3 text-2xl">Catagory:</h2>
-          <div
-            class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
-          >
+          <h2 class="py-3 text-2xl">
+            Catagory:
             <span
-              v-for="category in adop_cat"
-              :key="category.id"
-              class="bg-blue-400 px-2 rounded-lg inline-block m-1"
+              class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
             >
-              {{ category }}
+              <span
+                v-for="category in adop_cat"
+                :key="category.id"
+                class="bg-blue-400 px-2 rounded-lg inline-block m-1"
+              >
+                {{ category }}
+              </span>
             </span>
-          </div>
+          </h2>
 
           <div class="py-3 pt-12">
             <label class="text-2xl" v-if="!edit">{{ adop_price }} Coins</label>

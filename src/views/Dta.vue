@@ -1,8 +1,8 @@
 <template>
   <div class="my-font-eng text-white">
-    <div class="ml-14 mt-10">
+    <div class="flex flex-wrap">
       <b
-        ><h1 class="text-4xl">
+        ><h1 class="text-4xl ml-14 mt-10">
           Draw To Adop
           <span v-if="!loading">
             <router-link
@@ -12,7 +12,7 @@
                 params: { id: postId },
               }"
             >
-              <button v-if="checkIfOwner()" class="btn-sugges absolute">
+              <button v-if="checkIfOwner()" class="btn-sugges absolute mt-1">
                 Suggestion
               </button>
             </router-link>
@@ -23,7 +23,7 @@
         :post="postInfo"
         :report_list="['1', '2', '3']"
         type="Post"
-        class="-mt-10 pl-52 ml-16"
+        class="mt-10 px-5 z-10"
       />
     </div>
 
@@ -32,9 +32,11 @@
       <div class="border-b border-solid border-white">
         <div class="mt-12 h-0">
           <coverflow
+            style="z-index: 0;"
             v-if="wait"
             :coverList="coverList"
             :coverWidth="230"
+            :width="900"
             :index="0"
           ></coverflow>
         </div>
@@ -49,18 +51,21 @@
           >
             <h2 class="py-3 text-2xl">By: {{ this.owner.name }}</h2>
           </router-link>
-          <h2 class="py-3 text-2xl">Catagory:</h2>
-          <div
-            class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
-          >
+          <h2 class="py-3 text-2xl">
+            Catagory:
             <span
-              v-for="category in adop_cat"
-              :key="category.id"
-              class="bg-blue-400 px-2 rounded-lg inline-block m-1"
+              class="text-white my-text-content rounded-lg w-2/3 my-block-focus"
             >
-              {{ category }}
+              <span
+                v-for="category in adop_cat"
+                :key="category.id"
+                class="bg-blue-400 px-2 rounded-lg inline-block m-1"
+              >
+                {{ category }}
+              </span>
             </span>
-          </div>
+          </h2>
+
           <button
             v-if="checkIfOwner()"
             class="
