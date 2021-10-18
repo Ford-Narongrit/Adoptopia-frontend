@@ -37,7 +37,7 @@
     <Loading v-if="loading" />
     <div v-if="!loading">
       <div class="border-b border-solid border-white">
-        <div class="mt-12 h-0">
+        <div class="m-9 h-0">
           <coverflow
             style="z-index: 0;"
             v-if="wait"

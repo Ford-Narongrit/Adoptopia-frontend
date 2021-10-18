@@ -88,9 +88,9 @@
                 class="my-text-content rounded-lg w-2/3 px-2 py-1 my-block-focus"
               >
                 <option disabled value="">Please select a type</option>
-                <option value="OTA">OTA(Offer to Adop)</option>
-                <option value="DTA">DTA(Offer to Draw)</option>
-                <option value="For Sale">For Sale</option>
+                <option value="OTA">OTA (Offer to Adop)</option>
+                <option value="DTA">DTA (Draw to Adop)</option>
+                <option value="For Sale">For sale</option>
               </select>
             </div>
             <div v-if="isForSale">

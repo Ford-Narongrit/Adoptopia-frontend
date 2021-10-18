@@ -274,7 +274,7 @@ export default {
       let config = Header.getHeaders({ "Content-Type": "multipart/form-data" });
       try {
         let res = await axios.post("/adopt", payload, config);
-        Alert.mixin("success", "Add adopt successfully");
+        Alert.mixin("success", "Add adop successfully");
         this.$router.push({ path: `/${this.user.username}/adop` });
       } catch (error) {
         this.errors = error.response.data.errors;

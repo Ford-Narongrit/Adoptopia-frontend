@@ -52,15 +52,18 @@
           :title="`@${post.user.username}`"
           class="object-cover w-8 h-8 rounded-full shadow-xl"
         />
-        <div>
+        <div class="w-11/12">
           <router-link
             :to="`/${post.user.username}/home`"
             class="my-text-base text-gray-100 font-bold block hover:underline truncate"
           >
             {{ post.user.name }}
           </router-link>
-          <div class="my-text-base text-gray-100 truncate cursor-default">
+          <div
+            class="my-text-base text-gray-100 truncate cursor-default flex justify-between w-full"
+          >
             @{{ post.user.username }}
+            <div>{{ getFormatTime(post.created_at) }}</div>
           </div>
         </div>
       </div>

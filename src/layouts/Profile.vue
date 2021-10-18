@@ -141,9 +141,9 @@
     <div v-if="!errors && !loading" class="container mx-auto pt-10">
       <slot />
     </div>
-    <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
+    <!-- <div class="absolute w-full bg-gray-700 h-32 mt-10 bottom-0">
       footer
-    </div>
+    </div> -->
   </div>
 </template>
 

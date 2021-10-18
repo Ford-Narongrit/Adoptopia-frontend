@@ -8,7 +8,7 @@ import "./assets/css/tailwind.css";
 import "./assets/css/markdown.css";
 
 //import multiselect
-import "vue-multiselect/dist/vue-multiselect.min.css";
+// import "vue-multiselect/dist/vue-multiselect.min.css";
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
 

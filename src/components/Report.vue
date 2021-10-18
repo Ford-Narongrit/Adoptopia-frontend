@@ -1,5 +1,5 @@
 <template>
-  <div style="z-index: 100;">
+  <div>
     <div v-if="user">
       <button
         v-if="!user.isOwner"
@@ -10,7 +10,7 @@
       </button>
     </div>
     <div v-if="post">
-        <!-- v-if="!post.isOwner" -->
+      <!-- v-if="!post.isOwner" -->
       <button
         class="border-4 border-gray-500 h-12 w-12 rounded-full bg-gray-400 hover:bg-yellow-700 transition"
         @click="showMeun = true"
@@ -29,7 +29,10 @@
         style="z-index: 1;"
       ></button>
       <!-- form report -->
-      <div class="bg-white px-5 py-3 rounded-md space-y-2 text-black" style="z-index: 1;">
+      <div
+        class="bg-white px-5 py-3 rounded-md space-y-2 text-black"
+        style="z-index: 1;"
+      >
         <div class="my-text-subtitle font-bold text-center">
           Report an issue
         </div>
@@ -106,8 +109,8 @@ export default {
     async sendReport(message) {
       let payload = {
         description: message,
-        user_id: this.user ? this.user.id: null,
-        post_id: this.post ? this.post.id: null,
+        user_id: this.user ? this.user.id : null,
+        post_id: this.post ? this.post.id : null,
       };
       let res = await ReportStore.dispatch(`sentReport${this.type}`, payload);
       Alert.mixin("success", "Reported success");
