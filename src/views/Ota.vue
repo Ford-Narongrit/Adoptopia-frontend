@@ -19,16 +19,19 @@
           </span>
         </h1></b
       >
-      <report
-        :post="postInfo"
-        :report_list="[
-          'This post is inappropriate',
-          'Duplicate post',
-          'Plagiarism',
-        ]"
-        type="Post"
-        class="mt-10 px-5 z-10"
-      />
+      <div v-if="!loading" class="flex flex-wrap">
+        <report v-if="!checkIfOwner()"
+          :post="postInfo"
+          :report_list="[
+            'This post is inappropriate',
+            'Duplicate post',
+            'Plagiarism',
+          ]"
+          type="Post"
+          class="mt-10 px-5 z-10"
+        />        
+      </div>
+
     </div>
 
     <Loading v-if="loading" />
