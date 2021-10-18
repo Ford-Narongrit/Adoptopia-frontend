@@ -1,5 +1,5 @@
 <template>
-  <div class="my-font-eng sale text-white">
+  <div class="my-font-eng text-white">
     <div class="flex flex-wrap">
       <b><h1 class="text-4xl ml-14 mt-10">For Sale</h1></b>
       <report
@@ -75,7 +75,6 @@
                 Confirm
               </button>
             </div>
-            <br>
             <button
               class="btn-rounded absolute right-48"
               @click="purchase"
@@ -118,9 +117,9 @@
       </div>
       <div class="text-2xl">
         <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
-        <div class="my-font-th ml-32">
-          {{ adop_agr }}
+        <div class="my-font-th ml-32 text-white mark-content" v-html="compiledMarkdown(adop_agr)">
         </div>
+        <br>
       </div>
     </div>
   </div>
@@ -136,6 +135,7 @@ import Loading from "../components/Loading.vue";
 import Report from "../components/Report.vue";
 import Header from "@/helpers/Header";
 import Alert from "../helpers/Alert";
+import marked from "marked";
 
 export default {
   name: "sale",
@@ -351,6 +351,9 @@ export default {
       } else {
         return false;
       }
+    },
+    compiledMarkdown(text) {
+      return marked(text);
     },
   },
 };

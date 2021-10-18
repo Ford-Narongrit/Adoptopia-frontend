@@ -21,7 +21,7 @@
       >
       <report
         :post="postInfo"
-        :report_list="['1', '2', '3']"
+        :report_list="['This post is inappropriate', 'Duplicate post', 'Plagiarism']"
         type="Post"
         class="-mt-10 pl-52 ml-16"
       />
@@ -149,8 +149,7 @@
 
       <div class="text-2xl">
         <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
-        <div class="my-font-th ml-32">
-          {{ adop_agr }}
+        <div class="my-font-th ml-32 text-white mark-content" v-html="compiledMarkdown(adop_agr)">
         </div>
       </div>
     </div>
@@ -168,6 +167,7 @@ import Alert from "../helpers/Alert";
 import Header from "@/helpers/Header";
 import Loading from "../components/Loading.vue";
 import DtaStore from "../store/Dta.js";
+import marked from "marked";
 
 export default {
   name: "dta",
@@ -338,6 +338,10 @@ export default {
       } else {
         return false;
       }
+    },
+
+    compiledMarkdown(text) {
+      return marked(text);
     },
 
     async deletePost() {

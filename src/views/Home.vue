@@ -7,10 +7,10 @@
           v-model="type"
           class="my-text-content rounded-lg px-2 py-1 my-block-focus"
         >
-          <option disabled value="">Please select a type</option>
-          <option value="OTA">OTA(Offer to Adop)</option>
-          <option value="DTA">DTA(Offer to Draw)</option>
-          <option value="For Sale">For Sale</option>
+          <option value="All">All</option>
+          <option value="ota">OTA(Offer to Adop)</option>
+          <option value="dta">DTA(Offer to Draw)</option>
+          <option value="sale">For Sale</option>
         </select>
       </div>
       <div class="flex flex-nowrap py-8">
@@ -25,12 +25,11 @@
           placeholder="Search or select category"
           label="name"
           track-by="name"
-          :max="3"
-          @input="maxSelected()"
+          :max="1"
         >
         </multiselect>
       </div>
-      <div class="py-8 px-4">
+      <!-- <div class="py-8 px-4">
         <button
           class="
             bg-blue-600
@@ -45,12 +44,12 @@
         >
           search
         </button>
-      </div>
+      </div> -->
     </div>
     <Loading v-if="loading" />
     <div class="px-7" v-if="!loading">
       <vue-flex-waterfall :col="4" :col-spacing="20" :break-by-container="true">
-        <div v-for="adopt_list in filtered_adop" :key="adopt_list.index">
+        <div v-for="adopt_list in search_filter" :key="adopt_list.index">
           <router-link
             :to="{
               path: '/' + adopt_list.type + '/' + adopt_list.id,
@@ -94,9 +93,9 @@ export default {
   },
   data() {
     return {
-      catagory: null,
+      catagory: "",
       categories: [],
-      type: "",
+      type: "All",
       adopts: [],
       filtered_adop: [],
       selectedImage: null,
@@ -105,11 +104,18 @@ export default {
   },
   computed: {
     search_filter: function () {
-      if (this.type === "OTA") {
-        this.filtered_adop.sort((a, b) => {
+      if (this.type === "ota" || this.type === "dta" || this.type === "sale") {
+        let res = this.filtered_adop.filter(v => v.type == this.type);
+        res.sort((a, b) => {
           return new Date(b.created_at) - new Date(a.created_at);
         });
-        return this.filtered_adop;
+        return res;
+      }
+      if(this.type === "All"){
+        let res = this.filtered_adop.sort((a, b) => {
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+        return res;
       }
     },
   },
@@ -140,17 +146,13 @@ export default {
     getImagePath(image) {
       return process.env.VUE_APP_APIURL + image;
     },
+    filterProduct(category) {
+      this.activeCategory = category;
+    }
   },
   created() {
     this.fetchTrade();
     this.fetchCategory();
-  },
-  maxSelected() {
-    const selectedItems = this.form.catagory.length;
-    this.maxItemsSelected = false;
-    if (selectedItems >= 3) {
-      this.maxItemsSelected = true;
-    }
   },
 };
 </script>
