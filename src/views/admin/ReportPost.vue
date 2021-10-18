@@ -76,6 +76,7 @@
 <script>
 import ReportStore from "@/store/Report";
 import moment from "moment";
+import Alert from "../../helpers/Alert";
 export default {
   data() {
     return {
@@ -103,6 +104,12 @@ export default {
     async deletePost(id) {
       try {
         let res = await ReportStore.dispatch("deletePost", id);
+        this.reports.forEach((report) => {
+          if (report.post.id === id) {
+            report.post.deleted_at = true;
+          }
+        });
+        Alert.mixin("success", "Post deleted successful");
       } catch (error) {
         console.error(error);
       }
