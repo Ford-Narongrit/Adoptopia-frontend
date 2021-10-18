@@ -1,19 +1,43 @@
-# adoptopia
-
+# Adoptopia
+### Project-final Webtech (frontend)
 ## Project setup
 ```
 npm install
+cp .env.example .env
 ```
+go config .env to connect database
 
-### Compiles and hot-reloads for development
+Open http://localhost:8080 with your browser to see the result.
+
+### Compiles for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compiles for production
 ```
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### structure
+```
+.
+|-- pubilc
+|
+|-- src
+|   |- assests (เก็บ CSS กับ image)
+|   |- components
+|   |- layout
+|   |- router
+|   |- store
+|   |- views
+|   |- App.vue
+|   |- main.js
+|-- tailwind.config.js (เพิ่ม config tailwind ในนี้)
+```
+
+## route
+* /
+* /login
+* /register
+* /user/id
