@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="mt-8 mb-6 ml-8 text-white text-3xl">Add Adopt</div>
+    <div class="mt-8 mb-6 ml-8 text-white text-3xl">Add Adop</div>
     <div class="flex">
       <div class="w-2/3 h-full px-10 py-5 flex justify-center item-center">
         <!-- upload images -->
