@@ -32,6 +32,9 @@ import ReportPost from "@/views/admin/ReportPost.vue";
 import ReportUser from "@/views/admin/ReportUser.vue";
 import BanList from "@/views/admin/BanList.vue";
 
+//store
+import User from "@/store/User";
+import Alert from "@/helpers/Alert";
 Vue.use(VueRouter);
 
 const routes = [
@@ -49,6 +52,7 @@ const routes = [
     component: History,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -57,6 +61,7 @@ const routes = [
     component: Topup,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -65,6 +70,7 @@ const routes = [
     component: Sale,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -74,6 +80,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -83,6 +90,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -92,6 +100,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -101,6 +110,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -110,6 +120,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -118,6 +129,7 @@ const routes = [
     component: PaymentHistory,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -126,6 +138,7 @@ const routes = [
     component: AddAdop,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -135,6 +148,7 @@ const routes = [
     props: true,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -143,6 +157,7 @@ const routes = [
     component: PostSelect,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -168,6 +183,7 @@ const routes = [
     component: AdopUser,
     meta: {
       layout: "Profile",
+      requiresAuth: true,
     },
   },
   {
@@ -175,6 +191,7 @@ const routes = [
     component: EditProfile,
     meta: {
       layout: "Main",
+      requiresAuth: true,
     },
   },
   {
@@ -182,6 +199,7 @@ const routes = [
     component: AdopIDUser,
     meta: {
       layout: "Image",
+      requiresAuth: true,
     },
   },
   {
@@ -203,6 +221,7 @@ const routes = [
     component: ReportPost,
     meta: {
       layout: "Admin",
+      requiresAuth: true,
     },
   },
   {
@@ -210,6 +229,7 @@ const routes = [
     component: ReportUser,
     meta: {
       layout: "Admin",
+      requiresAuth: true,
     },
   },
   {
@@ -217,6 +237,7 @@ const routes = [
     component: BanList,
     meta: {
       layout: "Admin",
+      requiresAuth: true,
     },
   },
 ];
@@ -227,4 +248,33 @@ const router = new VueRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!User.getters.isAuthen) {
+      Alert.window(
+        "warning",
+        "warning",
+        "You need to sign in to user this feature"
+      );
+      next({ name: "Login" });
+    } else {
+      next();
+    }
+  }
+  if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    if (!User.getters.isAdmin) {
+      Alert.window("warning", "warning", "You are not admin");
+      next({ name: "Home" });
+    }
+  } else {
+    if (
+      User.getters.isAuthen &&
+      (to.name === "Login" || to.name === "Register")
+    ) {
+      next({ name: "Home" });
+    } else {
+      next();
+    }
+  }
+});
 export default router;
