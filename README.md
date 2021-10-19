@@ -1,25 +1,32 @@
 # Adoptopia
+
 ### Project-final Webtech (frontend)
+
 ## Project setup
+
 ```
 npm install
 cp .env.example .env
 ```
+
 go config .env to connect database
 
 Open http://localhost:8080 with your browser to see the result.
 
 ### Compiles for development
+
 ```
 npm run serve
 ```
 
 ### Compiles for production
+
 ```
 npm run build
 ```
 
 ### structure
+
 ```
 .
 |-- pubilc
@@ -37,7 +44,13 @@ npm run build
 ```
 
 ## route
-* /
-* /login
-* /register
-* /user/id
+
+- /
+- /login
+- /register
+- /user/id
+
+## docker
+
+- `docker build -t adoptopia-frontend .`
+- `docker run -it -p 8080:8080 --rm --name adoptopia-frontend -d adoptopia-frontend`
