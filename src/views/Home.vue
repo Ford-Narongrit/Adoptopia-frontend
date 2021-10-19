@@ -187,7 +187,7 @@ export default {
       this.user_list = res.data;
     },
     limitText(count) {
-      return `and ${count} other countries`;
+      return `and ${count} other categories`;
     },
     asyncFind(query) {
       this.isLoading.cat = true;
