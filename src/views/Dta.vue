@@ -160,6 +160,7 @@
         <div class="my-font-th ml-32 text-white mark-content" v-html="compiledMarkdown(adop_agr)">
         </div>
       </div>
+      <br><br><br>
     </div>
   </div>
 </template>
@@ -333,6 +334,7 @@ export default {
       try {
         let res = await axios.post("/dta-sug", payload, config);
         console.log(res.data);
+        Alert.mixin("success", "Request successfully");
         this.$router.push("/");
       } catch (error) {
         this.errors = error.response.data.errors;

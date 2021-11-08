@@ -18,6 +18,7 @@
       <div class="border-b border-solid border-white">
         <div class="m-9 h-0">
           <coverflow
+            style="z-index: 0;"
             v-if="wait"
             :coverList="coverList"
             :coverWidth="230"
@@ -125,7 +126,7 @@
         <b><h1 class="text-4xl ml-14 mt-10 pb-12 pt-5">Agreement</h1></b>
         <div class="my-font-th ml-32 text-white mark-content" v-html="compiledMarkdown(adop_agr)">
         </div>
-        <br>
+        <br><br><br>
       </div>
     </div>
   </div>
