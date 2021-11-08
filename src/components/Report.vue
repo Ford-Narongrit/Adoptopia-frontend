@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="z-index: 100;">
     <div v-if="user">
       <button
         v-if="!user.isOwner"
